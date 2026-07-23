@@ -1,0 +1,430 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body, #root { height: 100%; }
+body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-font-smoothing: antialiased; }
+
+/* ── Wrapper ── */
+.fmp-wrapper {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background: #f9fafb;
+}
+
+/* ── Main ── */
+.fmp-main {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 32px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: #f9fafb;
+  width: 100%;
+}
+
+/* ── Top Bar ── */
+.fmp-topbar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px 32px 14px;
+  margin: 0 -32px 4px;
+  font-size: 12px;
+  color: #9ca3af;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* ── Hero Card ── */
+.fmp-hero-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 40px 32px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+}
+
+.fmp-hero-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid #e5e7eb;
+  background: #f9fafb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.fmp-hero-info { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+
+.fmp-hero-name {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.3px;
+}
+
+.fmp-hero-dates { font-size: 13.5px; color: #6b7280; }
+
+.fmp-hero-location-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.fmp-hero-quote {
+  font-size: 13.5px;
+  color: #6b7280;
+  font-style: italic;
+  margin-top: 2px;
+}
+
+.fmp-tribute-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 14px;
+  padding: 11px 26px;
+  background: #111827;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
+}
+
+.fmp-tribute-btn:hover {
+  background: #1f2937;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.fmp-tribute-btn:active { transform: scale(0.98); }
+
+/* ── Pending Banner ── */
+.fmp-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 12px;
+  padding: 14px 18px;
+}
+
+.fmp-banner-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #f59e0b;
+  flex-shrink: 0;
+}
+
+.fmp-banner-title { font-size: 13.5px; font-weight: 600; color: #92400e; }
+.fmp-banner-sub { font-size: 12px; color: #b45309; margin-top: 2px; opacity: 0.9; }
+
+.fmp-banner-close {
+  margin-left: auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #d97706;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.fmp-banner-close:hover { background: #fef3c7; }
+
+/* ── Tributes Section ── */
+.fmp-section { display: flex; flex-direction: column; gap: 12px; }
+
+.fmp-section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fmp-section-title { font-size: 14px; font-weight: 600; color: #374151; }
+
+.fmp-section-count {
+  background: #f3f4f6;
+  color: #6b7280;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+/* ── Empty State ── */
+.fmp-empty {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 48px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.fmp-empty-text { font-size: 15px; font-weight: 600; color: #374151; }
+.fmp-empty-sub { font-size: 13px; color: #9ca3af; }
+
+/* ── Tribute List ── */
+.fmp-tribute-list {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.fmp-tribute-item {
+  display: flex;
+  gap: 14px;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f3f4f6;
+  transition: background 0.15s;
+}
+
+.fmp-tribute-item:last-child { border-bottom: none; }
+.fmp-tribute-item:hover { background: #fafafa; }
+
+.fmp-tribute-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #4b5563;
+  flex-shrink: 0;
+}
+
+.fmp-tribute-body { flex: 1; min-width: 0; }
+
+.fmp-tribute-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 5px;
+}
+
+.fmp-tribute-name { font-size: 13px; font-weight: 600; color: #111827; }
+.fmp-tribute-date { font-size: 11px; color: #9ca3af; }
+.fmp-tribute-msg { font-size: 13px; color: #4b5563; line-height: 1.6; }
+
+/* ── Modal Overlay ── */
+.fmp-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 16px;
+}
+
+/* ── Modal ── */
+.fmp-modal {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+
+.fmp-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.fmp-modal-title { font-size: 16px; font-weight: 700; color: #111827; }
+
+.fmp-modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #9ca3af;
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.fmp-modal-close:hover { color: #111827; background: #f3f4f6; }
+
+/* ── Tabs ── */
+.fmp-modal-tabs {
+  display: flex;
+  gap: 4px;
+  background: #f3f4f6;
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 16px;
+}
+
+.fmp-modal-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 7px;
+  background: none;
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b7280;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.fmp-modal-tab:hover { color: #111827; }
+.fmp-modal-tab.active { background: #111827; color: #ffffff; }
+
+/* ── Textarea ── */
+.fmp-modal-textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 13.5px;
+  color: #111827;
+  resize: none;
+  outline: none;
+  font-family: inherit;
+  line-height: 1.6;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  background: #fafafa;
+}
+
+.fmp-modal-textarea::placeholder { color: #9ca3af; }
+.fmp-modal-textarea:focus {
+  border-color: #6b7280;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(107,114,128,0.1);
+}
+
+/* ── Upload ── */
+.fmp-upload-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 2px dashed #e5e7eb;
+  border-radius: 10px;
+  padding: 32px 16px;
+  cursor: pointer;
+  text-align: center;
+  background: #fafafa;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.fmp-upload-zone:hover { border-color: #9ca3af; background: #f3f4f6; }
+.fmp-upload-input { display: none; }
+.fmp-upload-label { font-size: 13.5px; font-weight: 500; color: #374151; }
+.fmp-upload-hint { font-size: 12px; color: #9ca3af; }
+
+.fmp-upload-done {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #16a34a;
+  font-weight: 500;
+  word-break: break-all;
+}
+
+/* ── Modal Note ── */
+.fmp-modal-note {
+  font-size: 12px;
+  color: #9ca3af;
+  margin: 12px 0 0;
+  line-height: 1.5;
+}
+
+/* ── Modal Actions ── */
+.fmp-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.fmp-modal-cancel {
+  padding: 9px 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #ffffff;
+  font-size: 13.5px;
+  color: #374151;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.fmp-modal-cancel:hover { background: #f9fafb; border-color: #d1d5db; }
+
+.fmp-modal-submit {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #111827;
+  color: #ffffff;
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
+}
+
+.fmp-modal-submit:hover { background: #1f2937; }
+.fmp-modal-submit:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* ── Success State ── */
+.fmp-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 20px 0 10px;
+  gap: 10px;
+}
+
+.fmp-success-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 2px solid #e5e7eb;
+  background: #f9fafb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.fmp-success-title { font-size: 17px; font-weight: 700; color: #111827; }
+.fmp-success-sub { font-size: 13px; color: #6b7280; line-height: 1.5; }
