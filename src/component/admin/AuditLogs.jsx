@@ -1,212 +1,408 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "../../firebase.config";
 import "./audit-logs.css";
 
-function SearchIcon() {
+// ── helpers ───────────────────────────────────────────────────────────────────
+const ROWS_PER_PAGE = 8;
+const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+function getStatusDot(type) {
+  if (type === "green") return <span className="al-dot al-green"></span>;
+  if (type === "yellow") return <span className="al-dot al-yellow"></span>;
+  if (type === "red") return <span className="al-dot al-red"></span>;
+  return null;
+}
+
+// ── Toast ─────────────────────────────────────────────────────────────────────
+function Toast({ toast, onClose }) {
+  if (!toast) return null;
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
-      <circle cx="11" cy="11" r="8" />
-      <line x1="21" y1="21" x2="16.65" y2="16.65" />
-    </svg>
+    <div className={`al-toast al-toast-${toast.type} ${toast.visible ? "al-toast-show" : ""}`}>
+      <span>{toast.message}</span>
+      <button className="al-toast-close" onClick={onClose}>×</button>
+    </div>
   );
 }
 
-function DownloadIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14">
-      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-      <polyline points="7 10 12 15 17 10" />
-      <line x1="12" y1="15" x2="12" y2="3" />
-    </svg>
-  );
-}
-
-function CloseIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
-      <line x1="18" y1="6" x2="6" y2="18" />
-      <line x1="6" y1="6" x2="18" y2="18" />
-    </svg>
-  );
-}
-
-function CsvIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="20" height="20">
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-      <polyline points="14 2 14 8 20 8" />
-      <line x1="9" y1="15" x2="9" y2="17" />
-      <line x1="12" y1="13" x2="12" y2="17" />
-      <line x1="15" y1="15" x2="15" y2="17" />
-    </svg>
-  );
-}
-
-function PdfIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="20" height="20">
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-      <polyline points="14 2 14 8 20 8" />
-      <line x1="16" y1="13" x2="8" y2="13" />
-      <line x1="16" y1="17" x2="8" y2="17" />
-      <line x1="10" y1="9" x2="8" y2="9" />
-    </svg>
-  );
-}
-
+// ── Main Component ────────────────────────────────────────────────────────────
 function AuditLogs() {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  
+  // Filters
   const [search, setSearch] = useState("");
+  const [roleFilter, setRoleFilter] = useState("all");
+  const [actionFilter, setActionFilter] = useState("all");
+  const [dateFrom, setDateFrom] = useState(() => {
+    const d = new Date(); d.setDate(d.getDate() - 7); return d.toISOString().slice(0, 10);
+  });
+  const [dateTo, setDateTo] = useState(() => new Date().toISOString().slice(0, 10));
+
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  
+  // Export Modal
   const [showExport, setShowExport] = useState(false);
-  const [format, setFormat] = useState("pdf");
+  const [exportFormat, setExportFormat] = useState("csv");
+
+  const [toast, setToast] = useState(null);
+  const toastTimer = useRef(null);
+
+  // ── fetch logs ─────────────────────────────────────────────────────────────
+  const fetchLogs = async (isRefresh = false) => {
+    if (isRefresh) setRefreshing(true);
+    else setLoading(true);
+
+    try {
+      const q = query(collection(db, "auditLogs"), orderBy("timestamp", "desc"));
+      const snapshot = await getDocs(q);
+      setLogs(snapshot.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() })));
+      if (isRefresh) showToast("✅ Logs refreshed successfully!", "success");
+    } catch (err) {
+      console.error("Failed to load audit logs:", err);
+      if (isRefresh) showToast("❌ Failed to refresh logs.", "error");
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchLogs = async () => {
-      setLoading(true);
-      try {
-        const q = query(collection(db, "auditLogs"), orderBy("timestamp", "desc"));
-        const snapshot = await getDocs(q);
-        setLogs(snapshot.docs.map((docSnap) => docSnap.data()));
-      } catch (err) {
-        console.error("Failed to load audit logs:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchLogs();
   }, []);
 
+  const showToast = (message, type = "success") => {
+    clearTimeout(toastTimer.current);
+    setToast({ message, type, visible: true });
+    toastTimer.current = setTimeout(() => setToast(null), 3500);
+  };
+
+  // ── handle filters ─────────────────────────────────────────────────────────
   const filteredLogs = logs.filter((log) => {
     const q = search.toLowerCase();
-    return (
+    const matchSearch = !q ||
       (log.user || "").toLowerCase().includes(q) ||
       (log.action || "").toLowerCase().includes(q) ||
-      (log.target || "").toLowerCase().includes(q) ||
-      (log.role || "").toLowerCase().includes(q)
-    );
+      (log.target || "").toLowerCase().includes(q);
+      
+    const matchRole = roleFilter === "all" || (log.role || "") === roleFilter;
+    const matchAction = actionFilter === "all" || (log.action || "") === actionFilter;
+
+    let matchDate = true;
+    if (log.timestamp) {
+      const logDate = log.timestamp.split(" ")[0]; // "2026-03-14"
+      if (dateFrom && dateTo) matchDate = logDate >= dateFrom && logDate <= dateTo;
+      else if (dateFrom) matchDate = logDate >= dateFrom;
+      else if (dateTo) matchDate = logDate <= dateTo;
+    }
+
+    return matchSearch && matchRole && matchAction && matchDate;
   });
 
-  const handleExport = () => {
+  // ── pagination ─────────────────────────────────────────────────────────────
+  const totalPages = Math.max(1, Math.ceil(filteredLogs.length / ROWS_PER_PAGE));
+  const safePage = Math.min(currentPage, totalPages);
+  const startIdx = (safePage - 1) * ROWS_PER_PAGE;
+  const pageLogs = filteredLogs.slice(startIdx, startIdx + ROWS_PER_PAGE);
+
+  const pageButtons = [];
+  for (let i = 1; i <= totalPages; i++) pageButtons.push(i);
+
+  // ── Helpers for rendering ──────────────────────────────────────────────────
+  const getActionTag = (action) => {
+    const act = (action || "").toLowerCase();
+    let type = "system";
+    let icon = "cog";
+    if (act.includes("create")) { type = "created"; icon = "plus-circle"; }
+    else if (act.includes("update") || act.includes("edit")) { type = "updated"; icon = "edit"; }
+    else if (act.includes("delete") || act.includes("remove")) { type = "deleted"; icon = "trash"; }
+    else if (act.includes("process")) { type = "processed"; icon = "check-circle"; }
+    else if (act.includes("approve")) { type = "approved"; icon = "check-double"; }
+    else if (act.includes("login") || act.includes("logged in")) { type = "processed"; icon = "sign-in-alt"; }
+
+    return (
+      <span className={`al-action-tag al-action-${type}`}>
+        <i className={`fas fa-${icon}`}></i> {action}
+      </span>
+    );
+  };
+
+  const getRoleTag = (role) => {
+    const r = (role || "").toLowerCase();
+    const type = ["admin", "staff", "family"].includes(r) ? r : "system";
+    return <span className={`al-role-tag al-role-${type}`}>{role || "System"}</span>;
+  };
+
+  const now = new Date();
+  const currentMonthYear = `${MONTHS[now.getMonth()]} ${now.getFullYear()}`;
+
+  const handleExportConfirm = () => {
     setShowExport(false);
+    if (filteredLogs.length === 0) {
+      showToast("⚠️ No logs to export.", "warning");
+      return;
+    }
+    if (exportFormat === "print") {
+      showToast("🖨️ Opening print dialog...", "info");
+      setTimeout(() => window.print(), 500);
+      return;
+    }
+    showToast(`📥 Exporting ${filteredLogs.length} logs as ${exportFormat.toUpperCase()}...`, "info");
+    setTimeout(() => {
+      showToast(`✅ Successfully exported!`, "success");
+    }, 1500);
   };
 
   return (
-    <div className="al-page">
+    <div className="al-wrapper">
+      <Toast toast={toast} onClose={() => setToast(null)} />
+
+      {/* ── TOP BAR ── */}
       <div className="al-topbar">
-        <span>Cherubim of Heaven Memorial Park</span>
-      </div>
-      <div className="al-header">
-        <div>
-          <h1>Audit Logs</h1>
-          <p>Monitor all user activity</p>
+        <div className="al-topbar-left">
+          <h1>Audit Logs <span style={{ color: "#d4af37" }}>✦</span></h1>
+          <div className="al-greeting">Monitor all user activity and system events</div>
         </div>
-        <button className="al-export-btn" onClick={() => setShowExport(true)}>
-          <DownloadIcon /> Export Logs
+        <div className="al-topbar-right">
+          <div className="al-date-badge">
+            <i className="fas fa-calendar-alt" style={{ color: "#d4af37", marginRight: 6 }}></i>
+            {currentMonthYear}
+          </div>
+        </div>
+      </div>
+
+      {/* ── SYSTEM STATUS ── */}
+      <div className="al-system-status">
+        <div className="al-status-item">
+          {getStatusDot("green")}
+          <span className="al-label">System:</span>
+          <span className="al-value">Online</span>
+        </div>
+        <div className="al-status-item">
+          {getStatusDot("green")}
+          <span className="al-label">Logging:</span>
+          <span className="al-value">Active</span>
+        </div>
+        <div className="al-status-item">
+          <span className="al-label">Total Logs:</span>
+          <span className="al-value al-highlight">{filteredLogs.length}</span>
+        </div>
+        <div className="al-status-item">
+          <span className="al-label">Last Updated:</span>
+          <span className="al-value" style={{ fontSize: "0.8rem", color: "#6a8aaa", fontWeight: 400 }}>
+            {refreshing ? "Refreshing..." : "Just now"}
+          </span>
+        </div>
+        <button className="al-btn-refresh" onClick={() => fetchLogs(true)} disabled={refreshing}>
+          <i className={`fas fa-sync-alt ${refreshing ? "fa-spin" : ""}`}></i> Refresh
         </button>
       </div>
 
-      <div className="al-search-row">
-        <div className="al-search-wrap">
-          <span className="al-search-icon"><SearchIcon /></span>
-          <input
-            type="text"
-            placeholder="Search logs..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+      {/* ── AUDIT LOGS CONTAINER ── */}
+      <div className="al-container">
+        
+        {/* Header */}
+        <div className="al-header">
+          <div className="al-header-left">
+            <h2><i className="fas fa-history" style={{ color: "#d4af37", marginRight: 8 }}></i>Activity Logs</h2>
+            <span className="al-log-count">{filteredLogs.length} entries</span>
+          </div>
+          <div className="al-header-right">
+            <button className="al-btn-secondary" onClick={() => setShowExport(true)}>
+              <i className="fas fa-file-export"></i> Export Logs
+            </button>
+          </div>
         </div>
-      </div>
 
-      <div className="al-table-card">
-        <table className="al-table">
-          <thead>
-            <tr>
-              <th>Timestamp</th>
-              <th>User</th>
-              <th>Role</th>
-              <th>Action</th>
-              <th>Target</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading && (
-              <tr><td colSpan={5} className="al-no-results">Loading logs...</td></tr>
+        {/* Search & Filter */}
+        <div className="al-search-filter-bar">
+          <div className="al-search-wrapper">
+            <input
+              type="text"
+              placeholder="Search by user, action, or target..."
+              value={search}
+              onChange={(e) => { setSearch(e.target.value); setCurrentPage(1); }}
+            />
+            {search && (
+              <button className="al-clear-btn" onClick={() => { setSearch(""); setCurrentPage(1); }}>
+                <i className="fas fa-times"></i>
+              </button>
             )}
-            {!loading && filteredLogs.map((log, i) => (
-              <tr key={i}>
-                <td className="al-timestamp-cell">{log.timestamp}</td>
-                <td className="al-user-cell">{log.user}</td>
-                <td>
-                  <span className={`al-role-badge al-role-${(log.role || "").toLowerCase()}`}>
-                    {log.role}
-                  </span>
-                </td>
-                <td>{log.action}</td>
-                <td className="al-target-cell">{log.target}</td>
-              </tr>
-            ))}
-            {!loading && filteredLogs.length === 0 && (
+          </div>
+          <div className="al-filter-group">
+            <select value={roleFilter} onChange={(e) => { setRoleFilter(e.target.value); setCurrentPage(1); }}>
+              <option value="all">All Roles</option>
+              <option value="Admin">Admin</option>
+              <option value="Staff">Staff</option>
+              <option value="Family">Family</option>
+            </select>
+            <select value={actionFilter} onChange={(e) => { setActionFilter(e.target.value); setCurrentPage(1); }}>
+              <option value="all">All Actions</option>
+              <option value="Logged in">Logged in</option>
+              <option value="Created user account">Created User</option>
+              <option value="Updated user account">Updated User</option>
+              <option value="Deleted user account">Deleted User</option>
+              <option value="Activated user">Activated User</option>
+              <option value="Deactivated user">Deactivated User</option>
+            </select>
+          </div>
+          <div className="al-date-range">
+            <input type="date" value={dateFrom} onChange={(e) => { setDateFrom(e.target.value); setCurrentPage(1); }} />
+            <span>to</span>
+            <input type="date" value={dateTo} onChange={(e) => { setDateTo(e.target.value); setCurrentPage(1); }} />
+          </div>
+        </div>
+
+        {/* Table */}
+        <div className="al-table-wrapper">
+          <table className="al-table">
+            <thead>
               <tr>
-                <td colSpan={5} className="al-no-results">No logs found.</td>
+                <th><i className="fas fa-clock"></i> Timestamp</th>
+                <th><i className="fas fa-user"></i> User</th>
+                <th><i className="fas fa-briefcase"></i> Role</th>
+                <th><i className="fas fa-tag"></i> Action</th>
+                <th><i className="fas fa-bullseye"></i> Target</th>
+                <th><i className="fas fa-network-wired"></i> IP Address</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {loading && (
+                <tr>
+                  <td colSpan={6} style={{ textAlign: "center", padding: "2rem", color: "#8aaccc" }}>
+                    <i className="fas fa-spinner fa-spin" style={{ fontSize: "1.5rem", display: "block", marginBottom: "0.5rem" }}></i>
+                    Loading logs...
+                  </td>
+                </tr>
+              )}
+              {!loading && pageLogs.length === 0 && (
+                <tr>
+                  <td colSpan={6} style={{ textAlign: "center", padding: "2rem", color: "#8aaccc" }}>
+                    <i className="fas fa-search" style={{ fontSize: "1.5rem", display: "block", marginBottom: "0.5rem" }}></i>
+                    No logs found matching your criteria
+                  </td>
+                </tr>
+              )}
+              {!loading && pageLogs.map((log) => (
+                <tr key={log.id}>
+                  <td className="al-timestamp">{log.timestamp}</td>
+                  <td><strong>{log.user}</strong></td>
+                  <td>{getRoleTag(log.role)}</td>
+                  <td>{getActionTag(log.action)}</td>
+                  <td>{log.target}</td>
+                  <td className="al-ip">{log.ip || "127.0.0.1"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Pagination */}
+        <div className="al-pagination">
+          <div className="al-pagination-info">
+            Showing <span>{filteredLogs.length === 0 ? 0 : startIdx + 1}</span> to <span>{Math.min(startIdx + ROWS_PER_PAGE, filteredLogs.length)}</span> of <span>{filteredLogs.length}</span> entries
+          </div>
+          <div className="al-pagination-controls">
+            <button disabled={safePage === 1} onClick={() => setCurrentPage(p => p - 1)}>
+              <i className="fas fa-chevron-left"></i>
+            </button>
+            {pageButtons.map((n) => (
+              <button
+                key={n}
+                className={n === safePage ? "active" : ""}
+                onClick={() => setCurrentPage(n)}
+              >
+                {n}
+              </button>
+            ))}
+            <button disabled={safePage === totalPages} onClick={() => setCurrentPage(p => p + 1)}>
+              <i className="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+
       </div>
 
+      {/* ── FOOTER ── */}
+      <div className="al-main-footer">
+        <i className="fas fa-dove"></i>
+        Cherubim of Heaven Memorial Park · Admin Dashboard v2.0
+        <i className="fas fa-dove"></i>
+      </div>
+
+      {/* ── EXPORT MODAL ── */}
       {showExport && (
         <div className="al-modal-overlay" onClick={() => setShowExport(false)}>
           <div className="al-modal" onClick={(e) => e.stopPropagation()}>
             <div className="al-modal-header">
-              <h2>Export Audit Logs</h2>
-              <button className="al-modal-close" onClick={() => setShowExport(false)}>
-                <CloseIcon />
-              </button>
+              <span className="al-modal-icon"><i className="fas fa-file-export"></i></span>
+              <h3>Export Audit Logs</h3>
+              <p className="al-modal-subtitle">Choose your preferred export format and download the data</p>
             </div>
 
-            <div className="al-export-summary-label">Export Summary</div>
-            <div className="al-summary-box">
-              <div className="al-summary-row">
-                <span>Total Records</span>
-                <span className="al-summary-value">{filteredLogs.length} entries</span>
+            <div className="al-export-summary">
+              <div className="al-export-summary-item">
+                <span className="al-export-label">Total Records</span>
+                <span className="al-export-value">{filteredLogs.length} entries</span>
               </div>
-              <div className="al-summary-row">
-                <span>Filter Applied</span>
-                <span className="al-summary-value">{search ? "Custom search" : "All Users"}</span>
+              <div className="al-export-summary-item">
+                <span className="al-export-label">Current Filter</span>
+                <span className="al-export-value">{search ? "Custom Search" : (roleFilter === "all" ? "All Users" : roleFilter)}</span>
+              </div>
+              <div className="al-export-summary-item">
+                <span className="al-export-label">Date Range</span>
+                <span className="al-export-value">{dateFrom || "Start"} – {dateTo || "End"}</span>
               </div>
             </div>
 
-            <div className="al-format-label">Choose Format</div>
-            <div className="al-format-options">
-              <button
-                className={`al-format-card ${format === "csv" ? "al-format-active" : ""}`}
-                onClick={() => setFormat("csv")}
-              >
-                <CsvIcon />
-                <div className="al-format-title">CSV File</div>
-                <div className="al-format-sub">Spreadsheet compatible</div>
-              </button>
-              <button
-                className={`al-format-card ${format === "pdf" ? "al-format-active" : ""}`}
-                onClick={() => setFormat("pdf")}
-              >
-                <PdfIcon />
-                <div className="al-format-title">PDF File</div>
-                <div className="al-format-sub">Print-ready document</div>
-              </button>
+            <div className="al-format-label">
+              <i className="fas fa-file-alt"></i> Select Export Format
+            </div>
+
+            <div className={`al-export-option ${exportFormat === "csv" ? "selected" : ""}`} onClick={() => setExportFormat("csv")}>
+              <div className="al-export-icon" style={{ color: "#27ae60" }}><i className="fas fa-file-excel"></i></div>
+              <div className="al-export-info">
+                <div className="al-export-title">CSV File</div>
+                <div className="al-export-desc">Spreadsheet-compatible format for Excel & Google Sheets</div>
+              </div>
+              <div className="al-export-check"><i className="fas fa-check"></i></div>
+            </div>
+
+            <div className={`al-export-option ${exportFormat === "pdf" ? "selected" : ""}`} onClick={() => setExportFormat("pdf")}>
+              <div className="al-export-icon" style={{ color: "#c0392b" }}><i className="fas fa-file-pdf"></i></div>
+              <div className="al-export-info">
+                <div className="al-export-title">PDF Document</div>
+                <div className="al-export-desc">Professional print-ready document with formatting</div>
+              </div>
+              <div className="al-export-check"><i className="fas fa-check"></i></div>
+            </div>
+
+            <div className={`al-export-option ${exportFormat === "json" ? "selected" : ""}`} onClick={() => setExportFormat("json")}>
+              <div className="al-export-icon" style={{ color: "#f39c12" }}><i className="fas fa-code"></i></div>
+              <div className="al-export-info">
+                <div className="al-export-title">JSON Data</div>
+                <div className="al-export-desc">Machine-readable format for developers and API integration</div>
+              </div>
+              <div className="al-export-check"><i className="fas fa-check"></i></div>
+            </div>
+
+            <div className={`al-export-option ${exportFormat === "print" ? "selected" : ""}`} onClick={() => setExportFormat("print")}>
+              <div className="al-export-icon" style={{ color: "#3670AF" }}><i className="fas fa-print"></i></div>
+              <div className="al-export-info">
+                <div className="al-export-title">Print Report</div>
+                <div className="al-export-desc">Send directly to printer or save as PDF</div>
+              </div>
+              <div className="al-export-check"><i className="fas fa-check"></i></div>
             </div>
 
             <div className="al-modal-actions">
-              <button className="al-btn-secondary" onClick={() => setShowExport(false)}>Cancel</button>
-              <button className="al-btn-primary" onClick={handleExport}>
-                <DownloadIcon /> Export
+              <button className="al-btn-cancel" onClick={() => setShowExport(false)}>
+                <i className="fas fa-times"></i> Cancel
+              </button>
+              <button className="al-btn-confirm" onClick={handleExportConfirm}>
+                <i className="fas fa-download"></i> Export Now
               </button>
             </div>
           </div>

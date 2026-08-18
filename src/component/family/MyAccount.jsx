@@ -3,6 +3,7 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { updatePassword, reauthenticateWithCredential, EmailAuthProvider } from "firebase/auth";
 import { auth, db } from "../../firebase.config";
 import "./my-account.css";
+import FamilyTopbar from "./FamilyTopbar";
 
 function getInitials(name) {
   return (name || "")
@@ -131,201 +132,209 @@ function MyAccount() {
 
   if (loading) {
     return (
-      <div className="ma-main">
-        <div className="ma-topbar">
-          <span>Cherubim of Heaven Memorial Park</span>
-        </div>
-        <p style={{ padding: "20px 0", color: "#6b7280", fontSize: "13px" }}>
-          Loading account information...
+      <div className="fam-page-wrapper">
+        <FamilyTopbar title="My Account" greeting="Loading account information..." />
+        <p style={{ padding: "20px 0", color: "#6b7280" }}>
+          <i className="fas fa-spinner fa-spin"></i> Loading account information...
         </p>
       </div>
     );
   }
 
   return (
-    <div className="ma-main">
-      <div className="ma-topbar">
-        <span>Cherubim of Heaven Memorial Park</span>
-      </div>
+    <div className="fam-page-wrapper">
+      {/* Top Bar */}
+      <FamilyTopbar title="My Account" greeting="Manage your personal information and security" />
 
-      <div className="ma-header">
-        <h1 className="ma-title">My Account</h1>
-        <p className="ma-subtitle">Manage your account information</p>
-      </div>
+      <div className="facct-grid">
+        
+        {/* Account Information Card */}
+        <div className="fam-container">
+          <div className="facct-header">
+            <h2><i className="fas fa-user-circle" style={{ color: "#3670AF", marginRight: "8px" }}></i> Profile Information</h2>
+          </div>
 
-      {/* Account Information */}
-      <div className="ma-card">
-        <div className="ma-card-heading">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-            stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-            <circle cx="12" cy="7" r="4" />
-          </svg>
-          <span>Account Information</span>
+          <div className="facct-profile-row">
+            <div className="facct-profile-avatar">{getInitials(form.fullName)}</div>
+            <div>
+              <p className="facct-profile-name">{form.fullName}</p>
+              <p className="facct-profile-role">Family Account</p>
+            </div>
+          </div>
+
+          <form onSubmit={handleSave} className="facct-form">
+            <div className="facct-form-row">
+              <div className="facct-field">
+                <label className="facct-label">Full Name</label>
+                <div className="facct-input-wrap">
+                  <i className="fas fa-user facct-input-icon"></i>
+                  <input
+                    type="text"
+                    name="fullName"
+                    className="facct-input"
+                    value={form.fullName}
+                    onChange={handleFormChange}
+                  />
+                </div>
+              </div>
+
+              <div className="facct-field">
+                <label className="facct-label">Email Address</label>
+                <div className="facct-input-wrap">
+                  <i className="fas fa-envelope facct-input-icon"></i>
+                  <input
+                    type="email"
+                    name="email"
+                    className="facct-input facct-input--disabled"
+                    value={form.email}
+                    disabled
+                  />
+                </div>
+                <p className="facct-field-note"><i className="fas fa-info-circle"></i> Contact administration to change your email</p>
+              </div>
+            </div>
+
+            <div className="facct-form-row">
+              <div className="facct-field">
+                <label className="facct-label">Phone Number</label>
+                <div className="facct-input-wrap">
+                  <i className="fas fa-phone facct-input-icon"></i>
+                  <input
+                    type="text"
+                    name="phone"
+                    className="facct-input"
+                    value={form.phone}
+                    onChange={handleFormChange}
+                  />
+                </div>
+              </div>
+
+              <div className="facct-field">
+                <label className="facct-label">Relationship to Deceased</label>
+                <div className="facct-input-wrap">
+                  <i className="fas fa-users facct-input-icon"></i>
+                  <input
+                    type="text"
+                    name="relationship"
+                    className="facct-input"
+                    value={form.relationship}
+                    onChange={handleFormChange}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="facct-field">
+              <label className="facct-label">Address</label>
+              <div className="facct-input-wrap">
+                <i className="fas fa-home facct-input-icon"></i>
+                <input
+                  type="text"
+                  name="address"
+                  className="facct-input"
+                  value={form.address}
+                  onChange={handleFormChange}
+                />
+              </div>
+            </div>
+
+            {saveError && <p className="facct-error"><i className="fas fa-exclamation-triangle"></i> {saveError}</p>}
+
+            <div className="facct-actions">
+              <button type="submit" className="fam-btn-primary">
+                {saved ? (
+                  <>
+                    <i className="fas fa-check"></i> Saved!
+                  </>
+                ) : (
+                  <>
+                    <i className="fas fa-save"></i> Save Changes
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
         </div>
 
-        {/* Profile Row */}
-        <div className="ma-profile-row">
-          <div className="ma-profile-avatar">{getInitials(form.fullName)}</div>
-          <div>
-            <p className="ma-profile-name">{form.fullName}</p>
-            <p className="ma-profile-role">Family Account</p>
+        {/* Security / Change Password Card */}
+        <div className="fam-container">
+          <div className="facct-header">
+            <h2><i className="fas fa-shield-alt" style={{ color: "#d4af37", marginRight: "8px" }}></i> Security & Password</h2>
           </div>
+
+          <form onSubmit={handleUpdatePassword} className="facct-form">
+            <div className="facct-field">
+              <label className="facct-label">Current Password</label>
+              <div className="facct-input-wrap">
+                <i className="fas fa-lock facct-input-icon"></i>
+                <input
+                  type="password"
+                  name="current"
+                  className="facct-input"
+                  value={passwords.current}
+                  onChange={handlePasswordChange}
+                  placeholder="Enter current password"
+                />
+              </div>
+            </div>
+
+            <div className="facct-form-row">
+              <div className="facct-field">
+                <label className="facct-label">New Password</label>
+                <div className="facct-input-wrap">
+                  <i className="fas fa-key facct-input-icon"></i>
+                  <input
+                    type="password"
+                    name="newPass"
+                    className="facct-input"
+                    value={passwords.newPass}
+                    onChange={handlePasswordChange}
+                    placeholder="Enter new password"
+                  />
+                </div>
+              </div>
+
+              <div className="facct-field">
+                <label className="facct-label">Confirm Password</label>
+                <div className="facct-input-wrap">
+                  <i className="fas fa-key facct-input-icon"></i>
+                  <input
+                    type="password"
+                    name="confirm"
+                    className="facct-input"
+                    value={passwords.confirm}
+                    onChange={handlePasswordChange}
+                    placeholder="Confirm new password"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {pwError && <p className="facct-error"><i className="fas fa-exclamation-triangle"></i> {pwError}</p>}
+
+            <div className="facct-actions">
+              <button type="submit" className="fam-btn-secondary">
+                {pwSaved ? (
+                  <>
+                    <i className="fas fa-check" style={{ color: "#27ae60" }}></i> Password Updated
+                  </>
+                ) : (
+                  <>
+                    <i className="fas fa-lock"></i> Update Password
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
         </div>
-
-        <form onSubmit={handleSave} className="ma-form">
-          <div className="ma-field">
-            <label className="ma-label">Full Name</label>
-            <input
-              type="text"
-              name="fullName"
-              className="ma-input"
-              value={form.fullName}
-              onChange={handleFormChange}
-            />
-          </div>
-
-          <div className="ma-field">
-            <label className="ma-label">Email</label>
-            <input
-              type="email"
-              name="email"
-              className="ma-input ma-input--disabled"
-              value={form.email}
-              disabled
-            />
-            <p className="ma-field-note">Contact administration to change your email</p>
-          </div>
-
-          <div className="ma-field">
-            <label className="ma-label">Phone</label>
-            <input
-              type="text"
-              name="phone"
-              className="ma-input"
-              value={form.phone}
-              onChange={handleFormChange}
-            />
-          </div>
-
-          <div className="ma-field">
-            <label className="ma-label">Address</label>
-            <input
-              type="text"
-              name="address"
-              className="ma-input"
-              value={form.address}
-              onChange={handleFormChange}
-            />
-          </div>
-
-          <div className="ma-field">
-            <label className="ma-label">Relationship to Deceased</label>
-            <input
-              type="text"
-              name="relationship"
-              className="ma-input"
-              value={form.relationship}
-              onChange={handleFormChange}
-            />
-          </div>
-
-          {saveError && <p className="ma-error">{saveError}</p>}
-
-          <button type="submit" className="ma-save-btn">
-            {saved ? (
-              <>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" width="14" height="14">
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-                Saved!
-              </>
-            ) : (
-              <>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14">
-                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
-                  <polyline points="17 21 17 13 7 13 7 21" />
-                  <polyline points="7 3 7 8 15 8" />
-                </svg>
-                Save Changes
-              </>
-            )}
-          </button>
-        </form>
+        
       </div>
-
-      {/* Change Password */}
-      <div className="ma-card">
-        <div className="ma-card-heading">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-            stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
-            <circle cx="12" cy="12" r="10" />
-            <polyline points="12 6 12 12 16 14" />
-          </svg>
-          <span>Change Password</span>
-        </div>
-
-        <form onSubmit={handleUpdatePassword} className="ma-form">
-          <div className="ma-field">
-            <label className="ma-label">Current Password</label>
-            <input
-              type="password"
-              name="current"
-              className="ma-input"
-              value={passwords.current}
-              onChange={handlePasswordChange}
-              placeholder="Enter current password"
-            />
-          </div>
-
-          <div className="ma-field">
-            <label className="ma-label">New Password</label>
-            <input
-              type="password"
-              name="newPass"
-              className="ma-input"
-              value={passwords.newPass}
-              onChange={handlePasswordChange}
-              placeholder="Enter new password"
-            />
-          </div>
-
-          <div className="ma-field">
-            <label className="ma-label">Confirm New Password</label>
-            <input
-              type="password"
-              name="confirm"
-              className="ma-input"
-              value={passwords.confirm}
-              onChange={handlePasswordChange}
-              placeholder="Confirm new password"
-            />
-          </div>
-
-          {pwError && <p className="ma-error">{pwError}</p>}
-
-          <button type="submit" className="ma-pw-btn">
-            {pwSaved ? (
-              <>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" width="14" height="14">
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-                Password Updated!
-              </>
-            ) : (
-              "Update Password"
-            )}
-          </button>
-        </form>
-      </div>
-
+      
       {/* Footer Note */}
-      <p className="ma-footer-note">
-        Your account has view-only access. Only administrators and staff can modify burial records and process transactions.
-      </p>
+      <div className="facct-footer-note">
+        <i className="fas fa-info-circle" style={{ color: "#3670AF" }}></i>
+        <span>Your account has view-only access to burial plots. Only administrators and staff can modify burial records and process transactions.</span>
+      </div>
     </div>
   );
 }

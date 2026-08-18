@@ -1,0 +1,194 @@
+/* =====================================================
+   FAMILY TOPBAR — family-topbar.css
+   ===================================================== */
+
+/* ── Topbar ──────────────────────────────────────── */
+.fam-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+.fam-topbar-left h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1a3d5c;
+  margin: 0 0 0.4rem 0;
+  letter-spacing: -0.5px;
+}
+.fam-greeting {
+  font-size: 0.95rem;
+  color: #6a8aaa;
+  font-weight: 500;
+}
+
+.fam-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* ── Date Badge ──────────────────────────────────── */
+.fam-date-badge {
+  background: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #4a5568;
+  border: 1px solid #e8edf4;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  display: flex;
+  align-items: center;
+}
+
+/* ── Bell & Dropdown ─────────────────────────────── */
+.fam-bell-wrapper {
+  position: relative;
+}
+
+.fam-notification-btn {
+  background: white;
+  border: 1px solid #e8edf4;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1a3d5c;
+  cursor: pointer;
+  position: relative;
+  transition: 0.3s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+.fam-notification-btn:hover {
+  border-color: #d4af37;
+  color: #d4af37;
+}
+.fam-notification-btn .dot {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 8px;
+  height: 8px;
+  background: #e74c3c;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+.fam-notif-dropdown {
+  position: absolute;
+  top: 55px;
+  right: 0;
+  width: 340px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  border: 1px solid #e8edf4;
+  z-index: 1000;
+  overflow: hidden;
+  animation: famDropdownFadeIn 0.2s ease-out;
+}
+
+@keyframes famDropdownFadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fam-notif-dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.2rem;
+  background: #f8fafc;
+  border-bottom: 1px solid #e8edf4;
+}
+.fam-notif-dropdown-title {
+  font-weight: 700;
+  color: #1a3d5c;
+  font-size: 0.95rem;
+}
+.fam-notif-dropdown-unread {
+  font-size: 0.75rem;
+  background: #e74c3c;
+  color: white;
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.fam-notif-dropdown-list {
+  max-height: 350px;
+  overflow-y: auto;
+}
+.fam-notif-empty {
+  padding: 2rem;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+.fam-notif-dropdown-item {
+  display: flex;
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid #e8edf4;
+  cursor: pointer;
+  transition: 0.2s;
+  background: #fdfdfd;
+}
+.fam-notif-dropdown-item:hover {
+  background: #f8fafc;
+}
+.fam-notif-dropdown-item.read {
+  background: #ffffff;
+  opacity: 0.8;
+}
+
+.fam-notif-unread-dot {
+  width: 8px;
+  height: 8px;
+  background: #3670AF;
+  border-radius: 50%;
+  margin-top: 4px;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.fam-notif-dropdown-item-content {
+  flex: 1;
+}
+.fam-notif-dropdown-item-title {
+  font-weight: 600;
+  color: #1a3d5c;
+  font-size: 0.9rem;
+  margin-bottom: 0.2rem;
+}
+.fam-notif-dropdown-item-body {
+  font-size: 0.8rem;
+  color: #6a8aaa;
+  line-height: 1.4;
+  margin-bottom: 0.4rem;
+}
+.fam-notif-dropdown-item-time {
+  font-size: 0.7rem;
+  color: #94a3b8;
+}
+
+.fam-notif-dropdown-footer {
+  padding: 0.8rem;
+  text-align: center;
+  border-top: 1px solid #e8edf4;
+  background: #f8fafc;
+}
+.fam-notif-mark-all-btn {
+  background: none;
+  border: none;
+  color: #3670AF;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.fam-notif-mark-all-btn:hover {
+  text-decoration: underline;
+}

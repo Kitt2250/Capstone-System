@@ -11,7 +11,7 @@ import StaffNavigation from "./component/staff/StaffNavigation";
 
 function roleHome(role) {
   if (role === "admin") return "/admin/dashboard";
-  if (role === "family") return "/family/memorial";
+  if (role === "family") return "/family/burial";
   if (role === "staff") return "/staff/dashboard";
   return "/login";
 }
@@ -28,11 +28,18 @@ function App() {
       }
       try {
         const snap = await getDoc(doc(db, "users", user.uid));
-        const role = snap.exists() ? (snap.data().role || "").toLowerCase() : null;
+        if (!snap.exists()) {
+          // User exists in Auth but was deleted from Firestore
+          await signOut(auth);
+          setAuthState({ loading: false, user: null, role: null });
+          return;
+        }
+        const role = (snap.data().role || "").toLowerCase();
         setAuthState({ loading: false, user, role });
       } catch (err) {
         console.error("Failed to load role:", err);
-        setAuthState({ loading: false, user, role: null });
+        await signOut(auth);
+        setAuthState({ loading: false, user: null, role: null });
       }
     });
     return unsubscribe;

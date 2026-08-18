@@ -1,8 +1,12 @@
+import { useState, useEffect } from "react";
+import { collection, query, where, onSnapshot, doc, writeBatch } from "firebase/firestore";
+import { auth, db } from "../../firebase.config";
 import "./burial-records.css";
+import FamilyTopbar from "./FamilyTopbar";
 
-const BURIAL_RECORDS = [
+const INITIAL_RECORDS = [
   {
-    id: "B-2847",
+    recordId: "B-2847",
     name: "Alejandro Reyes Sr.",
     status: "Active",
     personal: {
@@ -27,109 +31,146 @@ const BURIAL_RECORDS = [
 ];
 
 function BurialRecords() {
+  const [records, setRecords] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const uid = auth.currentUser?.uid;
+    if (!uid) return;
+
+    const q = query(collection(db, "family_burial_records"), where("userId", "==", uid));
+
+    const unsubscribe = onSnapshot(q, async (snap) => {
+      if (snap.empty) {
+        try {
+          const batch = writeBatch(db);
+          INITIAL_RECORDS.forEach((r) => {
+            const docRef = doc(collection(db, "family_burial_records"));
+            batch.set(docRef, { ...r, userId: uid });
+          });
+          await batch.commit();
+        } catch (err) {
+          console.error("Failed to seed burial records:", err);
+        }
+      } else {
+        const data = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setRecords(data);
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
-    <div className="br-main">
-      <div className="br-topbar">
-        <span>Cherubim of Heaven Memorial Park</span>
-      </div>
+    <div className="fam-page-wrapper">
+      {/* Top Bar */}
+      <FamilyTopbar title="Burial Records" greeting="View details and manage your plots" />
 
-      <div className="br-header">
-        <h1 className="br-title">My Burial Records</h1>
-        <p className="br-subtitle">View burial details for your loved ones</p>
-      </div>
+      {/* Main Content */}
+      <div className="fam-container">
+        <div className="fbr-header-row">
+          <h2><i className="fas fa-file-alt" style={{ color: "#d4af37", marginRight: "8px" }}></i> My Records</h2>
+        </div>
 
-      <div className="br-list">
-        {BURIAL_RECORDS.map((record) => (
-          <div key={record.id} className="br-card">
-            {/* Card Header */}
-            <div className="br-card-header">
-              <div>
-                <h2 className="br-card-name">{record.name}</h2>
-                <p className="br-card-id">Record {record.id}</p>
-              </div>
-              <span className={`br-badge br-badge--${record.status.toLowerCase()}`}>
-                {record.status}
-              </span>
-            </div>
-
-            <div className="br-divider" />
-
-            {/* Card Body */}
-            <div className="br-card-body">
-              {/* Personal Information */}
-              <div className="br-section">
-                <p className="br-section-label">Personal Information</p>
-                <div className="br-field-row">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                    stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="13" height="13">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                    <circle cx="12" cy="7" r="4" />
-                  </svg>
-                  <span>{record.personal.name}</span>
-                </div>
-                <div className="br-field-row">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                    stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="13" height="13">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                    <line x1="16" y1="2" x2="16" y2="6" />
-                    <line x1="8" y1="2" x2="8" y2="6" />
-                    <line x1="3" y1="10" x2="21" y2="10" />
-                  </svg>
-                  <span>{record.personal.dates}</span>
-                </div>
-              </div>
-
-              {/* Location */}
-              <div className="br-section">
-                <p className="br-section-label">Location</p>
-                <div className="br-field-row">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                    stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="13" height="13">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                    <circle cx="12" cy="10" r="3" />
-                  </svg>
-                  <span>{record.location.grave}</span>
-                </div>
-                <div className="br-kv-row">
-                  <span className="br-kv-label">Section / Block:</span>
-                  <span className="br-kv-value">
-                    {record.location.section} / {record.location.block}
+        {loading ? (
+          <p style={{ color: "#6a8aaa", padding: "20px 0" }}>
+            <i className="fas fa-spinner fa-spin"></i> Loading records...
+          </p>
+        ) : records.length === 0 ? (
+          <div className="fmp-empty" style={{ padding: "4rem 2rem", textAlign: "center" }}>
+            <i className="fas fa-folder-open" style={{ fontSize: "2.5rem", color: "#d1d5db", marginBottom: "1rem" }}></i>
+            <p style={{ fontSize: "1.1rem", fontWeight: 600, color: "#1a3d5c" }}>No burial records found.</p>
+          </div>
+        ) : (
+          <div className="fbr-grid">
+            {records.map((record) => (
+              <div key={record.id} className="fbr-card">
+                {/* Card Header */}
+                <div className="fbr-card-header">
+                  <div className="fbr-card-title-group">
+                    <h2 className="fbr-card-name">{record.name}</h2>
+                    <p className="fbr-card-id"><i className="fas fa-hashtag" style={{ marginRight: 4, color: "#8aaccc" }}></i> Record {record.recordId}</p>
+                  </div>
+                  <span className={`fbr-badge fbr-badge--${(record.status || "active").toLowerCase()}`}>
+                    <i className="fas fa-check-circle" style={{ marginRight: 4 }}></i> {record.status}
                   </span>
                 </div>
-              </div>
 
-              {/* Burial Details */}
-              <div className="br-section">
-                <p className="br-section-label">Burial Details</p>
-                <div className="br-kv-row">
-                  <span className="br-kv-label">Date Buried:</span>
-                  <span className="br-kv-value br-kv-value--bold">{record.burial.dateBuried}</span>
-                </div>
-                <div className="br-kv-row">
-                  <span className="br-kv-label">Type:</span>
-                  <span className="br-kv-value br-kv-value--bold">{record.burial.type}</span>
-                </div>
-              </div>
+                <div className="fbr-divider" />
 
-              {/* Lease Information */}
-              <div className="br-section">
-                <p className="br-section-label">Lease Information</p>
-                <div className="br-kv-row">
-                  <span className="br-kv-label">Lease Start:</span>
-                  <span className="br-kv-value br-kv-value--bold">{record.lease.start}</span>
+                {/* Card Body */}
+                <div className="fbr-card-body">
+                  
+                  {/* Personal Information */}
+                  <div className="fbr-section">
+                    <p className="fbr-section-label">Personal Information</p>
+                    <div className="fbr-field-row">
+                      <i className="fas fa-user" style={{ color: "#9ca3af", width: 16 }}></i>
+                      <span>{record.personal?.name}</span>
+                    </div>
+                    <div className="fbr-field-row">
+                      <i className="fas fa-calendar-alt" style={{ color: "#9ca3af", width: 16 }}></i>
+                      <span>{record.personal?.dates}</span>
+                    </div>
+                  </div>
+
+                  {/* Location */}
+                  <div className="fbr-section">
+                    <p className="fbr-section-label">Location</p>
+                    <div className="fbr-field-row">
+                      <i className="fas fa-map-marker-alt" style={{ color: "#d4af37", width: 16 }}></i>
+                      <span style={{ fontWeight: 600, color: "#1a3d5c" }}>{record.location?.grave}</span>
+                    </div>
+                    <div className="fbr-kv-row">
+                      <span className="fbr-kv-label">Section / Block:</span>
+                      <span className="fbr-kv-value">
+                        {record.location?.section} / {record.location?.block}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Burial Details */}
+                  <div className="fbr-section">
+                    <p className="fbr-section-label">Burial Details</p>
+                    <div className="fbr-kv-row">
+                      <span className="fbr-kv-label">Date Buried:</span>
+                      <span className="fbr-kv-value fbr-kv-value--bold">{record.burial?.dateBuried}</span>
+                    </div>
+                    <div className="fbr-kv-row">
+                      <span className="fbr-kv-label">Type:</span>
+                      <span className="fbr-kv-value fbr-kv-value--bold">{record.burial?.type}</span>
+                    </div>
+                  </div>
+
+                  {/* Lease Information */}
+                  <div className="fbr-section">
+                    <p className="fbr-section-label">Lease Information</p>
+                    <div className="fbr-kv-row">
+                      <span className="fbr-kv-label">Lease Start:</span>
+                      <span className="fbr-kv-value fbr-kv-value--bold">{record.lease?.start}</span>
+                    </div>
+                    <div className="fbr-kv-row">
+                      <span className="fbr-kv-label">Lease Expiry:</span>
+                      <span className="fbr-kv-value fbr-kv-value--bold">{record.lease?.expiry}</span>
+                    </div>
+                    <div className="fbr-kv-row">
+                      <span className="fbr-kv-label">Payment:</span>
+                      <span className="fbr-kv-value" style={{ color: "#27ae60", fontWeight: 600 }}>{record.lease?.payment}</span>
+                    </div>
+                  </div>
+
                 </div>
-                <div className="br-kv-row">
-                  <span className="br-kv-label">Lease Expiry:</span>
-                  <span className="br-kv-value br-kv-value--bold">{record.lease.expiry}</span>
-                </div>
-                <div className="br-kv-row">
-                  <span className="br-kv-label">Payment:</span>
-                  <span className="br-kv-value br-kv-value--bold">{record.lease.payment}</span>
+                
+                <div className="fbr-card-footer">
+                  <button className="fam-btn-secondary">
+                    <i className="fas fa-download"></i> Download Certificate
+                  </button>
                 </div>
               </div>
-            </div>
+            ))}
           </div>
-        ))}
+        )}
       </div>
     </div>
   );

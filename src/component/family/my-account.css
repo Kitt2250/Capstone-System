@@ -1,194 +1,181 @@
-.ma-main {
-  flex: 1;
-  overflow-y: auto;
-  padding: 0 32px 48px;
+/* =====================================================
+   MY ACCOUNT — my-account.css
+   ===================================================== */
+
+/* ── Layout ──────────────────────────────────────── */
+.facct-grid {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  background: #f9fafb;
-  width: 100%;
+  gap: 1.5rem;
 }
 
-.ma-topbar {
-  display: flex;
-  justify-content: flex-end;
-  padding: 16px 32px 14px;
-  margin: 0 -32px 4px;
-  font-size: 12px;
-  color: #9ca3af;
-  border-bottom: 1px solid #e5e7eb;
+/* ── Container (Shared logic) ────────────────────── */
+.fam-container {
+  background: white;
+  border-radius: 20px;
+  padding: 1.8rem 2rem 2rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(212, 175, 55, 0.08);
+  position: relative;
 }
 
-.ma-header { display: flex; flex-direction: column; gap: 4px; }
-
-.ma-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: #111827;
-  letter-spacing: -0.3px;
+/* ── Header ──────────────────────────────────────── */
+.facct-header {
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #e8edf4;
+  padding-bottom: 1rem;
 }
-
-.ma-subtitle { font-size: 13px; color: #6b7280; }
-
-/* ── Card ── */
-.ma-card {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 14px;
-  padding: 22px 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
-.ma-card-heading {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
+.facct-header h2 {
+  font-size: 1.2rem;
   font-weight: 600;
-  color: #374151;
-  padding-bottom: 2px;
-  border-bottom: 1px solid #f3f4f6;
-}
-
-/* ── Profile Row ── */
-.ma-profile-row {
+  color: #1a3d5c;
+  margin: 0;
   display: flex;
   align-items: center;
-  gap: 14px;
 }
 
-.ma-profile-avatar {
-  width: 44px;
-  height: 44px;
+/* ── Profile Row ─────────────────────────────────── */
+.facct-profile-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.facct-profile-avatar {
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
-  background: #e5e7eb;
+  background: linear-gradient(135deg, #1565c0, #1976d2);
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 13px;
+  font-size: 1.4rem;
   font-weight: 700;
-  color: #374151;
-  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(21, 101, 192, 0.2);
 }
-
-.ma-profile-name {
-  font-size: 14.5px;
+.facct-profile-name {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1a3d5c;
+  margin: 0 0 0.2rem 0;
+}
+.facct-profile-role {
+  font-size: 0.85rem;
   font-weight: 600;
-  color: #111827;
+  color: #8aaccc;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
 }
 
-.ma-profile-role {
-  font-size: 12px;
-  color: #6b7280;
-  margin-top: 2px;
-}
-
-/* ── Form ── */
-.ma-form {
+/* ── Form Layout ─────────────────────────────────── */
+.facct-form {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 1.2rem;
+}
+.facct-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
 }
 
-.ma-field {
+.facct-field {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 0.4rem;
+}
+.facct-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1a3d5c;
 }
 
-.ma-label {
-  font-size: 13px;
-  font-weight: 500;
-  color: #374151;
+/* ── Input Styling ───────────────────────────────── */
+.facct-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
 }
-
-.ma-input {
+.facct-input-icon {
+  position: absolute;
+  left: 1rem;
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+.facct-input {
   width: 100%;
-  padding: 9px 12px;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  font-size: 13.5px;
-  color: #111827;
-  background: #fafafa;
-  outline: none;
+  padding: 0.7rem 1rem 0.7rem 2.5rem;
+  border: 1px solid #dce3ec;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  transition: 0.3s;
+  background: #fdfdfd;
+  color: #1a3d5c;
   font-family: inherit;
-  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+  outline: none;
 }
-
-.ma-input:focus {
-  border-color: #6b7280;
-  background: #ffffff;
-  box-shadow: 0 0 0 3px rgba(107,114,128,0.1);
+.facct-input:focus {
+  border-color: #d4af37;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+  background: white;
 }
-
-.ma-input::placeholder { color: #9ca3af; }
-
-.ma-input--disabled {
-  background: #f3f4f6;
-  color: #9ca3af;
+.facct-input--disabled {
+  background: #f1f5f9;
+  color: #94a3b8;
   cursor: not-allowed;
+  border-color: #e2e8f0;
 }
 
-.ma-field-note {
-  font-size: 11.5px;
-  color: #9ca3af;
-}
-
-/* ── Save Button ── */
-.ma-save-btn {
-  display: inline-flex;
+.facct-field-note {
+  font-size: 0.75rem;
+  color: #6a8aaa;
+  margin: 0;
+  display: flex;
   align-items: center;
-  gap: 7px;
-  padding: 10px 20px;
-  background: #111827;
-  color: #ffffff;
-  border: none;
-  border-radius: 8px;
-  font-size: 13.5px;
-  font-weight: 500;
-  cursor: pointer;
-  align-self: flex-start;
-  transition: background 0.15s, box-shadow 0.15s;
+  gap: 4px;
 }
 
-.ma-save-btn:hover { background: #1f2937; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
-
-/* ── Password Button ── */
-.ma-pw-btn {
-  display: inline-flex;
+.facct-error {
+  background: #fdedec;
+  color: #c0392b;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  margin: 0;
+  border: 1px solid rgba(192, 57, 43, 0.2);
+  display: flex;
   align-items: center;
-  gap: 7px;
-  padding: 9px 20px;
-  background: none;
-  color: #374151;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  font-size: 13.5px;
-  font-weight: 500;
-  cursor: pointer;
-  align-self: flex-start;
-  transition: background 0.15s, border-color 0.15s;
+  gap: 6px;
 }
 
-.ma-pw-btn:hover { background: #f9fafb; border-color: #9ca3af; }
-
-/* ── Error ── */
-.ma-error {
-  font-size: 13px;
-  color: #dc2626;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  border-radius: 8px;
-  padding: 9px 12px;
+/* ── Actions ─────────────────────────────────────── */
+.facct-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+  border-top: 1px solid #e8edf4;
+  padding-top: 1.5rem;
 }
 
-/* ── Footer Note ── */
-.ma-footer-note {
-  font-size: 12px;
-  color: #9ca3af;
-  text-align: center;
-  line-height: 1.6;
-  padding: 0 16px;
+/* ── Footer Note ─────────────────────────────────── */
+.facct-footer-note {
+  margin-top: 1rem;
+  padding: 1rem 1.5rem;
+  background: #ebf5ff;
+  border-left: 4px solid #1565c0;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.85rem;
+  color: #1a3d5c;
+}
+
+/* ── Responsive ──────────────────────────────────── */
+@media (max-width: 768px) {
+  .facct-form-row {
+    grid-template-columns: 1fr;
+  }
 }

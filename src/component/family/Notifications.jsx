@@ -1,146 +1,143 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { collection, query, where, onSnapshot, doc, writeBatch } from "firebase/firestore";
+import { auth, db } from "../../firebase.config";
 import "./notifications.css";
+import FamilyTopbar from "./FamilyTopbar";
 
 const INITIAL_NOTIFICATIONS = [
   {
-    id: 1,
-    type: "tribute_approved",
-    title: "Tribute Approved",
-    message: "Your tribute for Alejandro Reyes Sr. has been approved and is now visible on the memorial page.",
-    time: "2 hours ago",
+    type: "welcome",
+    title: "Welcome to Cherubim of Heaven",
+    message: "Thank you for creating your account. You can now view burial records and payment history online.",
+    time: "Just now",
     read: false,
+    createdAt: Date.now()
   },
   {
-    id: 2,
     type: "payment_reminder",
     title: "Payment Reminder",
     message: "Your monthly installment of ₱5,000 for Lot A-142 is due on April 1, 2026.",
-    time: "1 day ago",
+    time: "2 days ago",
     read: false,
-  },
-  {
-    id: 3,
-    type: "lease_expiration",
-    title: "Lease Expiration Notice",
-    message: "The lease for Lot A-142 (Alejandro Reyes Sr.) will expire on November 23, 2030. Please contact our office for renewal options.",
-    time: "3 days ago",
-    read: true,
-  },
-  {
-    id: 4,
-    type: "tribute_pending",
-    title: "Tribute Pending Review",
-    message: "Your photo tribute submitted on March 15, 2026 is currently pending admin review.",
-    time: "5 days ago",
-    read: true,
-  },
-  {
-    id: 5,
-    type: "welcome",
-    title: "Welcome to Cherubim of Heaven",
-    message: "Thank you for creating your account. You can now view burial records, memorial pages, and payment history online.",
-    time: "1 week ago",
-    read: true,
-  },
+    createdAt: Date.now() - 172800000
+  }
 ];
 
 function NotifIcon({ type }) {
-  if (type === "tribute_approved" || type === "tribute_pending") return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
-      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-    </svg>
-  );
-  if (type === "payment_reminder") return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
-      <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
-      <line x1="1" y1="10" x2="23" y2="10" />
-    </svg>
-  );
-  if (type === "lease_expiration") return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
-      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-      <line x1="16" y1="2" x2="16" y2="6" />
-      <line x1="8" y1="2" x2="8" y2="6" />
-      <line x1="3" y1="10" x2="21" y2="10" />
-    </svg>
-  );
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
-      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-      <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-    </svg>
-  );
+  if (type === "payment_reminder") return <i className="fas fa-wallet"></i>;
+  if (type === "lease_expiration") return <i className="fas fa-exclamation-triangle"></i>;
+  return <i className="fas fa-info-circle"></i>;
 }
 
 function iconColor(type) {
-  if (type === "tribute_approved")  return "notif-icon--green";
-  if (type === "payment_reminder")  return "notif-icon--blue";
-  if (type === "lease_expiration")  return "notif-icon--orange";
-  if (type === "tribute_pending")   return "notif-icon--gray";
-  return "notif-icon--gray";
+  if (type === "payment_reminder")  return "fnotif-icon--blue";
+  if (type === "lease_expiration")  return "fnotif-icon--orange";
+  return "fnotif-icon--gray";
 }
 
 function Notifications() {
-  const [notifications, setNotifications] = useState(INITIAL_NOTIFICATIONS);
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const uid = auth.currentUser?.uid;
+    if (!uid) return;
+
+    const q = query(collection(db, "family_notifications"), where("userId", "==", uid));
+
+    const unsubscribe = onSnapshot(q, async (snap) => {
+      if (snap.empty) {
+        try {
+          const batch = writeBatch(db);
+          INITIAL_NOTIFICATIONS.forEach((n) => {
+            const docRef = doc(collection(db, "family_notifications"));
+            batch.set(docRef, { ...n, userId: uid });
+          });
+          await batch.commit();
+        } catch (err) {
+          console.error("Failed to seed notifications:", err);
+        }
+      } else {
+        const notifs = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        notifs.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+        setNotifications(notifs);
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const unreadCount = notifications.filter((n) => !n.read).length;
 
-  const markAllRead = () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+  const markAllRead = async () => {
+    try {
+      const batch = writeBatch(db);
+      const unread = notifications.filter(n => !n.read);
+      unread.forEach(n => {
+        const docRef = doc(db, "family_notifications", n.id);
+        batch.update(docRef, { read: true });
+      });
+      await batch.commit();
+    } catch (err) {
+      console.error("Failed to mark all as read", err);
+    }
   };
 
-  const markRead = (id) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, read: true } : n))
-    );
+  const markRead = async (id) => {
+    try {
+      const docRef = doc(db, "family_notifications", id);
+      await writeBatch(db).update(docRef, { read: true }).commit();
+    } catch (err) {
+      console.error("Failed to mark as read", err);
+    }
   };
 
   return (
-    <div className="notif-main">
-      <div className="notif-topbar">
-        <span>Cherubim of Heaven Memorial Park</span>
-      </div>
+    <div className="fam-page-wrapper">
+      {/* Top Bar */}
+      <FamilyTopbar 
+        title="Notifications" 
+        greeting={unreadCount > 0 ? `You have ${unreadCount} unread notification${unreadCount > 1 ? "s" : ""}` : "You are all caught up"}
+      />
 
-      <div className="notif-header">
-        <div>
-          <h1 className="notif-title">Notifications</h1>
-          {unreadCount > 0 ? (
-            <p className="notif-subtitle">{unreadCount} unread</p>
-          ) : (
-            <p className="notif-subtitle">All caught up</p>
-          )}
+      <div className="fam-container">
+        <div className="fnotif-header">
+          <h2><i className="fas fa-inbox" style={{ color: "#d4af37", marginRight: "8px" }}></i> Inbox</h2>
         </div>
-        {unreadCount > 0 && (
-          <button className="notif-mark-all" onClick={markAllRead}>
-            Mark all as read
-          </button>
-        )}
-      </div>
 
-      <div className="notif-list">
-        {notifications.map((n) => (
-          <div
-            key={n.id}
-            className={`notif-item ${!n.read ? "notif-item--unread" : ""}`}
-            onClick={() => markRead(n.id)}
-          >
-            <div className={`notif-icon-wrap ${iconColor(n.type)}`}>
-              <NotifIcon type={n.type} />
-            </div>
-            <div className="notif-body">
-              <div className="notif-row">
-                <span className="notif-item-title">{n.title}</span>
-                {!n.read && <span className="notif-dot" />}
-              </div>
-              <p className="notif-message">{n.message}</p>
-              <span className="notif-time">{n.time}</span>
-            </div>
+        {loading ? (
+          <p style={{ color: "#6a8aaa", padding: "20px 0" }}>
+            <i className="fas fa-spinner fa-spin"></i> Loading notifications...
+          </p>
+        ) : notifications.length === 0 ? (
+          <div className="fam-notif-empty" style={{ padding: "3rem", textAlign: "center", color: "#94a3b8" }}>
+            <i className="fas fa-bell-slash" style={{ fontSize: "2rem", marginBottom: "1rem" }}></i>
+            <p>No notifications found.</p>
           </div>
-        ))}
+        ) : (
+          <div className="fnotif-list">
+            {notifications.map((n) => (
+              <div
+                key={n.id}
+                className={`fnotif-item ${!n.read ? "fnotif-item--unread" : ""}`}
+                onClick={() => markRead(n.id)}
+              >
+                <div className={`fnotif-icon-wrap ${iconColor(n.type)}`}>
+                  <NotifIcon type={n.type} />
+                </div>
+                <div className="fnotif-body">
+                  <div className="fnotif-row">
+                    <span className="fnotif-title">{n.title}</span>
+                    {!n.read && <span className="fnotif-dot" />}
+                  </div>
+                  <p className="fnotif-message">{n.message}</p>
+                  <span className="fnotif-time"><i className="fas fa-clock" style={{ marginRight: 4 }}></i>{n.time}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

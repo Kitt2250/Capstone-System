@@ -6,19 +6,23 @@ import "./admin-navigation.css";
 import DashboardA from "./DashboardA";
 import UserManagement from "./UserManagement";
 import AuditLogs from "./AuditLogs";
-import DigitalMemory from "./DigitalMemory";
+import MapAvailability from "./MapAvailability";
 import Settings from "./Settings";
 import BackupRestore from "./BackupRestore";
 import Reports from "./Reports";
 
-const menuItems = [
-  { key: "dashboard", label: "Dashboard",        path: "/admin/dashboard" },
-  { key: "users",     label: "User Management",  path: "/admin/users" },
-  { key: "audit",     label: "Audit Logs",       path: "/admin/audit" },
-  { key: "memory",    label: "Digital Memory",   path: "/admin/memory" },
-  { key: "reports",   label: "Reports",          path: "/admin/reports" },
-  { key: "settings",  label: "Settings",         path: "/admin/settings" },
-  { key: "backup",    label: "Backup & Restore", path: "/admin/backup" },
+// ── Section-grouped menu ──────────────────────────────────────────────────────
+const mainItems = [
+  { key: "dashboard", label: "Dashboard",       path: "/admin/dashboard" },
+  { key: "users",     label: "User Management", path: "/admin/users" },
+  { key: "audit",     label: "Audit Logs",      path: "/admin/audit" },
+  { key: "map",       label: "Map Availability", path: "/admin/map" },
+];
+
+const managementItems = [
+  { key: "reports",  label: "Reports",          path: "/admin/reports" },
+  { key: "settings", label: "Settings",         path: "/admin/settings" },
+  { key: "backup",   label: "Backup & Restore", path: "/admin/backup" },
 ];
 
 function getInitials(name) {
@@ -59,14 +63,14 @@ function AdminNavIcon({ navKey }) {
       <line x1="10" y1="9" x2="8" y2="9" />
     </svg>
   );
-  if (navKey === "memory") return (
+  if (navKey === "map") return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
       stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
-      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-      <circle cx="8.5" cy="8.5" r="1.5" />
-      <polyline points="21 15 16 10 5 21" />
+      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+      <circle cx="12" cy="10" r="3" />
     </svg>
   );
+
   if (navKey === "reports") return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
       stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
@@ -93,8 +97,42 @@ function AdminNavIcon({ navKey }) {
   return null;
 }
 
+// ── Chevron icon (rotates on toggle) ─────────────────────────────────────────
+function ChevronIcon({ collapsed }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      width="13"
+      height="13"
+      style={{
+        transition: "transform 280ms cubic-bezier(0.4,0,0.2,1)",
+        transform: collapsed ? "rotate(180deg)" : "rotate(0deg)",
+      }}
+    >
+      <polyline points="15 18 9 12 15 6" />
+    </svg>
+  );
+}
+
 function AdminNavigation({ onSignOut }) {
   const [currentUser, setCurrentUser] = useState(null);
+  const [collapsed, setCollapsed] = useState(() => {
+    return localStorage.getItem("adminSidebarCollapsed") === "true";
+  });
+
+  const toggleSidebar = () => {
+    setCollapsed(prev => {
+      const next = !prev;
+      localStorage.setItem("adminSidebarCollapsed", next);
+      return next;
+    });
+  };
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -102,9 +140,7 @@ function AdminNavigation({ onSignOut }) {
       if (!uid) return;
       try {
         const userSnap = await getDoc(doc(db, "users", uid));
-        if (userSnap.exists()) {
-          setCurrentUser(userSnap.data());
-        }
+        if (userSnap.exists()) setCurrentUser(userSnap.data());
       } catch (err) {
         console.error("Failed to load current user:", err);
       }
@@ -114,75 +150,100 @@ function AdminNavigation({ onSignOut }) {
 
   return (
     <div className="admin-layout">
-      {/* SIDEBAR */}
-      <aside className="admin-sidebar">
+      {/* ── SIDEBAR ── */}
+      <aside className={`admin-sidebar${collapsed ? " collapsed" : ""}`}>
+
+        {/* Brand */}
         <div className="admin-brand">
-          <div className="admin-brand-icon">
+          <div className="admin-brand-icon" title="Cherubim of Heaven">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
               fill="none" stroke="white" strokeWidth="1.8"
               strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
-              <circle cx="12" cy="12" r="9" />
-              <circle cx="12" cy="12" r="3" />
+              <circle cx="12" cy="8" r="3" />
+              <path d="M6 20v-2a6 6 0 0 1 12 0v2" />
             </svg>
           </div>
+
           <div className="admin-brand-text">
             <div className="admin-brand-title">Cherubim of Heaven</div>
             <div className="admin-brand-subtitle">Administrator Panel</div>
           </div>
+
+          {/* Toggle button — always in the brand row */}
+          <button
+            className="admin-toggle-btn"
+            onClick={toggleSidebar}
+            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            <ChevronIcon collapsed={collapsed} />
+          </button>
         </div>
 
-        <nav className="admin-menu">
-          {menuItems.map((item) => (
+        {/* Navigation */}
+        <nav className="admin-nav">
+          <div className="admin-nav-section-label">MAIN</div>
+          {mainItems.map((item) => (
             <NavLink
               key={item.key}
               to={item.path}
-              className={({ isActive }) => `admin-menu-item ${isActive ? "active" : ""}`}
+              className={({ isActive }) => `admin-menu-item${isActive ? " active" : ""}`}
+              title={collapsed ? item.label : ""}
             >
-              <AdminNavIcon navKey={item.key} />
+              <span className="admin-menu-icon"><AdminNavIcon navKey={item.key} /></span>
+              <span className="admin-menu-label">{item.label}</span>
+            </NavLink>
+          ))}
+
+          <div className="admin-nav-section-label" style={{ marginTop: "16px" }}>MANAGEMENT</div>
+          {managementItems.map((item) => (
+            <NavLink
+              key={item.key}
+              to={item.path}
+              className={({ isActive }) => `admin-menu-item${isActive ? " active" : ""}`}
+              title={collapsed ? item.label : ""}
+            >
+              <span className="admin-menu-icon"><AdminNavIcon navKey={item.key} /></span>
               <span className="admin-menu-label">{item.label}</span>
             </NavLink>
           ))}
         </nav>
 
-        {/* FOOTER */}
+        {/* Footer */}
         <div className="admin-sidebar-footer">
-          <div className="admin-user">
+          <div className="admin-user" title={collapsed ? (currentUser?.name || "") : ""}>
             <div className="admin-user-avatar">
               {getInitials(currentUser?.name) || "—"}
             </div>
             <div className="admin-user-info">
-              <div className="admin-user-name">
-                {currentUser?.name || "Loading..."}
-              </div>
-              <div className="admin-user-email">
-                {currentUser?.email || auth.currentUser?.email || ""}
-              </div>
+              <div className="admin-user-name">{currentUser?.name || "Loading..."}</div>
+              <div className="admin-user-email">{currentUser?.email || auth.currentUser?.email || ""}</div>
             </div>
+            <button className="admin-signout-btn" onClick={onSignOut} title="Sign Out">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                width="15" height="15">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+            </button>
           </div>
-          <button className="admin-signout-btn" onClick={onSignOut}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-              <polyline points="16 17 21 12 16 7" />
-              <line x1="21" y1="12" x2="9" y2="12" />
-            </svg>
-            Sign Out
-          </button>
         </div>
       </aside>
 
-      {/* MAIN CONTENT — nested routes */}
+      {/* ── MAIN CONTENT ── */}
       <main className="admin-content">
         <Routes>
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<DashboardA />} />
-          <Route path="users" element={<UserManagement />} />
-          <Route path="audit" element={<AuditLogs />} />
-          <Route path="memory" element={<DigitalMemory />} />
-          <Route path="reports" element={<Reports />} />
-          <Route path="settings" element={<Settings />} />
-          <Route path="backup" element={<BackupRestore />} />
-          <Route path="*" element={<Navigate to="dashboard" replace />} />
+          <Route path="users"     element={<UserManagement />} />
+          <Route path="audit"     element={<AuditLogs />} />
+          <Route path="map"       element={<MapAvailability />} />
+          <Route path="reports"   element={<Reports />} />
+          <Route path="settings"  element={<Settings />} />
+          <Route path="backup"    element={<BackupRestore />} />
+          <Route path="*"         element={<Navigate to="dashboard" replace />} />
         </Routes>
       </main>
     </div>

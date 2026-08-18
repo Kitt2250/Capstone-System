@@ -1,14 +1,17 @@
 {
+  "homepage": "https://Kitt2250.github.io/Capstone-System",
   "name": "capstone-project",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
-  },
+  "dev": "vite",
+  "build": "vite build",
+  "lint": "eslint .",
+  "preview": "vite preview",
+  "predeploy": "npm run build",
+  "deploy": "gh-pages -d dist"
+},
   "dependencies": {
     "firebase": "^12.15.0",
     "react": "^19.2.6",

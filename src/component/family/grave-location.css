@@ -1,247 +1,256 @@
-.gl-main {
-  flex: 1;
-  overflow-y: auto;
-  padding: 0 32px 48px;
+/* =====================================================
+   GRAVE LOCATION — grave-location.css
+   ===================================================== */
+
+/* ── Layout ──────────────────────────────────────── */
+.fgl-container-stack {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  background: #f9fafb;
-  width: 100%;
+  gap: 1.5rem;
 }
 
-.gl-topbar {
-  display: flex;
-  justify-content: flex-end;
-  padding: 16px 32px 14px;
-  margin: 0 -32px 4px;
-  font-size: 12px;
-  color: #9ca3af;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.gl-header { display: flex; flex-direction: column; gap: 4px; }
-
-.gl-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: #111827;
-  letter-spacing: -0.3px;
-}
-
-.gl-subtitle { font-size: 13px; color: #6b7280; }
-
-/* ── Info Card ── */
-.gl-info-card {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 14px;
-  padding: 20px 24px;
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  flex-wrap: wrap;
-}
-
-.gl-info-left {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.gl-info-avatar {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: #111827;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.gl-info-name {
-  font-size: 15px;
-  font-weight: 600;
-  color: #111827;
-}
-
-.gl-info-grave {
-  font-size: 12.5px;
-  color: #6b7280;
-  margin-top: 2px;
-}
-
-.gl-info-divider {
-  width: 1px;
-  height: 40px;
-  background: #e5e7eb;
-  flex-shrink: 0;
-}
-
-.gl-info-stats {
-  display: flex;
-  gap: 32px;
-  flex-wrap: wrap;
-}
-
-.gl-stat {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.gl-stat-label {
-  font-size: 11.5px;
-  color: #9ca3af;
-  font-weight: 500;
-}
-
-.gl-stat-value {
-  font-size: 15px;
-  font-weight: 600;
-  color: #111827;
-}
-
-/* ── Map Card ── */
-.gl-map-card {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 14px;
-  padding: 20px 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.gl-map-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.gl-map-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: #374151;
-}
-
-.gl-plot-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: none;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 6px 12px;
-  font-size: 12.5px;
-  color: #374151;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background 0.15s, border-color 0.15s;
-}
-
-.gl-plot-btn:hover { background: #f9fafb; border-color: #d1d5db; }
-
-/* ── Map Wrap ── */
-.gl-map-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
+/* ── Container (Shared logic) ────────────────────── */
+.fam-container {
+  background: white;
+  border-radius: 20px;
+  padding: 1.8rem 2rem 2rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(212, 175, 55, 0.08);
   position: relative;
 }
 
-.gl-compass {
-  position: absolute;
-  top: 0;
-  right: 0;
-  font-size: 11px;
-  font-weight: 700;
-  color: #9ca3af;
-  letter-spacing: 1px;
+/* ── Info Card ───────────────────────────────────── */
+.fgl-info-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2rem;
+  padding: 1.5rem 2rem;
 }
-
-.gl-entrance {
-  font-size: 12px;
-  color: #6b7280;
-  align-self: flex-start;
-  padding-left: 4px;
+.fgl-info-left {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  min-width: 250px;
 }
-
-/* ── Grid ── */
-.gl-grid {
-  display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  gap: 4px;
-  width: 100%;
-}
-
-.gl-plot {
-  aspect-ratio: 1;
+.fgl-info-avatar {
+  width: 54px;
+  height: 54px;
+  background: linear-gradient(135deg, #1565c0, #1976d2);
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 9px;
-  color: #6b7280;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 4px;
-  cursor: default;
-  transition: background 0.15s;
-  user-select: none;
-  min-height: 36px;
+  color: white;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(21, 101, 192, 0.2);
 }
-
-.gl-plot:hover { background: #f3f4f6; }
-
-.gl-plot--active {
-  background: #111827;
-  color: #ffffff;
-  border-color: #111827;
+.fgl-info-name {
+  font-size: 1.25rem;
   font-weight: 700;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  color: #1a3d5c;
+  margin: 0 0 0.2rem 0;
 }
-
-.gl-road {
-  font-size: 12px;
-  color: #6b7280;
-  align-self: flex-end;
-  padding-right: 4px;
-}
-
-/* ── Legend ── */
-.gl-legend {
+.fgl-info-grave {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1a3d5c;
+  margin: 0;
   display: flex;
-  gap: 20px;
+  align-items: center;
+}
+
+.fgl-info-divider {
+  width: 1px;
+  height: 50px;
+  background: #e8edf4;
+}
+
+.fgl-info-stats {
+  display: flex;
+  gap: 2.5rem;
+  flex: 1;
+}
+.fgl-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.fgl-stat-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  color: #8aaccc;
+}
+.fgl-stat-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a3d5c;
+}
+
+/* ── Map Card ────────────────────────────────────── */
+.fgl-map-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #e8edf4;
+  padding-bottom: 1rem;
+}
+.fgl-map-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1a3d5c;
+  display: flex;
   align-items: center;
 }
 
-.gl-legend-item {
+/* Map Wrapper */
+.fgl-map-wrap {
+  position: relative;
+  background: #fdfdfd;
+  border: 1px solid #e8edf4;
+  border-radius: 12px;
+  padding: 3rem 4rem;
+  overflow: auto;
   display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 12.5px;
-  color: #374151;
+  justify-content: center;
+  min-height: 400px;
 }
 
-.gl-legend-dot {
+.fgl-compass {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #6a8aaa;
+}
+
+.fgl-entrance {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #8aaccc;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.fgl-road {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #8aaccc;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Grid Layout */
+.fgl-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 45px);
+  gap: 4px;
+}
+
+.fgl-plot {
+  width: 45px;
+  height: 45px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.fgl-plot:hover {
+  background: #e2e8f0;
+  color: #475569;
+}
+.fgl-plot--active {
+  background: #27ae60;
+  border-color: #219653;
+  color: white;
+  box-shadow: 0 0 0 4px rgba(39, 174, 96, 0.2);
+  z-index: 2;
+}
+
+/* Legend & Footer */
+.fgl-legend-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+  background: #f8fafc;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+}
+
+.fgl-legend {
+  display: flex;
+  gap: 1.5rem;
+}
+.fgl-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #1a3d5c;
+  font-weight: 500;
+}
+.fgl-legend-dot {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: #e5e7eb;
-  border: 1px solid #d1d5db;
-  flex-shrink: 0;
+  background: #e2e8f0;
+}
+.fgl-legend-dot--active {
+  background: #27ae60;
+  box-shadow: 0 0 0 2px rgba(39, 174, 96, 0.2);
 }
 
-.gl-legend-dot--active {
-  background: #111827;
-  border-color: #111827;
+.fgl-map-note {
+  font-size: 0.85rem;
+  color: #6a8aaa;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-/* ── Note ── */
-.gl-map-note {
-  font-size: 12px;
-  color: #9ca3af;
-  text-align: center;
-  padding-top: 4px;
+/* ── Responsive ──────────────────────────────────── */
+@media (max-width: 900px) {
+  .fgl-info-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+  .fgl-info-divider {
+    width: 100%;
+    height: 1px;
+  }
+  .fgl-info-stats {
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+  .fgl-legend-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
 }

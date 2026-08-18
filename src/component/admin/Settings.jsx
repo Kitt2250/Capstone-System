@@ -1,55 +1,57 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase.config";
 import { logAudit } from "../../utils/logAudit";
 import "./settings.css";
 
 const DEFAULT_SETTINGS = {
-  notifications: {
-    emailAlerts: true,
-    contractExpiryAlerts: true,
-    paymentReminders: true,
-    tributeSubmissions: true,
-    systemUpdates: true,
-    expiryAlertDays: "30",
-  },
-  config: {
-    siteName: "Cherubim of Heaven Memorial Park",
-    contactEmail: "admin@cherubim.ph",
-    contactPhone: "(000) 000-0000",
-    address: "Hagonoy, Bulacan, Philippines",
-    timezone: "Asia/Manila",
-    currency: "PHP",
-  },
-  security: {
-    autoBackup: true,
-    backupFrequency: "Daily",
-  },
+  siteName: "Cherubim of Heaven Memorial Park",
+  contactPhone: "10001 000-0000",
+  timezone: "Asia/Manila",
+  currency: "PHP",
+  expiryDays: "30",
+  contactEmail: "admin@cherubim.ph",
+  address: "Hagonoy, Bulacan, Philippines",
+  coordinates: "14.8367° N, 120.7323° E",
+  operatingHours: "8:00 AM - 6:00 PM",
+  backupFrequency: "daily",
+  sessionTimeout: "30",
+  emailAlerts: true,
+  contractExpiryAlerts: true,
+  paymentReminders: true,
+  systemUpdates: false,
+  autoBackup: true,
+  twoFactorAuth: false
 };
 
-function ToggleSwitch({ checked, onChange }) {
+const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+function Toast({ toast, onClose }) {
+  if (!toast) return null;
   return (
-    <button
-      type="button"
-      className={`st-toggle ${checked ? "st-toggle--on" : ""}`}
-      onClick={onChange}
-    >
-      <span className="st-toggle-knob" />
-    </button>
+    <div className={`set-toast set-toast-${toast.type} ${toast.visible ? "set-toast-show" : ""}`}>
+      <span>{toast.message}</span>
+      <button className="set-toast-close" onClick={onClose}>×</button>
+    </div>
   );
 }
 
 function Settings() {
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [saved, setSaved] = useState(false);
+  
+  // Modals
+  const [showSaveModal, setShowSaveModal] = useState(false);
+  const [showResetModal, setShowResetModal] = useState(false);
+  
+  const [toast, setToast] = useState(null);
+  const toastTimer = useRef(null);
 
   useEffect(() => {
     const fetchSettings = async () => {
       setLoading(true);
       try {
-        const snap = await getDoc(doc(db, "settings", "system"));
+        const snap = await getDoc(doc(db, "settings", "system2"));
         if (snap.exists()) {
           setSettings((prev) => ({ ...prev, ...snap.data() }));
         }
@@ -62,279 +64,345 @@ function Settings() {
     fetchSettings();
   }, []);
 
-  const updateNotif = (key, value) => {
-    setSettings((prev) => ({
-      ...prev,
-      notifications: { ...prev.notifications, [key]: value },
-    }));
+  const showToast = (message, type = "success") => {
+    clearTimeout(toastTimer.current);
+    setToast({ message, type, visible: true });
+    toastTimer.current = setTimeout(() => setToast(null), 3500);
   };
 
-  const updateConfig = (key, value) => {
-    setSettings((prev) => ({
-      ...prev,
-      config: { ...prev.config, [key]: value },
-    }));
+  const updateSetting = (key, value) => {
+    setSettings((prev) => ({ ...prev, [key]: value }));
   };
 
-  const updateSecurity = (key, value) => {
-    setSettings((prev) => ({
-      ...prev,
-      security: { ...prev.security, [key]: value },
-    }));
+  const toggleSetting = (name, key, isEnabled) => {
+    updateSetting(key, isEnabled);
+    showToast(`🔔 ${name} ${isEnabled ? 'enabled' : 'disabled'}`, 'info');
   };
 
-  const handleSave = async () => {
-    setSaving(true);
+  const confirmSave = async () => {
+    setShowSaveModal(false);
     try {
-      await setDoc(doc(db, "settings", "system"), settings);
+      await setDoc(doc(db, "settings", "system2"), settings);
       await logAudit({
         user: auth.currentUser?.email || "Admin",
         role: "Admin",
         action: "Updated system settings",
-        target: "—",
+        target: "System Configuration",
       });
-      setSaved(true);
-      setTimeout(() => setSaved(false), 3000);
+      showToast('✅ All settings saved successfully!', 'success');
     } catch (err) {
       console.error("Failed to save settings:", err);
-    } finally {
-      setSaving(false);
+      showToast('❌ Failed to save settings', 'error');
     }
   };
 
+  const confirmReset = () => {
+    setShowResetModal(false);
+    setSettings(DEFAULT_SETTINGS);
+    showToast('🔄 All settings reset to defaults', 'warning');
+  };
+
+  const now = new Date();
+  const currentMonthYear = `${MONTHS[now.getMonth()]} ${now.getFullYear()}`;
+
   if (loading) {
     return (
-      <div className="st-page">
-        <div className="st-topbar">
-          <span>Cherubim of Heaven Memorial Park</span>
-        </div>
-        <div className="st-header">
-          <div>
-            <h1>System Settings</h1>
-            <p>Configure system preferences</p>
-          </div>
-        </div>
-        <p className="st-loading">Loading settings...</p>
+      <div className="set-wrapper" style={{ padding: "2rem", textAlign: "center", color: "#6a8aaa" }}>
+        <i className="fas fa-spinner fa-spin" style={{ fontSize: "2rem", marginBottom: "1rem" }}></i>
+        <p>Loading settings...</p>
       </div>
     );
   }
 
   return (
-    <div className="st-page">
-      <div className="st-topbar">
-        <span>Cherubim of Heaven Memorial Park</span>
-      </div>
-      <div className="st-header">
-        <div>
-          <h1>System Settings</h1>
-          <p>Configure system preferences</p>
-        </div>
-        <button className="st-save-btn" onClick={handleSave} disabled={saving}>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14">
-            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
-            <polyline points="17 21 17 13 7 13 7 21" />
-            <polyline points="7 3 7 8 15 8" />
-          </svg>
-          {saving ? "Saving..." : saved ? "Saved!" : "Save Changes"}
-        </button>
-      </div>
+    <div className="set-wrapper">
+      <Toast toast={toast} onClose={() => setToast(null)} />
 
-      {/* Notification Settings */}
-      <div className="st-card">
-        <div className="st-card-heading">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-            stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-          </svg>
-          <span>Notification Settings</span>
+      {/* ── TOP BAR ── */}
+      <div className="set-topbar">
+        <div className="set-topbar-left">
+          <h1>System Settings <span style={{ color: "#d4af37" }}>✦</span></h1>
+          <div className="set-greeting">Configure system preferences and notifications</div>
         </div>
-
-        <div className="st-row">
-          <div>
-            <p className="st-row-label">Email Alerts</p>
-            <p className="st-row-sub">Send email notifications to users</p>
-          </div>
-          <ToggleSwitch
-            checked={settings.notifications.emailAlerts}
-            onChange={() => updateNotif("emailAlerts", !settings.notifications.emailAlerts)}
-          />
-        </div>
-
-        <div className="st-row">
-          <div>
-            <p className="st-row-label">Contract Expiry Alerts</p>
-            <p className="st-row-sub">Notify families about expiring lease contracts</p>
-          </div>
-          <ToggleSwitch
-            checked={settings.notifications.contractExpiryAlerts}
-            onChange={() => updateNotif("contractExpiryAlerts", !settings.notifications.contractExpiryAlerts)}
-          />
-        </div>
-
-        <div className="st-row">
-          <div>
-            <p className="st-row-label">Payment Reminders</p>
-            <p className="st-row-sub">Send reminders for overdue installments</p>
-          </div>
-          <ToggleSwitch
-            checked={settings.notifications.paymentReminders}
-            onChange={() => updateNotif("paymentReminders", !settings.notifications.paymentReminders)}
-          />
-        </div>
-
-        <div className="st-row">
-          <div>
-            <p className="st-row-label">Tribute Submissions</p>
-            <p className="st-row-sub">Notify admin of new tribute submissions</p>
-          </div>
-          <ToggleSwitch
-            checked={settings.notifications.tributeSubmissions}
-            onChange={() => updateNotif("tributeSubmissions", !settings.notifications.tributeSubmissions)}
-          />
-        </div>
-
-        <div className="st-row">
-          <div>
-            <p className="st-row-label">System Updates</p>
-            <p className="st-row-sub">Notify admin of system updates and maintenance</p>
-          </div>
-          <ToggleSwitch
-            checked={settings.notifications.systemUpdates}
-            onChange={() => updateNotif("systemUpdates", !settings.notifications.systemUpdates)}
-          />
-        </div>
-
-        <div className="st-row st-row--input">
-          <div>
-            <p className="st-row-label">Expiry Alert Days</p>
-            <p className="st-row-sub">Days before contract expiry to send alert</p>
-          </div>
-          <input
-            type="number"
-            className="st-small-input"
-            value={settings.notifications.expiryAlertDays}
-            onChange={(e) => updateNotif("expiryAlertDays", e.target.value)}
-          />
-        </div>
-      </div>
-
-      {/* System Configuration */}
-      <div className="st-card">
-        <div className="st-card-heading">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-            stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
-            <circle cx="12" cy="12" r="10" />
-            <line x1="2" y1="12" x2="22" y2="12" />
-            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-          </svg>
-          <span>System Configuration</span>
-        </div>
-
-        <div className="st-form-grid">
-          <div className="st-field">
-            <label className="st-label">Site Name</label>
-            <input
-              type="text"
-              className="st-input"
-              value={settings.config.siteName}
-              onChange={(e) => updateConfig("siteName", e.target.value)}
-            />
-          </div>
-          <div className="st-field">
-            <label className="st-label">Contact Email</label>
-            <input
-              type="email"
-              className="st-input"
-              value={settings.config.contactEmail}
-              onChange={(e) => updateConfig("contactEmail", e.target.value)}
-            />
-          </div>
-          <div className="st-field">
-            <label className="st-label">Contact Phone</label>
-            <input
-              type="text"
-              className="st-input"
-              value={settings.config.contactPhone}
-              onChange={(e) => updateConfig("contactPhone", e.target.value)}
-            />
-          </div>
-          <div className="st-field">
-            <label className="st-label">Address</label>
-            <input
-              type="text"
-              className="st-input"
-              value={settings.config.address}
-              onChange={(e) => updateConfig("address", e.target.value)}
-            />
-          </div>
-          <div className="st-field">
-            <label className="st-label">Timezone</label>
-            <select
-              className="st-input"
-              value={settings.config.timezone}
-              onChange={(e) => updateConfig("timezone", e.target.value)}
-            >
-              <option value="Asia/Manila">Asia/Manila (GMT+8)</option>
-              <option value="Asia/Singapore">Asia/Singapore (GMT+8)</option>
-              <option value="Asia/Tokyo">Asia/Tokyo (GMT+9)</option>
-              <option value="UTC">UTC</option>
-            </select>
-          </div>
-          <div className="st-field">
-            <label className="st-label">Currency</label>
-            <select
-              className="st-input"
-              value={settings.config.currency}
-              onChange={(e) => updateConfig("currency", e.target.value)}
-            >
-              <option value="PHP">PHP (₱)</option>
-              <option value="USD">USD ($)</option>
-              <option value="EUR">EUR (€)</option>
-            </select>
+        <div className="set-topbar-right">
+          <div className="set-date-badge">
+            <i className="fas fa-calendar-alt" style={{ color: "#d4af37", marginRight: 6 }}></i>
+            {currentMonthYear}
           </div>
         </div>
       </div>
 
-      {/* Security */}
-      <div className="st-card">
-        <div className="st-card-heading">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-            stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
-            <circle cx="12" cy="12" r="10" />
-            <polyline points="12 6 12 12 16 14" />
-          </svg>
-          <span>Security</span>
+      {/* ── SETTINGS CONTAINER ── */}
+      <div className="set-container">
+        
+        {/* Header */}
+        <div className="set-header">
+          <div className="set-header-left">
+            <h2><i className="fas fa-sliders-h" style={{ color: "#d4af37", marginRight: 8 }}></i>Preferences</h2>
+          </div>
+          <div className="set-header-right">
+            <button className="set-btn-secondary" onClick={() => setShowResetModal(true)}>
+              <i className="fas fa-undo"></i> Reset Defaults
+            </button>
+            <button className="set-btn-primary" onClick={() => setShowSaveModal(true)}>
+              <i className="fas fa-save"></i> Save Changes
+            </button>
+          </div>
         </div>
 
-        <div className="st-row">
-          <div>
-            <p className="st-row-label">Auto Backup</p>
-            <p className="st-row-sub">Automatically backup system data</p>
-          </div>
-          <ToggleSwitch
-            checked={settings.security.autoBackup}
-            onChange={() => updateSecurity("autoBackup", !settings.security.autoBackup)}
-          />
-        </div>
+        {/* Settings Grid */}
+        <div className="set-grid">
 
-        <div className="st-row st-row--input">
-          <div>
-            <p className="st-row-label">Backup Frequency</p>
-            <p className="st-row-sub">How often to create system backups</p>
+          {/* Notification Settings */}
+          <div className="set-section">
+            <div className="set-section-title">
+              <i className="fas fa-bell"></i> Notification Settings
+            </div>
+
+            <div className="set-item">
+              <div className="set-info">
+                <div className="set-label">Email Alerts</div>
+                <div className="set-desc">Send email notifications to users</div>
+              </div>
+              <label className="set-toggle">
+                <input type="checkbox" checked={settings.emailAlerts} onChange={(e) => toggleSetting('Email Alerts', 'emailAlerts', e.target.checked)} />
+                <span className="set-toggle-slider"></span>
+              </label>
+            </div>
+
+            <div className="set-item">
+              <div className="set-info">
+                <div className="set-label">Contract Expiry Alerts</div>
+                <div className="set-desc">Notify families about expiring lease contracts</div>
+              </div>
+              <label className="set-toggle">
+                <input type="checkbox" checked={settings.contractExpiryAlerts} onChange={(e) => toggleSetting('Contract Expiry Alerts', 'contractExpiryAlerts', e.target.checked)} />
+                <span className="set-toggle-slider"></span>
+              </label>
+            </div>
+
+            <div className="set-item">
+              <div className="set-info">
+                <div className="set-label">Payment Reminders</div>
+                <div className="set-desc">Send reminders for overdue installments</div>
+              </div>
+              <label className="set-toggle">
+                <input type="checkbox" checked={settings.paymentReminders} onChange={(e) => toggleSetting('Payment Reminders', 'paymentReminders', e.target.checked)} />
+                <span className="set-toggle-slider"></span>
+              </label>
+            </div>
+
+            <div className="set-item">
+              <div className="set-info">
+                <div className="set-label">System Updates</div>
+                <div className="set-desc">Notify admin of system updates and maintenance</div>
+              </div>
+              <label className="set-toggle">
+                <input type="checkbox" checked={settings.systemUpdates} onChange={(e) => toggleSetting('System Updates', 'systemUpdates', e.target.checked)} />
+                <span className="set-toggle-slider"></span>
+              </label>
+            </div>
+
+            <div className="set-item">
+              <div className="set-info">
+                <div className="set-label">Expiry Alert Days</div>
+                <div className="set-desc">Days before contract expiry to send alert</div>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <input type="number" className="set-input" style={{ width: 80 }} value={settings.expiryDays} onChange={(e) => updateSetting("expiryDays", e.target.value)} />
+                <span style={{ fontSize: "0.8rem", color: "#7a9fbe" }}>days</span>
+              </div>
+            </div>
           </div>
-          <select
-            className="st-small-input"
-            value={settings.security.backupFrequency}
-            onChange={(e) => updateSecurity("backupFrequency", e.target.value)}
-          >
-            <option value="Daily">Daily</option>
-            <option value="Weekly">Weekly</option>
-            <option value="Monthly">Monthly</option>
-          </select>
+
+          {/* System Configuration */}
+          <div className="set-section">
+            <div className="set-section-title">
+              <i className="fas fa-server"></i> System Configuration
+            </div>
+
+            <div className="set-item">
+              <div className="set-info">
+                <div className="set-label">Site Name</div>
+                <div className="set-desc">Name of the memorial park</div>
+              </div>
+              <input type="text" className="set-input" value={settings.siteName} onChange={(e) => updateSetting("siteName", e.target.value)} />
+            </div>
+
+            <div className="set-item">
+              <div className="set-info">
+                <div className="set-label">Contact Phone</div>
+                <div className="set-desc">Main contact number</div>
+              </div>
+              <input type="text" className="set-input" value={settings.contactPhone} onChange={(e) => updateSetting("contactPhone", e.target.value)} />
+            </div>
+
+            <div className="set-item">
+              <div className="set-info">
+                <div className="set-label">Timezone</div>
+                <div className="set-desc">System timezone</div>
+              </div>
+              <select className="set-select" value={settings.timezone} onChange={(e) => updateSetting("timezone", e.target.value)}>
+                <option value="Asia/Manila">Asia/Manila (UTC+8)</option>
+                <option value="Asia/Tokyo">Asia/Tokyo (UTC+9)</option>
+                <option value="America/New_York">America/New_York (UTC-5)</option>
+                <option value="Europe/London">Europe/London (UTC+0)</option>
+              </select>
+            </div>
+
+            <div className="set-item">
+              <div className="set-info">
+                <div className="set-label">Currency</div>
+                <div className="set-desc">Default currency for transactions</div>
+              </div>
+              <select className="set-select" value={settings.currency} onChange={(e) => updateSetting("currency", e.target.value)}>
+                <option value="PHP">PHP (₱) - Philippine Peso</option>
+                <option value="USD">USD ($) - US Dollar</option>
+                <option value="EUR">EUR (€) - Euro</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Security */}
+          <div className="set-section">
+            <div className="set-section-title">
+              <i className="fas fa-shield-alt"></i> Security
+            </div>
+
+            <div className="set-item">
+              <div className="set-info">
+                <div className="set-label">Auto Backup</div>
+                <div className="set-desc">Automatically backup system data</div>
+              </div>
+              <label className="set-toggle">
+                <input type="checkbox" checked={settings.autoBackup} onChange={(e) => toggleSetting('Auto Backup', 'autoBackup', e.target.checked)} />
+                <span className="set-toggle-slider"></span>
+              </label>
+            </div>
+
+            <div className="set-item">
+              <div className="set-info">
+                <div className="set-label">Backup Frequency</div>
+                <div className="set-desc">How often to create backups</div>
+              </div>
+              <select className="set-select" value={settings.backupFrequency} onChange={(e) => updateSetting("backupFrequency", e.target.value)}>
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+              </select>
+            </div>
+
+            <div className="set-item">
+              <div className="set-info">
+                <div className="set-label">Two-Factor Authentication</div>
+                <div className="set-desc">Require 2FA for admin logins</div>
+              </div>
+              <label className="set-toggle">
+                <input type="checkbox" checked={settings.twoFactorAuth} onChange={(e) => toggleSetting('Two-Factor Authentication', 'twoFactorAuth', e.target.checked)} />
+                <span className="set-toggle-slider"></span>
+              </label>
+            </div>
+
+            <div className="set-item">
+              <div className="set-info">
+                <div className="set-label">Session Timeout</div>
+                <div className="set-desc">Auto-logout after inactivity</div>
+              </div>
+              <select className="set-select" value={settings.sessionTimeout} onChange={(e) => updateSetting("sessionTimeout", e.target.value)}>
+                <option value="15">15 minutes</option>
+                <option value="30">30 minutes</option>
+                <option value="60">1 hour</option>
+                <option value="120">2 hours</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Contact & Address */}
+          <div className="set-section">
+            <div className="set-section-title">
+              <i className="fas fa-address-card"></i> Contact & Location
+            </div>
+
+            <div className="set-item">
+              <div className="set-info">
+                <div className="set-label">Contact Email</div>
+                <div className="set-desc">Primary support email</div>
+              </div>
+              <input type="email" className="set-input" value={settings.contactEmail} onChange={(e) => updateSetting("contactEmail", e.target.value)} />
+            </div>
+
+            <div className="set-item">
+              <div className="set-info">
+                <div className="set-label">Address</div>
+                <div className="set-desc">Physical location of park</div>
+              </div>
+              <input type="text" className="set-input" value={settings.address} onChange={(e) => updateSetting("address", e.target.value)} />
+            </div>
+
+            <div className="set-item">
+              <div className="set-info">
+                <div className="set-label">Map Coordinates</div>
+                <div className="set-desc">Google Maps coordinates</div>
+              </div>
+              <input type="text" className="set-input" value={settings.coordinates} onChange={(e) => updateSetting("coordinates", e.target.value)} />
+            </div>
+
+            <div className="set-item">
+              <div className="set-info">
+                <div className="set-label">Operating Hours</div>
+                <div className="set-desc">Daily operating hours</div>
+              </div>
+              <input type="text" className="set-input" value={settings.operatingHours} onChange={(e) => updateSetting("operatingHours", e.target.value)} />
+            </div>
+          </div>
+
         </div>
       </div>
+
+      {/* ── FOOTER ── */}
+      <div className="set-main-footer">
+        <i className="fas fa-dove"></i>
+        Cherubim of Heaven Memorial Park · Admin Dashboard v2.0
+        <i className="fas fa-dove"></i>
+      </div>
+
+      {/* ── SAVE MODAL ── */}
+      {showSaveModal && (
+        <div className="set-modal-overlay" onClick={() => setShowSaveModal(false)}>
+          <div className="set-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="set-modal-icon" style={{ color: "#27ae60" }}>
+              <i className="fas fa-check-circle"></i>
+            </div>
+            <h3>Save Changes?</h3>
+            <p className="set-modal-subtitle">Are you sure you want to save all settings changes?</p>
+            <div className="set-modal-actions">
+              <button className="set-btn-cancel" onClick={() => setShowSaveModal(false)}>Cancel</button>
+              <button className="set-btn-confirm" onClick={confirmSave}>
+                <i className="fas fa-save"></i> Save Changes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── RESET MODAL ── */}
+      {showResetModal && (
+        <div className="set-modal-overlay" onClick={() => setShowResetModal(false)}>
+          <div className="set-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="set-modal-icon" style={{ color: "#c0392b" }}>
+              <i className="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3>Reset to Defaults?</h3>
+            <p className="set-modal-subtitle">This will restore all settings to their default values. This action cannot be undone.</p>
+            <div className="set-modal-actions">
+              <button className="set-btn-cancel" onClick={() => setShowResetModal(false)}>Cancel</button>
+              <button className="set-btn-danger" onClick={confirmReset}>
+                <i className="fas fa-undo"></i> Reset Defaults
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

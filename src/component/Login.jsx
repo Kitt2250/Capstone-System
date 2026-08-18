@@ -3,6 +3,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../firebase.config";
 import { logAudit } from "../utils/logAudit";
+import heavenBg from "../assets/heaven_background.jpg";
 import "./login.css";
 
 function Login({ onForgotPassword, onLogin }) {
@@ -61,88 +62,101 @@ function Login({ onForgotPassword, onLogin }) {
   };
 
   return (
-    <div className="login-wrapper">
-      <div className="login-body">
-        <div className="login-center">
+    <div className="login-wrapper" style={{ backgroundImage: `url(${heavenBg})` }}>
+      <div className="login-overlay" />
 
-          <div className="login-brand">
-            <div className="login-logo">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                fill="none" stroke="white" strokeWidth="1.8"
-                strokeLinecap="round" strokeLinejoin="round" width="26" height="26">
-                <circle cx="12" cy="8" r="3" />
-                <path d="M6 20v-2a6 6 0 0 1 12 0v2" />
-              </svg>
-            </div>
-            <h1 className="login-title">Cherubim of Heaven</h1>
-            <p className="login-subtitle">Memorial Services Management System</p>
+      <div className="login-center">
+        {/* ── Brand ── */}
+        <div className="login-brand">
+          <div className="login-logo">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+              fill="none" stroke="white" strokeWidth="1.8"
+              strokeLinecap="round" strokeLinejoin="round" width="26" height="26">
+              <circle cx="12" cy="8" r="3" />
+              <path d="M6 20v-2a6 6 0 0 1 12 0v2" />
+            </svg>
           </div>
+          <h1 className="login-title">Cherubim of Heaven</h1>
+          <p className="login-subtitle">Memorial Services Management System</p>
+        </div>
 
-          <div className="login-card">
-            <h2 className="login-card-title">Sign in to your account</h2>
+        {/* ── Card ── */}
+        <div className="login-card">
+          <h2 className="login-card-title">Sign in to your account</h2>
 
-            <form onSubmit={handleSubmit} className="login-form">
-              <div className="login-field">
-                <label htmlFor="login-email" className="login-label">Email</label>
+          <form onSubmit={handleSubmit} className="login-form">
+            {/* Email */}
+            <div className="login-field">
+              <label htmlFor="login-email" className="login-label">Email</label>
+              <input
+                id="login-email"
+                type="email"
+                className="login-input"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => { setEmail(e.target.value); setError(""); }}
+                required
+              />
+            </div>
+
+            {/* Password */}
+            <div className="login-field">
+              <label htmlFor="login-password" className="login-label">Password</label>
+              <div className="login-password-wrap">
                 <input
-                  id="login-email"
-                  type="email"
-                  className="login-input"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => { setEmail(e.target.value); setError(""); }}
+                  id="login-password"
+                  type={showPassword ? "text" : "password"}
+                  className="login-input login-input--password"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => { setPassword(e.target.value); setError(""); }}
                   required
                 />
-              </div>
-
-              <div className="login-field">
-                <label htmlFor="login-password" className="login-label">Password</label>
-                <div className="login-password-wrap">
-                  <input
-                    id="login-password"
-                    type={showPassword ? "text" : "password"}
-                    className="login-input login-input--password"
-                    placeholder="Enter your password"
-                    value={password}
-                    onChange={(e) => { setPassword(e.target.value); setError(""); }}
-                    required
-                  />
-                  <button type="button" className="login-eye-btn"
-                    onClick={() => setShowPassword((v) => !v)}>
-                    {showPassword ? (
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" strokeWidth="2"
-                        strokeLinecap="round" strokeLinejoin="round" width="17" height="17">
-                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
-                        <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
-                        <line x1="1" y1="1" x2="23" y2="23" />
-                      </svg>
-                    ) : (
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" strokeWidth="2"
-                        strokeLinecap="round" strokeLinejoin="round" width="17" height="17">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                        <circle cx="12" cy="12" r="3" />
-                      </svg>
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              {error && <p className="login-error">{error}</p>}
-
-              <div className="login-forgot-row">
-                <button type="button" className="login-forgot-link" onClick={onForgotPassword}>
-                  Forgot Password?
+                <button
+                  type="button"
+                  className="login-eye-btn"
+                  onClick={() => setShowPassword((v) => !v)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                      fill="none" stroke="currentColor" strokeWidth="2"
+                      strokeLinecap="round" strokeLinejoin="round" width="17" height="17">
+                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
+                      <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
+                      <line x1="1" y1="1" x2="23" y2="23" />
+                    </svg>
+                  ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                      fill="none" stroke="currentColor" strokeWidth="2"
+                      strokeLinecap="round" strokeLinejoin="round" width="17" height="17">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                  )}
                 </button>
               </div>
+            </div>
 
-              <button type="submit" className="login-submit-btn" disabled={loading}>
-                {loading ? "Signing in..." : "Sign In"}
+            {/* Error */}
+            {error && <p className="login-error">{error}</p>}
+
+            {/* Forgot Password */}
+            <div className="login-forgot-row">
+              <button
+                type="button"
+                className="login-forgot-link"
+                onClick={onForgotPassword}
+              >
+                Forgot Password?
               </button>
-            </form>
-          </div>
+            </div>
 
+            {/* Submit */}
+            <button type="submit" className="login-submit-btn" disabled={loading}>
+              {loading ? "Signing in..." : "Sign In"}
+            </button>
+          </form>
         </div>
       </div>
     </div>
