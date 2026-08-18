@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { signInWithEmailAndPassword, setPersistence, inMemoryPersistence } from "firebase/auth";
+import { signInWithEmailAndPassword, setPersistence, browserSessionPersistence } from "firebase/auth";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../firebase.config";
 import { logAudit } from "../utils/logAudit";
@@ -19,8 +19,8 @@ function Login({ onForgotPassword, onLogin }) {
     setLoading(true);
 
     try {
-      // Force in-memory persistence (will definitely clear if the page is closed/refreshed)
-      await setPersistence(auth, inMemoryPersistence);
+      // Force session persistence (survives refreshes, but clears when tab/browser is closed)
+      await setPersistence(auth, browserSessionPersistence);
       const credential = await signInWithEmailAndPassword(auth, email, password);
       const uid = credential.user.uid;
 
