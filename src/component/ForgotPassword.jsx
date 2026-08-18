@@ -32,7 +32,11 @@ function ForgotPassword({ onBack }) {
 
     setLoading(true);
     try {
-      await sendPasswordResetEmail(auth, email);
+      const actionCodeSettings = {
+        url: window.location.origin + "/login",
+        handleCodeInApp: false,
+      };
+      await sendPasswordResetEmail(auth, email, actionCodeSettings);
       setSubmitted(true);
     } catch (err) {
       console.error(err);
