@@ -13,6 +13,13 @@ function ForgotPassword({ onBack }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Please enter a valid, correctly formatted email address.");
+      return;
+    }
+
     setLoading(true);
     try {
       await sendPasswordResetEmail(auth, email);
