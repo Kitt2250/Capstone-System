@@ -136,6 +136,13 @@ function UserManagement() {
     if (!form.name.trim() || !form.email.trim()) {
       setFormError("Please fill in all required fields."); return;
     }
+    if (form.password) {
+      const pwd = form.password;
+      if (pwd.length < 8 || !/[A-Z]/.test(pwd) || !/[0-9]/.test(pwd) || !/[!@#$%^&*(),.?":{}|<>]/.test(pwd)) {
+        setFormError("Invalid password. Must have 8+ characters, 1 uppercase, 1 number, and 1 special char.");
+        return;
+      }
+    }
     setSaving(true); setFormError("");
     try {
       await updateDoc(doc(db, "users", selectedUser.id), {
@@ -155,7 +162,13 @@ function UserManagement() {
   // ── create user ────────────────────────────────────────────────────────────
   const handleSaveCreate = async () => {
     if (!form.email || !form.password) { setFormError("Email and password are required."); return; }
-    if (form.password.length < 6)      { setFormError("Password must be at least 6 characters."); return; }
+    
+    const pwd = form.password;
+    if (pwd.length < 8 || !/[A-Z]/.test(pwd) || !/[0-9]/.test(pwd) || !/[!@#$%^&*(),.?":{}|<>]/.test(pwd)) {
+      setFormError("Invalid password. Must have 8+ characters, 1 uppercase, 1 number, and 1 special char.");
+      return;
+    }
+    
     setSaving(true); setFormError("");
     const secondaryApp  = initializeApp(firebaseConfig, `Secondary-${Date.now()}`);
     const secondaryAuth = getAuth(secondaryApp);
@@ -507,7 +520,6 @@ function UserManagement() {
                 <select value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })}>
                   <option value="Admin">Admin</option>
                   <option value="Staff">Staff</option>
-                  <option value="Family">Family</option>
                 </select>
               </div>
               <div className="um-form-group">

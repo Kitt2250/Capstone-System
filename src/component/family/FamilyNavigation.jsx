@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { NavLink, Routes, Route, Navigate } from "react-router-dom";
+import { NavLink, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase.config";
 import "./family-navigation.css";
@@ -9,6 +9,16 @@ import MyPayments from "./MyPayments";
 import GraveLocation from "./GraveLocation";
 import Notifications from "./Notifications";
 import MyAccount from "./MyAccount";
+
+// ── Fallback Route Helper ───────────────────────────────────────────────────
+function FallbackRoute({ to }) {
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (window.history.length > 2) navigate(-1);
+    else navigate(to, { replace: true });
+  }, [navigate, to]);
+  return null;
+}
 
 // ── Section-grouped menu ──────────────────────────────────────────────────────
 const mainItems = [
@@ -217,7 +227,7 @@ function FamilyNavigation({ onSignOut }) {
           <Route path="grave"         element={<GraveLocation />} />
           <Route path="notifications" element={<Notifications />} />
           <Route path="account"       element={<MyAccount />} />
-          <Route path="*"             element={<Navigate to="burial" replace />} />
+          <Route path="*"             element={<FallbackRoute to="burial" />} />
         </Routes>
       </main>
     </div>

@@ -235,6 +235,36 @@ function ExportModal({ tab, period, onClose }) {
 
   const handleExport = () => {
     onClose();
+    if (format === "pdf") {
+      setTimeout(() => window.print(), 500);
+      return;
+    }
+    
+    if (format === "csv") {
+      let csvContent = "data:text/csv;charset=utf-8,";
+      if (tab === "financial") {
+        const data = period === "weekly" ? WEEKLY_DATA : MONTHLY_DATA;
+        const headers = ["Label", "Lot Sales", "Wake Space", "Expenses"];
+        const rows = data.chart.map(d => [d.label, d.lotSales, d.wakeSpace, d.expenses]);
+        csvContent += [headers.join(","), ...rows.map(e => e.join(","))].join("\\n");
+      } else if (tab === "burial") {
+        const headers = ["Month", "Ground", "Apartment", "Mausoleum", "Bone Vault"];
+        const rows = BURIAL_CHART.map(d => [d.label, d.ground, d.apartment, d.mausoleum, d.boneVault]);
+        csvContent += [headers.join(","), ...rows.map(e => e.join(","))].join("\\n");
+      } else if (tab === "reservation") {
+        const headers = ["Type", "Total Lots", "Reserved", "Available", "Occupancy %"];
+        const rows = RESERVATION_DATA.map(d => [d.type, d.total, d.reserved, d.available, d.occupancy]);
+        csvContent += [headers.join(","), ...rows.map(e => e.join(","))].join("\\n");
+      }
+      
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `report_${tab}_${new Date().toISOString().slice(0, 10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   };
 
   return (

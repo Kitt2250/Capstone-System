@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { NavLink, Routes, Route, Navigate } from "react-router-dom";
+import { NavLink, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase.config";
 import "./admin-navigation.css";
@@ -10,6 +10,16 @@ import MapAvailability from "./MapAvailability";
 import Settings from "./Settings";
 import BackupRestore from "./BackupRestore";
 import Reports from "./Reports";
+
+// ── Fallback Route Helper ───────────────────────────────────────────────────
+function FallbackRoute({ to }) {
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (window.history.length > 2) navigate(-1);
+    else navigate(to, { replace: true });
+  }, [navigate, to]);
+  return null;
+}
 
 // ── Section-grouped menu ──────────────────────────────────────────────────────
 const mainItems = [
@@ -243,7 +253,7 @@ function AdminNavigation({ onSignOut }) {
           <Route path="reports"   element={<Reports />} />
           <Route path="settings"  element={<Settings />} />
           <Route path="backup"    element={<BackupRestore />} />
-          <Route path="*"         element={<Navigate to="dashboard" replace />} />
+          <Route path="*"         element={<FallbackRoute to="dashboard" />} />
         </Routes>
       </main>
     </div>

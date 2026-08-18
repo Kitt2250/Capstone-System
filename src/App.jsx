@@ -16,6 +16,15 @@ function roleHome(role) {
   return "/login";
 }
 
+function FallbackRoute({ to }) {
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (window.history.length > 2) navigate(-1);
+    else navigate(to, { replace: true });
+  }, [navigate, to]);
+  return null;
+}
+
 function App() {
   const navigate = useNavigate();
   const [authState, setAuthState] = useState({ loading: true, user: null, role: null });
@@ -111,7 +120,7 @@ function App() {
         element={<Navigate to={user ? roleHome(role) : "/login"} replace />}
       />
 
-      <Route path="*" element={<Navigate to="/login" replace />} />
+      <Route path="*" element={<FallbackRoute to="/login" />} />
     </Routes>
   );
 }

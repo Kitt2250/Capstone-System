@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { NavLink, Routes, Route, Navigate } from "react-router-dom";
+import { NavLink, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase.config";
 import "./staff-navigation.css";
@@ -10,6 +10,16 @@ import InstallmentPayments from "./InstallmentPayments";
 import WakeScheduling from "./WakeScheduling";
 import Reports from "./Reports";
 import MyAccount from "./MyAccount";
+
+// ── Fallback Route Helper ───────────────────────────────────────────────────
+function FallbackRoute({ to }) {
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (window.history.length > 2) navigate(-1);
+    else navigate(to, { replace: true });
+  }, [navigate, to]);
+  return null;
+}
 import SNotifications from "./Notifications";
 import POSTransactions from "./POSTransactions";
 
@@ -227,7 +237,7 @@ function StaffNavigation({ onSignOut }) {
           <Route path="notifications" element={<SNotifications />} />
           <Route path="reports" element={<Reports />} />
           <Route path="account" element={<MyAccount />} />  
-          <Route path="*" element={<Navigate to="dashboard" replace />} />
+          <Route path="*"             element={<FallbackRoute to="dashboard" />} />
         </Routes>
       </main>
     </div>

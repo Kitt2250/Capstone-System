@@ -144,15 +144,44 @@ function AuditLogs() {
       showToast("⚠️ No logs to export.", "warning");
       return;
     }
-    if (exportFormat === "print") {
-      showToast("🖨️ Opening print dialog...", "info");
+    if (exportFormat === "print" || exportFormat === "pdf") {
+      showToast("🖨️ Opening print dialog... Please 'Save as PDF' if needed.", "info");
       setTimeout(() => window.print(), 500);
       return;
     }
+    
     showToast(`📥 Exporting ${filteredLogs.length} logs as ${exportFormat.toUpperCase()}...`, "info");
+    
     setTimeout(() => {
+      if (exportFormat === "csv") {
+        const headers = ["Timestamp", "User", "Role", "Action", "Target", "IP Address"];
+        const rows = filteredLogs.map(log => [
+          `"${log.timestamp || ""}"`,
+          `"${log.user || ""}"`,
+          `"${log.role || "System"}"`,
+          `"${log.action || ""}"`,
+          `"${log.target || ""}"`,
+          `"${log.ip || "127.0.0.1"}"`
+        ]);
+        const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map(e => e.join(","))].join("\\n");
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `audit_logs_${new Date().toISOString().slice(0, 10)}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else if (exportFormat === "json") {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(filteredLogs, null, 2));
+        const link = document.createElement("a");
+        link.setAttribute("href", dataStr);
+        link.setAttribute("download", `audit_logs_${new Date().toISOString().slice(0, 10)}.json`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
       showToast(`✅ Successfully exported!`, "success");
-    }, 1500);
+    }, 500);
   };
 
   return (
