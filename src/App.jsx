@@ -5,6 +5,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "./firebase.config";
 import Login from "./component/Login";
 import ForgotPassword from "./component/ForgotPassword";
+import ResetPassword from "./component/ResetPassword";
 import FamilyNavigation from "./component/family/FamilyNavigation";
 import AdminNavigation from "./component/admin/AdminNavigation";
 import StaffNavigation from "./component/staff/StaffNavigation";
@@ -86,6 +87,11 @@ function App() {
       <Route
         path="/forgot-password"
         element={<ForgotPassword onBack={() => navigate("/login")} />}
+      />
+
+      <Route
+        path="/reset-password"
+        element={<ResetPassword />}
       />
 
       <Route
