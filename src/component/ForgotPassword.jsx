@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../firebase.config";
 import heavenBg from "../assets/heaven_background.jpg";
@@ -9,6 +9,16 @@ function ForgotPassword({ onBack }) {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Automatically go back to login after 6 seconds of success
+  useEffect(() => {
+    if (submitted) {
+      const timer = setTimeout(() => {
+        onBack();
+      }, 6000);
+      return () => clearTimeout(timer);
+    }
+  }, [submitted, onBack]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,7 +32,11 @@ function ForgotPassword({ onBack }) {
 
     setLoading(true);
     try {
-      await sendPasswordResetEmail(auth, email);
+      const actionCodeSettings = {
+        url: window.location.origin + "/login",
+        handleCodeInApp: false,
+      };
+      await sendPasswordResetEmail(auth, email, actionCodeSettings);
       setSubmitted(true);
     } catch (err) {
       console.error(err);
