@@ -1,130 +1,296 @@
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body, #root { height: 100%; }
-body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-font-smoothing: antialiased; }
+*, *::before, *::after { box-sizing: border-box; }
 
-.sn-wrapper {
+/* =====================================================
+   ADMIN NAVIGATION  —  sn-navigation.css
+   Collapsible sidebar (220px ↔ 64px)
+   ===================================================== */
+
+/* ── Layout ──────────────────────────────────────── */
+.sn-layout {
   display: flex;
   height: 100vh;
   overflow: hidden;
-  background: #f9fafb;
+  background: #e8edf4;
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
 }
 
-/* ── Sidebar ── */
+/* ── Sidebar ──────────────────────────────────────── */
 .sn-sidebar {
   width: 220px;
   min-width: 220px;
-  background: #ffffff;
-  border-right: 1px solid #e5e7eb;
+  height: 100vh;
+  background: linear-gradient(180deg, #1565c0 0%, #1976d2 60%, #1e88e5 100%);
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  overflow: hidden;
+  flex-shrink: 0;
+  transition: width 280ms cubic-bezier(0.4, 0, 0.2, 1),
+              min-width 280ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.sn-sidebar.collapsed {
+  width: 64px;
+  min-width: 64px;
+}
+
+/* ── Brand row ───────────────────────────────────── */
 .sn-brand {
   display: flex;
+  flex-direction: row;
   align-items: center;
   gap: 10px;
-  padding: 18px 16px;
-  border-bottom: 1px solid #f3f4f6;
+  padding: 14px 8px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  flex-shrink: 0;
+  overflow: hidden;
+  min-height: 58px;
+  transition: padding 280ms ease, min-height 280ms ease;
 }
 
-.sn-brand-logo {
+/* When collapsed: stack icon above toggle button, both centered */
+.sn-sidebar.collapsed .sn-brand {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 0;
+  min-height: 0;
+}
+
+.sn-brand-icon {
   width: 36px;
   height: 36px;
-  background: #111827;
-  border-radius: 8px;
+  min-width: 36px;
+  background: #f5c842;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.sn-brand-name {
-  font-size: 12.5px;
-  font-weight: 600;
-  color: #111827;
+.sn-brand-icon svg {
+  stroke: #1a3b5d !important;
+}
+
+/* Brand text — fades out when collapsed */
+.sn-brand-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  transition: opacity 200ms ease, max-width 280ms ease;
+  white-space: nowrap;
+}
+
+.sn-sidebar.collapsed .sn-brand-text {
+  opacity: 0;
+  max-width: 0;
+  pointer-events: none;
+}
+
+.sn-brand-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffffff;
   line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.sn-brand-sub {
-  font-size: 11px;
-  color: #9ca3af;
+.sn-brand-subtitle {
+  font-size: 10.5px;
+  color: rgba(255, 255, 255, 0.65);
+  margin-top: 1px;
+  white-space: nowrap;
 }
 
-/* ── Nav ── */
+/* ── Toggle Button ───────────────────────────────── */
+.sn-toggle-btn {
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.2s, color 0.2s, transform 0.15s, opacity 200ms ease;
+}
+
+.sn-toggle-btn:hover {
+  background: rgba(245, 200, 66, 0.28);
+  color: #f5c842;
+}
+
+.sn-toggle-btn:active { transform: scale(0.88); }
+
+/* Button always visible in both states */
+.sn-sidebar.collapsed .sn-toggle-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ── Navigation ──────────────────────────────────── */
 .sn-nav {
   flex: 1;
-  padding: 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* Same 8px horizontal padding as brand so all icons share the same center */
+  padding: 12px 8px 8px;
   display: flex;
   flex-direction: column;
   gap: 2px;
-  overflow-y: auto;
+  scrollbar-width: none;
+}
+.sn-nav::-webkit-scrollbar { display: none; }
+
+/* Section labels */
+.sn-nav-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: rgba(255, 255, 255, 0.5);
+  padding: 6px 4px 4px;
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: opacity 180ms ease, height 280ms ease, padding 280ms ease, margin 280ms ease;
 }
 
-.sn-nav-btn {
+.sn-sidebar.collapsed .sn-nav-section-label {
+  opacity: 0;
+  height: 0;
+  padding: 0;
+  margin: 0;
+  pointer-events: none;
+}
+
+/* Menu items */
+.sn-menu-item {
   display: flex;
   align-items: center;
-  gap: 9px;
-  padding: 9px 12px;
-  border: none;
+  gap: 10px;
+  padding: 9px 6px;
   border-radius: 8px;
-  background: none;
-  cursor: pointer;
   font-size: 13px;
-  color: #6b7280;
-  text-align: left;
-  width: 100%;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.78);
   text-decoration: none;
+  cursor: pointer;
   transition: background 0.15s, color 0.15s;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
-.sn-nav-btn:hover { background: #f3f4f6; color: #111827; }
-.sn-nav-btn--active { background: #111827; color: #ffffff; }
-.sn-nav-btn--active:hover { background: #1f2937; }
-
-/* ── Footer ── */
-.sn-footer {
-  padding: 12px 14px;
-  border-top: 1px solid #f3f4f6;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.sn-menu-item:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
 }
 
-.sn-user-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.sn-menu-item.active {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  font-weight: 600;
 }
 
-.sn-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: #e5e7eb;
+/* Icon wrapper — fixed width, always centered */
+.sn-menu-icon {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 36px;   /* matches brand-icon width exactly */
+}
+
+/* Label fades out when collapsed */
+.sn-menu-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  transition: opacity 180ms ease, max-width 280ms ease;
+}
+
+.sn-sidebar.collapsed .sn-menu-label {
+  opacity: 0;
+  max-width: 0;
+  flex: 0;
+  pointer-events: none;
+}
+
+/* Collapsed menu items — remove extra padding, keep icon centered */
+.sn-sidebar.collapsed .sn-menu-item {
+  justify-content: center;
+  padding: 9px 0;
+  gap: 0;
+}
+
+/* ── Footer ──────────────────────────────────────── */
+.sn-sidebar-footer {
+  flex-shrink: 0;
+  padding: 10px 8px 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.sn-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.sn-sidebar.collapsed .sn-user {
+  justify-content: center;
+}
+
+.sn-user-avatar {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 50%;
+  background: #f5c842;
+  color: #1a3b5d;
   font-size: 11px;
-  font-weight: 600;
-  color: #374151;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
 }
 
-.sn-user-info { flex: 1; min-width: 0; }
+.sn-user-info {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  transition: opacity 180ms ease, max-width 280ms ease;
+}
+
+.sn-sidebar.collapsed .sn-user-info {
+  opacity: 0;
+  max-width: 0;
+  flex: 0;
+  pointer-events: none;
+}
 
 .sn-user-name {
   font-size: 12px;
   font-weight: 600;
-  color: #111827;
+  color: #ffffff;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .sn-user-email {
-  font-size: 11px;
-  color: #9ca3af;
+  font-size: 10.5px;
+  color: rgba(255, 255, 255, 0.55);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -133,50 +299,82 @@ body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; -
 .sn-signout-btn {
   display: flex;
   align-items: center;
-  gap: 6px;
-  background: none;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
+  border-radius: 8px;
   border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
   cursor: pointer;
-  color: #9ca3af;
-  font-size: 12px;
-  padding: 6px 8px;
-  border-radius: 6px;
-  transition: color 0.15s, background 0.15s;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s, opacity 180ms ease, max-width 280ms ease;
 }
 
-.sn-signout-btn:hover { color: #dc2626; background: #fef2f2; }
+.sn-signout-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+}
 
-/* ── Content ── */
+.sn-sidebar.collapsed .sn-signout-btn {
+  opacity: 0;
+  max-width: 0;
+  min-width: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* ── Main Content ────────────────────────────────── */
 .sn-content {
   flex: 1;
+  height: 100vh;
   overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  background: #f9fafb;
+  background: #e8edf4;
+  padding: 24px 28px;
 }
 
-/* ── Placeholder ── */
-.sn-placeholder {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
+/* ── Shared page header ──────────────────────────── */
+.sn-page-header h1 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 4px 0;
+}
+
+.sn-page-header p {
+  font-size: 13px;
+  color: #9ca3af;
+  margin: 0 0 24px 0;
+}
+
+.sn-page-body {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
   padding: 40px;
-  text-align: center;
-}
-
-.sn-placeholder-icon {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: #f3f4f6;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 8px;
 }
 
-.sn-placeholder-title { font-size: 18px; font-weight: 600; color: #111827; }
-.sn-placeholder-sub { font-size: 13px; color: #9ca3af; }
+.sn-coming-soon {
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+/* ── Responsive ──────────────────────────────────── */
+@media (max-width: 768px) {
+  .sn-sidebar {
+    width: 64px;
+    min-width: 64px;
+  }
+  .sn-sidebar .sn-brand-text,
+  .sn-sidebar .sn-nav-section-label,
+  .sn-sidebar .sn-menu-label,
+  .sn-sidebar .sn-user-info,
+  .sn-sidebar .sn-signout-btn { display: none; }
+  .sn-sidebar .sn-menu-item { justify-content: center; padding: 9px 0; }
+  .sn-sidebar .sn-user { justify-content: center; }
+  .sn-content { padding: 16px; }
+}

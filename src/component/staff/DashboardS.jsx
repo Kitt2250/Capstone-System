@@ -1,194 +1,315 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./dashboards.css";
 
 const SCHEDULE_DATA = [
-  { time: '09:00 AM', event: 'Burial - Section A, Block 3, Lot 15', type: 'burial' },
-  { time: '10:30 AM', event: 'Installment payment - Single Niche Lot B-042', type: 'payment' },
-  { time: '01:00 PM', event: 'Burial - Section B, Block 1, Lot 8', type: 'burial' },
-  { time: '02:30 PM', event: 'Wake setup - Chapel A (Columbarium)', type: 'wake' },
-  { time: '03:00 PM', event: 'New lot registration - Apartment Type', type: 'registration' },
-  { time: '04:00 PM', event: 'Burial - Section A, Block 5, Lot 22', type: 'burial' },
+  { id: 1, time: '09:00 AM', event: 'Burial - Section A, Block 3, Lot 15', type: 'burial' },
+  { id: 2, time: '10:30 AM', event: 'Installment payment - Single Niche Lot B-042', type: 'payment' },
+  { id: 3, time: '01:00 PM', event: 'Burial - Section B, Block 1, Lot 8', type: 'burial' },
+  { id: 4, time: '02:30 PM', event: 'Wake setup - Chapel A', type: 'wake' },
+  { id: 5, time: '03:00 PM', event: 'New lot registration', type: 'registration' },
+  { id: 6, time: '04:00 PM', event: 'Burial - Section A, Block 5, Lot 22', type: 'burial' },
 ];
 
 const TRANSACTIONS = [
-  { name: 'Rosa Mendoza', or: 'OR-2026-0342', desc: 'Installation - Single Niche', icon: 'gold' },
-  { name: 'Pedro Garcia', or: 'OR-2026-0341', desc: 'Full Payment - Columbarium', icon: 'blue' },
-  { name: 'Elena Santos', or: 'OR-2026-0340', desc: 'Installment - Bonevault', icon: 'green' },
+  { id: 1, name: 'Rosa Mendoza', or: 'OR-2026-0342', desc: 'Installation - Single Niche', icon: 'gold' },
+  { id: 2, name: 'Pedro Garcia', or: 'OR-2026-0341', desc: 'Full Payment - Columbarium', icon: 'blue' },
+  { id: 3, name: 'Elena Santos', or: 'OR-2026-0340', desc: 'Installment - Bonevault', icon: 'green' },
 ];
 
 const PAYMENTS = [
-  { name: 'Rosa Mendoza', amount: '₱6,250', or: 'OR-2026-0342', desc: 'Single Niche - Monthly', time: '2 hours ago', avatar: 'RM', color: 'gold', installment: '6 of 12 payments' },
-  { name: 'Pedro Garcia', amount: '₱3,167', or: 'OR-2026-0341', desc: 'Columbarium - Monthly', time: '4 hours ago', avatar: 'PG', color: 'blue', installment: '3 of 12 payments' },
-  { name: 'Elena Santos', amount: '₱2,500', or: 'OR-2026-0340', desc: 'Bonevault - Monthly', time: 'Yesterday', avatar: 'ES', color: 'green', installment: '4 of 12 payments' },
+  { id: 1, name: 'Rosa Mendoza', amount: '₱6,250', or: 'OR-2026-0342', desc: 'Single Niche - Monthly', time: '2 hours ago', avatar: 'RM', color: 'gold', installment: '6 of 12 payments' },
+  { id: 2, name: 'Pedro Garcia', amount: '₱3,167', or: 'OR-2026-0341', desc: 'Columbarium - Monthly', time: '4 hours ago', avatar: 'PG', color: 'blue', installment: '3 of 12 payments' },
+  { id: 3, name: 'Elena Santos', amount: '₱2,500', or: 'OR-2026-0340', desc: 'Bonevault - Monthly', time: 'Yesterday', avatar: 'ES', color: 'green', installment: '4 of 12 payments' },
 ];
+
+// ── System alert notifications ───────────────────────────────────────────────
+const SYSTEM_ALERTS_INIT = [
+  {
+    id: 1,
+    title: "Payment Due Alert",
+    body: "Elena Reyes installment OR-2026-0881 (₱3,250) is due on 2026-09-05.",
+    time: "5:00:00 PM",
+    read: false,
+  },
+  {
+    id: 2,
+    title: "Wake space Chapel B reserved",
+    body: "Reservation confirmed for tomorrow 09:00 AM.",
+    time: "7:45:00 PM",
+    read: false,
+  },
+  {
+    id: 3,
+    title: "Contract Expiration",
+    body: "3 contracts expiring this week.",
+    time: "4:00:00 PM",
+    read: false,
+  },
+];
+
+// ── Toast component ──────────────────────────────────────────────────────────
+function Toast({ toasts, removeToast }) {
+  return (
+    <div className="ds-toast-container">
+      {toasts.map(t => (
+        <div key={t.id} className={`ds-toast ds-toast-${t.type}`}>
+          <span>{t.message}</span>
+          <button onClick={() => removeToast(t.id)} className="ds-toast-close">×</button>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ── Notification Bell Dropdown ───────────────────────────────────────────────
+function NotificationDropdown({ alerts, onMarkRead, onMarkAllRead, onClose }) {
+  const unreadCount = alerts.filter(a => !a.read).length;
+
+  return (
+    <div className="ds-notif-dropdown">
+      <div className="ds-notif-dropdown-header">
+        <span className="ds-notif-dropdown-title">System Alerts ({alerts.length})</span>
+        <span className="ds-notif-dropdown-unread">{unreadCount} unread</span>
+      </div>
+
+      <div className="ds-notif-dropdown-list">
+        {alerts.map(alert => (
+          <div
+            key={alert.id}
+            className={`ds-notif-dropdown-item${alert.read ? " read" : ""}`}
+            onClick={() => onMarkRead(alert.id)}
+          >
+            {!alert.read && <span className="ds-notif-unread-dot" />}
+            <div className="ds-notif-dropdown-item-content">
+              <div className="ds-notif-dropdown-item-title">{alert.title}</div>
+              <div className="ds-notif-dropdown-item-body">{alert.body}</div>
+              <div className="ds-notif-dropdown-item-time">{alert.time}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {unreadCount > 0 && (
+        <div className="ds-notif-dropdown-footer">
+          <button className="ds-notif-mark-all-btn" onClick={onMarkAllRead}>
+            <i className="fas fa-check-double"></i> Mark all as read
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
 
 function DashboardS() {
   const [filter, setFilter] = useState('all');
+  const [toasts, setToasts] = useState([]);
+  
+  // Bell dropdown state
+  const [bellOpen, setBellOpen]           = useState(false);
+  const [systemAlerts, setSystemAlerts]   = useState(SYSTEM_ALERTS_INIT);
+  const bellRef                           = useRef(null);
+  const toastIdRef                        = useRef(0);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (bellRef.current && !bellRef.current.contains(e.target)) {
+        setBellOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    if (toasts.length === 0) return;
+    const t = setTimeout(() => setToasts(prev => prev.slice(1)), 3500);
+    return () => clearTimeout(t);
+  }, [toasts]);
+
+  const addToast = (message, type = "success") => {
+    const id = ++toastIdRef.current;
+    setToasts(prev => [...prev, { id, message, type }]);
+  };
+
+  const removeToast = (id) => setToasts(prev => prev.filter(t => t.id !== id));
+
+  const handleMarkAlertRead = (id) => {
+    setSystemAlerts(prev => prev.map(a => a.id === id ? { ...a, read: true } : a));
+  };
+
+  const handleMarkAllAlertsRead = () => {
+    setSystemAlerts(prev => prev.map(a => ({ ...a, read: true })));
+    addToast("All alerts marked as read.", "info");
+  };
 
   const filteredSchedule = SCHEDULE_DATA.filter(item => filter === 'all' || item.type === filter);
+  const unreadAlerts = systemAlerts.filter(a => !a.read).length;
+
+  const now = new Date();
+  const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const monthYear = `${months[now.getMonth()]} ${now.getFullYear()}`;
 
   return (
-    <div className="ds-page">
-      {/* TOP BAR */}
+    <div className="ds-wrapper">
+      <Toast toasts={toasts} removeToast={removeToast} />
+
+      {/* ── Top Bar ── */}
       <div className="ds-topbar">
         <div className="ds-topbar-left">
-          <h1>Operational Overview <span>✦</span></h1>
-          <div className="ds-greeting">Welcome back, <strong>Staff</strong> • Here's your daily overview</div>
+          <h1 className="ds-title">Operational Overview <span className="ds-title-star">✦</span></h1>
+          <p className="ds-greeting">Welcome back, Staff</p>
         </div>
         <div className="ds-topbar-right">
           <div className="ds-date-badge">
-            <i className="fas fa-calendar-alt"></i> August 2026
+            <i className="fas fa-calendar-alt"></i> {monthYear}
           </div>
-          <button className="ds-notification-btn" title="Notifications">
-            <i className="fas fa-bell"></i>
-            <span className="ds-dot"></span>
-          </button>
+
+          {/* Bell with dropdown */}
+          <div className="ds-bell-wrapper" ref={bellRef}>
+            <button
+              className="ds-bell-btn"
+              onClick={() => setBellOpen(o => !o)}
+              title="Notifications"
+            >
+              <i className="fas fa-bell"></i>
+              {unreadAlerts > 0 && <span className="ds-bell-dot" />}
+            </button>
+
+            {bellOpen && (
+              <NotificationDropdown
+                alerts={systemAlerts}
+                onMarkRead={handleMarkAlertRead}
+                onMarkAllRead={handleMarkAllAlertsRead}
+                onClose={() => setBellOpen(false)}
+              />
+            )}
+          </div>
         </div>
       </div>
 
-      {/* ===== STATS CARDS ===== */}
+      {/* ── Stats Grid ── */}
       <div className="ds-stats-grid">
         <div className="ds-stat-card">
-          <div className="ds-stat-icon ds-gold"><i className="fas fa-cross"></i></div>
           <div className="ds-stat-label">Burials Today</div>
           <div className="ds-stat-value">3</div>
-          <div className="ds-stat-change"><span>↑ 2</span> vs yesterday</div>
+          <div className="ds-stat-change up">
+            <i className="fas fa-arrow-up"></i> +2 vs yesterday
+          </div>
+          <div className="ds-stat-sub">
+            <i className="fas fa-info-circle"></i> 2 scheduled afternoon
+          </div>
         </div>
         <div className="ds-stat-card">
-          <div className="ds-stat-icon ds-blue"><i className="fas fa-tshirt"></i></div>
+          <i className="fas fa-tshirt ds-stat-icon"></i>
           <div className="ds-stat-label">Available Slots</div>
-          <div className="ds-stat-value">223</div>
-          <div className="ds-stat-change"><span className="ds-down">↓ 8</span> this week</div>
+          <div className="ds-stat-value">240</div>
+          <div className="ds-stat-change down">
+            <i className="fas fa-arrow-down"></i> -8 this week
+          </div>
         </div>
         <div className="ds-stat-card">
-          <div className="ds-stat-icon ds-orange"><i className="fas fa-clock"></i></div>
-          <div className="ds-stat-label">Pending Installments</div>
+          <i className="fas fa-coins ds-stat-icon"></i>
+          <div className="ds-stat-label">Pending Payments</div>
           <div className="ds-stat-value">12</div>
-          <div className="ds-stat-change"><span>↑ 3</span> vs last week</div>
+          <div className="ds-stat-change up">
+            <i className="fas fa-arrow-up"></i> +3 vs last week
+          </div>
         </div>
         <div className="ds-stat-card">
-          <div className="ds-stat-icon ds-green"><i className="fas fa-bed"></i></div>
+          <i className="fas fa-cross ds-stat-icon"></i>
           <div className="ds-stat-label">Wake Reservations</div>
           <div className="ds-stat-value">2</div>
-          <div className="ds-stat-change"><span>+1</span> today</div>
+          <div className="ds-stat-change up">
+            <i className="fas fa-arrow-up"></i> +1 today
+          </div>
         </div>
       </div>
 
-      {/* ===== ALERT BANNER ===== */}
-      <div className="ds-alert-banner">
-        <div className="ds-alert-item">
-          <i className="fas fa-exclamation-triangle ds-red"></i>
-          <span><strong>5</strong> installment payments overdue</span>
-          <span className="ds-badge">Urgent</span>
-        </div>
-        <div className="ds-alert-item">
-          <i className="fas fa-clock ds-blue"></i>
-          <span>Wake space Chapel B reserved for <strong>tomorrow</strong></span>
-          <span className="ds-badge ds-info">Reminder</span>
-        </div>
-        <div className="ds-alert-item">
-          <i className="fas fa-calendar-times ds-orange"></i>
-          <span><strong>3</strong> contracts expiring this week</span>
-          <span className="ds-badge ds-warning">Warning</span>
-        </div>
-      </div>
-
-      {/* ===== DASHBOARD GRID ===== */}
-      <div className="ds-dashboard-grid">
-
-        {/* LEFT: Schedule with Filters */}
-        <div className="ds-schedule-section">
-          <div className="ds-section-header">
-            <h3><i className="fas fa-clock"></i> Today's Schedule</h3>
-            <span className="ds-view-all">View all →</span>
+      {/* ── Dashboard Grid ── */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr', gap: '24px', marginTop: '24px' }}>
+        
+        {/* LEFT: Schedule */}
+        <div className="ds-chart-box">
+          <div className="ds-chart-header">
+            <h3>
+              <i className="fas fa-clock" style={{ color: "#3670AF", marginRight: 6 }}></i>
+              Today's Schedule
+            </h3>
+            <a href="#" className="ds-view-link-gold">View all <i className="fas fa-chevron-right" style={{ fontSize: "0.6rem" }}></i></a>
           </div>
 
-          {/* Filter Tabs */}
-          <div className="ds-schedule-filters">
-            <button className={`ds-filter-btn ${filter === 'all' ? 'ds-active' : ''}`} onClick={() => setFilter('all')}>
-              <i className="fas fa-list"></i> All
-              <span className="ds-count">{SCHEDULE_DATA.length}</span>
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', borderBottom: '1px solid #f3f4f6', paddingBottom: '12px' }}>
+            <button style={{ padding: '6px 12px', borderRadius: '20px', border: filter === 'all' ? '1px solid #1a3b5d' : '1px solid #e5e7eb', background: filter === 'all' ? '#1a3b5d' : 'white', color: filter === 'all' ? 'white' : '#6b7280', fontSize: '12px', cursor: 'pointer' }} onClick={() => setFilter('all')}>
+              All ({SCHEDULE_DATA.length})
             </button>
-            <button className={`ds-filter-btn ${filter === 'burial' ? 'ds-active' : ''}`} onClick={() => setFilter('burial')}>
-              <i className="fas fa-cross"></i> Burials
-              <span className="ds-count">{SCHEDULE_DATA.filter(i => i.type === 'burial').length}</span>
+            <button style={{ padding: '6px 12px', borderRadius: '20px', border: filter === 'burial' ? '1px solid #1a3b5d' : '1px solid #e5e7eb', background: filter === 'burial' ? '#1a3b5d' : 'white', color: filter === 'burial' ? 'white' : '#6b7280', fontSize: '12px', cursor: 'pointer' }} onClick={() => setFilter('burial')}>
+              Burials
             </button>
-            <button className={`ds-filter-btn ${filter === 'payment' ? 'ds-active' : ''}`} onClick={() => setFilter('payment')}>
-              <i className="fas fa-coins"></i> Payments
-              <span className="ds-count">{SCHEDULE_DATA.filter(i => i.type === 'payment').length}</span>
+            <button style={{ padding: '6px 12px', borderRadius: '20px', border: filter === 'payment' ? '1px solid #1a3b5d' : '1px solid #e5e7eb', background: filter === 'payment' ? '#1a3b5d' : 'white', color: filter === 'payment' ? 'white' : '#6b7280', fontSize: '12px', cursor: 'pointer' }} onClick={() => setFilter('payment')}>
+              Payments
             </button>
-            <button className={`ds-filter-btn ${filter === 'wake' ? 'ds-active' : ''}`} onClick={() => setFilter('wake')}>
-              <i className="fas fa-bed"></i> Wake
-              <span className="ds-count">{SCHEDULE_DATA.filter(i => i.type === 'wake').length}</span>
-            </button>
-            <button className={`ds-filter-btn ${filter === 'registration' ? 'ds-active' : ''}`} onClick={() => setFilter('registration')}>
-              <i className="fas fa-file-signature"></i> Registrations
-              <span className="ds-count">{SCHEDULE_DATA.filter(i => i.type === 'registration').length}</span>
+            <button style={{ padding: '6px 12px', borderRadius: '20px', border: filter === 'wake' ? '1px solid #1a3b5d' : '1px solid #e5e7eb', background: filter === 'wake' ? '#1a3b5d' : 'white', color: filter === 'wake' ? 'white' : '#6b7280', fontSize: '12px', cursor: 'pointer' }} onClick={() => setFilter('wake')}>
+              Wake
             </button>
           </div>
 
-          <div className="ds-schedule-list">
-            {filteredSchedule.length > 0 ? filteredSchedule.map((item, idx) => (
-              <div key={idx} className={`ds-schedule-item ds-${item.type}`}>
-                <div className="ds-time">{item.time}</div>
-                <div className="ds-event">
-                  {item.event}
-                  <span className="ds-location">
-                    {item.type === 'burial' ? 'Burial Service' : item.type === 'payment' ? 'Payment Processing' : item.type === 'wake' ? 'Wake Service' : 'Lot Registration'}
-                  </span>
-                </div>
-                <span className={`ds-type-badge ds-${item.type}`}>{item.type}</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {filteredSchedule.map(item => (
+              <div key={item.id} style={{ display: 'flex', alignItems: 'center', padding: '12px', background: '#f9fafb', borderRadius: '8px' }}>
+                <div style={{ fontWeight: 600, fontSize: '13px', color: '#111827', minWidth: '80px' }}>{item.time}</div>
+                <div style={{ flex: 1, fontSize: '14px', color: '#374151' }}>{item.event}</div>
+                <span style={{ fontSize: '11px', padding: '4px 10px', borderRadius: '12px', background: '#e5e7eb', textTransform: 'capitalize' }}>{item.type}</span>
               </div>
-            )) : (
-              <div className="ds-no-results">
-                <i className="fas fa-search"></i>
-                No items found for today
-              </div>
+            ))}
+            {filteredSchedule.length === 0 && (
+              <div style={{ padding: '24px', textAlign: 'center', color: '#6b7280', fontSize: '14px' }}>No items match filter.</div>
             )}
           </div>
         </div>
 
-        {/* RIGHT: Recent Transactions + Payments */}
-        <div className="ds-right-panel">
-
-          {/* Recent Transactions */}
-          <div className="ds-transactions-section">
-            <div className="ds-section-header">
-              <h3><i className="fas fa-receipt"></i> Recent Transactions</h3>
-              <span className="ds-view-all">View all →</span>
+        {/* RIGHT: Transactions & Payments */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          
+          <div className="ds-chart-box">
+            <div className="ds-chart-header">
+              <h3>
+                <i className="fas fa-receipt" style={{ color: "#3670AF", marginRight: 6 }}></i>
+                Recent Transactions
+              </h3>
             </div>
-            <div className="ds-transaction-list">
-              {TRANSACTIONS.map((tx, idx) => (
-                <div key={idx} className="ds-transaction-item">
-                  <div className={`ds-tx-icon ds-${tx.icon}`}>
-                    <i className={`fas fa-${tx.icon === 'gold' ? 'star' : tx.icon === 'blue' ? 'user' : 'check'}`}></i>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {TRANSACTIONS.map(tx => (
+                <div key={tx.id} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: tx.icon === 'gold' ? '#fef9e7' : tx.icon === 'blue' ? '#e3effa' : '#eafaf1', color: tx.icon === 'gold' ? '#f39c12' : tx.icon === 'blue' ? '#3670AF' : '#27ae60', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <i className="fas fa-check"></i>
                   </div>
-                  <div className="ds-tx-info">
-                    <div className="ds-name">{tx.name}</div>
-                    <div className="ds-desc">{tx.or} - {tx.desc}</div>
+                  <div>
+                    <div style={{ fontSize: '14px', fontWeight: 500, color: '#111827' }}>{tx.name}</div>
+                    <div style={{ fontSize: '12px', color: '#6b7280' }}>{tx.or} · {tx.desc}</div>
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Payments Overview */}
-          <div className="ds-payments-section">
-            <div className="ds-section-header">
-              <h3><i className="fas fa-coins"></i> Installment Payments</h3>
-              <span className="ds-view-all">View all →</span>
+          <div className="ds-chart-box">
+            <div className="ds-chart-header">
+              <h3>
+                <i className="fas fa-coins" style={{ color: "#3670AF", marginRight: 6 }}></i>
+                Installment Payments
+              </h3>
             </div>
-            <div>
-              {PAYMENTS.map((pay, idx) => (
-                <div key={idx} className="ds-payment-item">
-                  <div className={`ds-pay-avatar ds-${pay.color}`}>{pay.avatar}</div>
-                  <div className="ds-pay-info">
-                    <div className="ds-name">{pay.name}</div>
-                    <div className="ds-desc">{pay.or} - {pay.desc}</div>
-                    <div className="ds-installment">{pay.installment}</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {PAYMENTS.map(pay => (
+                <div key={pay.id} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#1a3b5d', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 'bold' }}>
+                    {pay.avatar}
                   </div>
-                  <div className="ds-pay-amount">{pay.amount}</div>
-                  <div className="ds-pay-time">{pay.time}</div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: '14px', fontWeight: 500, color: '#111827' }}>{pay.name}</div>
+                    <div style={{ fontSize: '12px', color: '#6b7280' }}>{pay.installment} · {pay.amount}</div>
+                  </div>
+                  <div style={{ fontSize: '12px', color: '#9ca3af' }}>{pay.time}</div>
                 </div>
               ))}
             </div>
@@ -196,12 +317,11 @@ function DashboardS() {
 
         </div>
       </div>
-      
-      {/* FOOTER */}
-      <div style={{marginTop: '1rem', textAlign: 'center', fontSize: '0.7rem', color: '#8aaccc', borderTop: '1px solid rgba(212,175,55,0.08)', paddingTop: '1.5rem'}}>
-          <i className="fas fa-dove" style={{color: '#d4af37', margin: '0 4px'}}></i>
-          Cherubim of Heaven Memorial Park · Staff Dashboard v2.0
-          <i className="fas fa-dove" style={{color: '#d4af37', margin: '0 4px'}}></i>
+
+      <div className="ds-footer">
+        <i className="fas fa-dove"></i>
+        {" "}Cherubim of Heaven Memorial Park · Staff Dashboard v2.0{" "}
+        <i className="fas fa-dove"></i>
       </div>
     </div>
   );

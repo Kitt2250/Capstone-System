@@ -1,0 +1,1625 @@
+<USER_REQUEST>
+lets do the staff dashboard using this html and also the navigation
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cherubim of Heaven · Staff Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        /* ----- RESET & BASE ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: #e8edf4;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* ----- SIDEBAR (fixed, collapsible) ----- */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background: linear-gradient(180deg, #0073d1 50%, #003764 100%);
+            color: #fff;
+            padding: 1.8rem 0 1.5rem;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.18);
+            z-index: 1000;
+            transition: width 280ms cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+            overflow-x: hidden;
+            flex-shrink: 0;
+        }
+        .sidebar::-webkit-scrollbar {
+            width: 3px;
+        }
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(212, 175, 55, 0.4);
+            border-radius: 10px;
+        }
+
+        .sidebar.collapsed {
+            width: 72px;
+        }
+
+        /* ----- SIDEBAR BRAND ----- */
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.2rem 1.6rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+            margin-bottom: 1.2rem;
+            min-height: 64px;
+            gap: 8px;
+        }
+
+        .brand-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow: hidden;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .brand-content .icon-ornament {
+            font-size: 1.6rem;
+            color: #d4af37;
+            letter-spacing: 3px;
+            flex-shrink: 0;
+            transition: font-size 280ms ease;
+        }
+        .sidebar.collapsed .brand-content .icon-ornament {
+            font-size: 1.3rem;
+        }
+
+        .brand-text {
+            white-space: nowrap;
+            overflow: hidden;
+            transition: opacity 280ms ease, transform 280ms ease;
+        }
+        .sidebar.collapsed .brand-text {
+            opacity: 0;
+            transform: translateX(-12px);
+            width: 0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .brand-text h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: 0.3px;
+            line-height: 1.2;
+        }
+        .brand-text .sub {
+            font-size: 0.65rem;
+            color: #a0c0db;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+
+        /* ----- TOGGLE BUTTON ----- */
+        .toggle-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.08);
+            color: #f9fbfc;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+            transition: background 0.2s, transform 280ms ease, color 0.2s;
+            flex-shrink: 0;
+            backdrop-filter: blur(2px);
+        }
+        .toggle-btn:hover {
+            background: rgba(212, 175, 55, 0.2);
+            color: #d4af37;
+        }
+        .toggle-btn:active {
+            transform: scale(0.92);
+        }
+        .sidebar.collapsed .toggle-btn {
+            transform: rotate(180deg);
+        }
+        .toggle-btn i {
+            transition: transform 280ms ease;
+        }
+
+        /* ----- SIDEBAR NAV ----- */
+        .sidebar-nav {
+            flex: 1;
+            padding: 0 0.7rem;
+        }
+
+        .sidebar-nav .nav-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #fafbfb;
+            padding: 0 0.8rem 0.6rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            transition: opacity 280ms ease, padding 280ms ease;
+        }
+        .sidebar.collapsed .nav-label {
+            opacity: 0;
+            padding: 0 0.8rem 0.2rem;
+            height: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.7rem 1rem;
+            border-radius: 10px;
+            color: #fcfeff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background 0.2s, color 0.2s, padding 0.2s, border-radius 0.2s;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .sidebar-nav a i {
+            width: 20px;
+            text-align: center;
+            font-size: 1rem;
+            color: #fcfeff;
+            transition: color 0.2s;
+            flex-shrink: 0;
+        }
+
+        .sidebar-nav a span {
+            transition: opacity 280ms ease, width 280ms ease, margin 280ms ease;
+            overflow: hidden;
+        }
+        .sidebar.collapsed .sidebar-nav a span {
+            opacity: 0;
+            width: 0;
+            margin: 0;
+            display: inline-block;
+        }
+
+        .sidebar-nav a:hover {
+            background: rgba(212, 175, 55, 0.10);
+            color: #fff;
+        }
+        .sidebar-nav a:hover i {
+            color: #d4af37;
+        }
+
+        .sidebar-nav a.active {
+            background: rgba(212, 175, 55, 0.16);
+            color: #fff;
+            border-radius: 10px;
+            box-shadow: inset 0 0 0 1px rgba(212, 175, 55, 0.12);
+        }
+        .sidebar-nav a.active i {
+            color: #d4af37;
+        }
+
+        .sidebar.collapsed .sidebar-nav a {
+            justify-content: center;
+            padding: 0.7rem;
+            border-radius: 10px;
+        }
+        .sidebar.collapsed .sidebar-nav a.active {
+            background: rgba(212, 175, 55, 0.18);
+            border-radius: 10px;
+        }
+
+        /* ----- SIDEBAR FOOTER ----- */
+        .sidebar-footer {
+            padding: 1.2rem 0.8rem 0.3rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            margin-top: 0.5rem;
+            transition: padding 280ms ease;
+        }
+        .sidebar.collapsed .sidebar-footer {
+            padding: 1.2rem 0.3rem 0.3rem;
+        }
+
+        .sidebar-footer .user-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.6rem 0.8rem;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            transition: padding 280ms ease, background 0.2s;
+            overflow: hidden;
+        }
+        .sidebar.collapsed .sidebar-footer .user-card {
+            justify-content: center;
+            padding: 0.4rem;
+            background: transparent;
+        }
+
+        .sidebar-footer .user-card .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #d4af37, #b8942e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #1a3d5c;
+            flex-shrink: 0;
+            transition: width 280ms ease, height 280ms ease, font-size 280ms ease;
+        }
+        .sidebar.collapsed .sidebar-footer .user-card .avatar {
+            width: 32px;
+            height: 32px;
+            font-size: 0.8rem;
+        }
+
+        .sidebar-footer .user-card .info {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            transition: opacity 280ms ease, transform 280ms ease;
+        }
+        .sidebar.collapsed .sidebar-footer .user-card .info {
+            opacity: 0;
+            transform: translateX(-10px);
+            width: 0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .sidebar-footer .user-card .info .name {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #fff;
+            white-space: nowrap;
+        }
+        .sidebar-footer .user-card .info .email {
+            font-size: 0.65rem;
+            color: #8ab0d0;
+            white-space: nowrap;
+        }
+
+        .sidebar-footer .user-card .badge {
+            background: #3670AF;
+            color: white;
+            font-size: 0.55rem;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+            flex-shrink: 0;
+            transition: opacity 280ms ease, transform 280ms ease, padding 280ms ease;
+        }
+        .sidebar.collapsed .sidebar-footer .user-card .badge {
+            opacity: 0;
+            transform: scale(0.8);
+            width: 0;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* ----- MAIN CONTENT ----- */
+        .main-content {
+            margin-left: 260px;
+            padding: 1.8rem 2.2rem 2.5rem;
+            flex: 1;
+            min-height: 100vh;
+            transition: margin-left 280ms cubic-bezier(0.4, 0, 0.2, 1);
+            width: 100%;
+            background: #e8edf4;
+        }
+
+        body.sidebar-collapsed .main-content {
+            margin-left: 72px;
+        }
+
+        /* ----- TOP BAR ----- */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .topbar-left h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #1a3d5c;
+        }
+        .topbar-left h1 span {
+            color: #d4af37;
+        }
+        .topbar-left .greeting {
+            font-size: 0.9rem;
+            color: #6a8aaa;
+            margin-top: 2px;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .topbar-right .date-badge {
+            background: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            color: #1a3d5c;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+        }
+        .topbar-right .date-badge i {
+            color: #d4af37;
+            margin-right: 6px;
+        }
+
+        .topbar-right .notification-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: white;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            color: #1a3d5c;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            position: relative;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+        .topbar-right .notification-btn:hover {
+            background: #faf3e0;
+        }
+        .topbar-right .notification-btn .dot {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 8px;
+            height: 8px;
+            background: #c0392b;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        /* ----- STATS CARDS ----- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.2rem 1.5rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(212, 175, 55, 0.08);
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #3670AF, #d4af37);
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(26, 59, 93, 0.06);
+        }
+
+        .stat-card .stat-icon {
+            float: right;
+            font-size: 1.8rem;
+            opacity: 0.15;
+            color: #1a3d5c;
+        }
+        .stat-card .stat-icon.gold {
+            color: #d4af37;
+            opacity: 0.2;
+        }
+        .stat-card .stat-icon.blue {
+            color: #3670AF;
+            opacity: 0.2;
+        }
+        .stat-card .stat-icon.green {
+            color: #27ae60;
+            opacity: 0.2;
+        }
+        .stat-card .stat-icon.orange {
+            color: #f39c12;
+            opacity: 0.2;
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #7a9fbe;
+            font-weight: 600;
+        }
+
+        .stat-card .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1a3d5c;
+            margin: 0.2rem 0 0.1rem;
+        }
+
+        .stat-card .stat-change {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #8aaccc;
+        }
+        .stat-card .stat-change span {
+            color: #27ae60;
+        }
+        .stat-card .stat-change span.down {
+            color: #c0392b;
+        }
+
+        /* ----- ALERT BANNER ----- */
+        .alert-banner {
+            background: #fef9e7;
+            border-left: 4px solid #f39c12;
+            border-radius: 12px;
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .alert-banner .alert-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: #1a3d5c;
+        }
+
+        .alert-banner .alert-item i {
+            font-size: 0.9rem;
+        }
+        .alert-banner .alert-item i.orange {
+            color: #f39c12;
+        }
+        .alert-banner .alert-item i.red {
+            color: #c0392b;
+        }
+        .alert-banner .alert-item i.blue {
+            color: #3670AF;
+        }
+
+        .alert-banner .alert-item .badge {
+            background: #c0392b;
+            color: white;
+            padding: 0.1rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .alert-banner .alert-item .badge.warning {
+            background: #f39c12;
+        }
+        .alert-banner .alert-item .badge.info {
+            background: #3670AF;
+        }
+
+        /* ----- DASHBOARD GRID ----- */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ----- SCHEDULE SECTION ----- */
+        .schedule-section {
+            background: white;
+            border-radius: 16px;
+            padding: 1.2rem 1.5rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(212, 175, 55, 0.08);
+            position: relative;
+        }
+
+        .schedule-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #3670AF, #d4af37);
+            border-radius: 16px 16px 0 0;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            margin-top: 0.2rem;
+        }
+
+        .section-header h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #1a3d5c;
+        }
+
+        .section-header h3 i {
+            color: #d4af37;
+            margin-right: 6px;
+        }
+
+        .section-header .view-all {
+            font-size: 0.75rem;
+            color: #d4af37;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .section-header .view-all:hover {
+            color: #c49a2e;
+        }
+
+        /* ----- SCHEDULE FILTERS ----- */
+        .schedule-filters {
+            display: flex;
+            gap: 0.4rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .schedule-filters .filter-btn {
+            padding: 0.3rem 0.9rem;
+            border-radius: 20px;
+            border: 1px solid #dce3ec;
+            background: white;
+            color: #7a9fbe;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .schedule-filters .filter-btn:hover {
+            background: #f8fafc;
+            border-color: #d4af37;
+            color: #1a3d5c;
+        }
+
+        .schedule-filters .filter-btn.active {
+            background: #d4af37;
+            color: #1a3d5c;
+            border-color: #d4af37;
+            font-weight: 600;
+        }
+
+        .schedule-filters .filter-btn i {
+            font-size: 0.7rem;
+        }
+
+        .schedule-filters .filter-btn .count {
+            background: #e8edf4;
+            color: #6a8aaa;
+            padding: 0.05rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            margin-left: 2px;
+        }
+        .schedule-filters .filter-btn.active .count {
+            background: rgba(255, 255, 255, 0.3);
+            color: #1a3d5c;
+        }
+
+        /* Schedule List */
+        .schedule-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            max-height: 380px;
+            overflow-y: auto;
+            transition: opacity 0.3s ease;
+        }
+        .schedule-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .schedule-list::-webkit-scrollbar-thumb {
+            background: #dce3ec;
+            border-radius: 10px;
+        }
+
+        .schedule-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.6rem 0.8rem;
+            border-radius: 10px;
+            background: #f8fafc;
+            transition: 0.3s;
+            border-left: 3px solid transparent;
+            animation: fadeIn 0.3s ease;
+        }
+        .schedule-item:hover {
+            background: #f0f2f5;
+        }
+        .schedule-item.burial {
+            border-left-color: #3670AF;
+        }
+        .schedule-item.payment {
+            border-left-color: #27ae60;
+        }
+        .schedule-item.wake {
+            border-left-color: #d4af37;
+        }
+        .schedule-item.registration {
+            border-left-color: #f39c12;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .schedule-item .time {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #1a3d5c;
+            min-width: 60px;
+            white-space: nowrap;
+        }
+
+        .schedule-item .event {
+            flex: 1;
+            font-size: 0.85rem;
+            color: #1a3d5c;
+        }
+
+        .schedule-item .event .location {
+            font-size: 0.7rem;
+            color: #7a9fbe;
+            display: block;
+        }
+
+        .schedule-item .type-badge {
+            font-size: 0.65rem;
+            padding: 0.1rem 0.6rem;
+            border-radius: 12px;
+            font-weight: 500;
+            text-transform: capitalize;
+            white-space: nowrap;
+        }
+        .type-badge.burial {
+            background: #e3effa;
+            color: #3670AF;
+        }
+        .type-badge.payment {
+            background: #eafaf1;
+            color: #27ae60;
+        }
+        .type-badge.wake {
+            background: #faf3e0;
+            color: #d4af37;
+        }
+        .type-badge.registration {
+            background: #fef9e7;
+            color: #f39c12;
+        }
+
+        /* No results message */
+        .no-results {
+            text-align: center;
+            padding: 1.5rem 0;
+            color: #8aaccc;
+            font-size: 0.85rem;
+        }
+        .no-results i {
+            font-size: 1.5rem;
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #dce3ec;
+        }
+
+        /* ----- RIGHT PANEL ----- */
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Recent Transactions */
+        .transactions-section {
+            background: white;
+            border-radius: 16px;
+            padding: 1.2rem 1.5rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(212, 175, 55, 0.08);
+            position: relative;
+        }
+        .transactions-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #3670AF, #d4af37);
+            border-radius: 16px 16px 0 0;
+        }
+
+        .transaction-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .transaction-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid #f0f2f5;
+        }
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-item .tx-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+        .tx-icon.gold {
+            background: #faf3e0;
+            color: #d4af37;
+        }
+        .tx-icon.blue {
+            background: #e3effa;
+            color: #3670AF;
+        }
+        .tx-icon.green {
+            background: #eafaf1;
+            color: #27ae60;
+        }
+
+        .transaction-item .tx-info {
+            flex: 1;
+        }
+        .transaction-item .tx-info .name {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #1a3d5c;
+        }
+        .transaction-item .tx-info .desc {
+            font-size: 0.7rem;
+            color: #7a9fbe;
+        }
+
+        /* ----- PAYMENTS OVERVIEW ----- */
+        .payments-section {
+            background: white;
+            border-radius: 16px;
+            padding: 1.2rem 1.5rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(212, 175, 55, 0.08);
+            position: relative;
+        }
+        .payments-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #3670AF, #d4af37);
+            border-radius: 16px 16px 0 0;
+        }
+
+        .payment-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid #f0f2f5;
+        }
+        .payment-item:last-child {
+            border-bottom: none;
+        }
+
+        .payment-item .pay-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: white;
+            flex-shrink: 0;
+        }
+        .pay-avatar.blue {
+            background: linear-gradient(135deg, #3670AF, #2c5f82);
+        }
+        .pay-avatar.green {
+            background: linear-gradient(135deg, #27ae60, #1e8449);
+        }
+        .pay-avatar.gold {
+            background: linear-gradient(135deg, #d4af37, #b8942e);
+            color: #1a3d5c;
+        }
+
+        .payment-item .pay-info {
+            flex: 1;
+        }
+        .payment-item .pay-info .name {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #1a3d5c;
+        }
+        .payment-item .pay-info .desc {
+            font-size: 0.7rem;
+            color: #7a9fbe;
+        }
+        .payment-item .pay-info .installment {
+            font-size: 0.65rem;
+            color: #8aaccc;
+        }
+
+        .payment-item .pay-amount {
+            font-weight: 700;
+            color: #27ae60;
+            font-size: 0.95rem;
+        }
+
+        .payment-item .pay-time {
+            font-size: 0.65rem;
+            color: #8aaccc;
+            min-width: 70px;
+            text-align: right;
+        }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            color: white;
+            font-weight: 500;
+            z-index: 10000;
+            transform: translateX(120%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            max-width: 400px;
+        }
+        .toast.show {
+            transform: translateX(0);
+        }
+        .toast.success {
+            background: #27ae60;
+        }
+        .toast.error {
+            background: #c0392b;
+        }
+        .toast.info {
+            background: #3670AF;
+        }
+        .toast.warning {
+            background: #f39c12;
+        }
+        .toast .toast-close {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+            opacity: 0.7;
+            transition: 0.2s;
+            padding: 0 4px;
+        }
+        .toast .toast-close:hover {
+            opacity: 1;
+        }
+
+        /* ----- RESPONSIVE ----- */
+        @media (max-width: 1200px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 72px;
+                padding: 1rem 0;
+            }
+            .sidebar .brand-text,
+            .sidebar .sidebar-nav .nav-label,
+            .sidebar .sidebar-nav a span,
+            .sidebar .sidebar-footer .user-card .info,
+            .sidebar .sidebar-footer .user-card .badge {
+                display: none !important;
+            }
+            .sidebar .sidebar-nav a {
+                justify-content: center;
+                padding: 0.7rem;
+            }
+            .sidebar .sidebar-nav a i {
+                font-size: 1.1rem;
+            }
+            .sidebar .sidebar-footer .user-card {
+                justify-content: center;
+                padding: 0.4rem;
+                background: transparent;
+            }
+            .sidebar .sidebar-footer .user-card .avatar {
+                width: 32px;
+                height: 32px;
+                font-size: 0.8rem;
+            }
+            .sidebar .toggle-btn {
+                transform: rotate(180deg);
+            }
+            .main-content {
+                margin-left: 72px;
+                padding: 1.2rem;
+            }
+            body.sidebar-collapsed .main-content {
+                margin-left: 72px;
+            }
+            .topbar-left h1 {
+                font-size: 1.3rem;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .alert-banner {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.5rem;
+            }
+            .schedule-item {
+                flex-wrap: wrap;
+            }
+            .schedule-item .time {
+                min-width: 100%;
+            }
+            .schedule-filters {
+                justify-content: center;
+            }
+            .schedule-filters .filter-btn {
+                font-size: 0.7rem;
+                padding: 0.2rem 0.6rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .topbar-left h1 {
+                font-size: 1.1rem;
+            }
+            .topbar-right .date-badge {
+                display: none;
+            }
+            .main-content {
+                padding: 1rem;
+                margin-left: 72px;
+            }
+            body.sidebar-collapsed .main-content {
+                margin-left: 72px;
+            }
+            .sidebar {
+                width: 60px;
+            }
+            .sidebar .sidebar-nav a {
+                padding: 0.5rem;
+            }
+            .sidebar .sidebar-nav a i {
+                font-size: 1rem;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .schedule-filters {
+                gap: 0.3rem;
+            }
+            .schedule-filters .filter-btn {
+                font-size: 0.65rem;
+                padding: 0.2rem 0.5rem;
+            }
+            .schedule-filters .filter-btn .count {
+                display: none;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            .sidebar,
+            .topbar-right,
+            .section-header .view-all,
+            .schedule-filters {
+                display: none !important;
+            }
+            .main-content {
+                margin-left: 0 !important;
+                padding: 20px !important;
+            }
+            .stat-card,
+            .schedule-section,
+            .transactions-section,
+            .payments-section {
+                box-shadow: none !important;
+                border: 1px solid #ddd !important;
+                break-inside: avoid;
+            }
+            .stat-card::before,
+            .schedule-section::before,
+            .transactions-section::before,
+            .payments-section::before {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-content">
+                <div class="icon-ornament">
+                    <i class="fas fa-dove"></i>
+                </div>
+                <div class="brand-text">
+                    <h2>Cherubim of Heaven</h2>
+                    <div class="sub">Memorial Park</div>
+                </div>
+            </div>
+            <button class="toggle-btn" id="toggleSidebar" aria-label="Toggle sidebar">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-label">Main</div>
+            <a href="#" class="active"><i class="fas fa-th-large"></i> <span>Dashboard</span></a>
+            <a href="#"><i class="fas fa-cross"></i> <span>Burial Records</span></a>
+            <a href="#"><i class="fas fa-map-marked-alt"></i> <span>Map Availability</span></a>
+            <a href="#"><i class="fas fa-coins"></i> <span>Payments</span></a>
+            <div class="nav-label" style="margin-top: 1.2rem;">Management</div>
+            <a href="#"><i class="fas fa-calendar-check"></i> <span>Reservations</span></a>
+            <a href="#"><i class="fas fa-users"></i> <span>Family Portal</span></a>
+            <a href="#"><i class="fas fa-file-alt"></i> <span>Reports</span></a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-card">
+                <div class="avatar">JD</div>
+                <div class="info">
+                    <div class="name">Juan Dela Cruz</div>
+                    <div class="email">staff@cherubium.ph</div>
+                </div>
+                <span class="badge">Staff</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="main-content" id="mainContent">
+
+        <!-- TOP BAR -->
+        <div class="topbar">
+            <div class="topbar-left">
+                <h1>Operational Overview <span>✦</span></h1>
+                <div class="greeting">Welcome back, <strong>Staff</strong> • Here's your daily overview</div>
+            </div>
+            <div class="topbar-right">
+                <div class="date-badge">
+                    <i class="fas fa-calendar-alt"></i> August 2026
+                </div>
+                <button class="notification-btn" title="Notifications">
+                    <i class="fas fa-bell"></i>
+                    <span class="dot"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== STATS CARDS ===== -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon gold"><i class="fas fa-cross"></i></div>
+                <div class="stat-label">Burials Today</div>
+                <div class="stat-value">3</div>
+                <div class="stat-change"><span>↑ 2</span> vs yesterday</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon blue"><i class="fas fa-tshirt"></i></div>
+                <div class="stat-label">Available Slots</div>
+                <div class="stat-value">223</div>
+                <div class="stat-change"><span class="down">↓ 8</span> this week</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon orange"><i class="fas fa-clock"></i></div>
+                <div class="stat-label">Pending Installments</div>
+                <div class="stat-value">12</div>
+                <div class="stat-change"><span>↑ 3</span> vs last week</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green"><i class="fas fa-bed"></i></div>
+                <div class="stat-label">Wake Reservations</div>
+                <div class="stat-value">2</div>
+                <div class="stat-change"><span>+1</span> today</div>
+            </div>
+        </div>
+
+        <!-- ===== ALERT BANNER ===== -->
+        <div class="alert-banner">
+            <div class="alert-item">
+                <i class="fas fa-exclamation-triangle red"></i>
+                <span><strong>5</strong> installment payments overdue</span>
+                <span class="badge">Urgent</span>
+            </div>
+            <div class="alert-item">
+                <i class="fas fa-clock blue"></i>
+                <span>Wake space Chapel B reserved for <strong>tomorrow</strong></span>
+                <span class="badge info">Reminder</span>
+            </div>
+            <div class="alert-item">
+                <i class="fas fa-calendar-times orange"></i>
+                <span><strong>3</strong> contracts expiring this week</span>
+                <span class="badge warning">Warning</span>
+            </div>
+        </div>
+
+        <!-- ===== DASHBOARD GRID ===== -->
+        <div class="dashboard-grid">
+
+            <!-- LEFT: Schedule with Filters -->
+            <div class="schedule-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-clock"></i> Today's Schedule</h3>
+                    <span class="view-all" onclick="viewFullSchedule()">View all →</span>
+                </div>
+
+                <!-- Filter Tabs -->
+                <div class="schedule-filters" id="filterContainer">
+                    <button class="filter-btn active" data-filter="all" onclick="filterSchedule('all', this)">
+                        <i class="fas fa-list"></i> All
+                        <span class="count">6</span>
+                    </button>
+                    <button class="filter-btn" data-filter="burial" onclick="filterSchedule('burial', this)">
+                        <i class="fas fa-cross"></i> Burials
+                        <span class="count">3</span>
+                    </button>
+                    <button class="filter-btn" data-filter="payment" onclick="filterSchedule('payment', this)">
+                        <i class="fas fa-coins"></i> Payments
+                        <span class="count">1</span>
+                    </button>
+                    <button class="filter-btn" data-filter="wake" onclick="filterSchedule('wake', this)">
+                        <i class="fas fa-bed"></i> Wake
+                        <span class="count">1</span>
+                    </button>
+                    <button class="filter-btn" data-filter="registration" onclick="filterSchedule('registration', this)">
+                        <i class="fas fa-file-signature"></i> Registrations
+                        <span class="count">1</span>
+                    </button>
+                </div>
+
+                <div class="schedule-list" id="scheduleList">
+                    <!-- Rendered by JavaScript -->
+                </div>
+            </div>
+
+            <!-- RIGHT: Recent Transactions + Payments -->
+            <div class="right-panel">
+
+                <!-- Recent Transactions -->
+                <div class="transactions-section">
+                    <div class="section-header">
+                        <h3><i class="fas fa-receipt"></i> Recent Transactions</h3>
+                        <span class="view-all" onclick="viewAllTransactions()">View all →</span>
+                    </div>
+                    <div class="transaction-list" id="transactionList">
+                        <!-- Rendered by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Payments Overview -->
+                <div class="payments-section">
+                    <div class="section-header">
+                        <h3><i class="fas fa-coins"></i> Installment Payments</h3>
+                        <span class="view-all" onclick="viewAllPayments()">View all →</span>
+                    </div>
+                    <div id="paymentList">
+                        <!-- Rendered by JavaScript -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="main-footer" style="margin-top:1rem;text-align:center;font-size:0.7rem;color:#8aaccc;border-top:1px solid rgba(212,175,55,0.08);padding-top:1.5rem;">
+            <i class="fas fa-dove" style="color:#d4af37;margin:0 4px;"></i>
+            Cherubim of Heaven Memorial Park · Staff Dashboard v2.0
+            <i class="fas fa-dove" style="color:#d4af37;margin:0 4px;"></i>
+        </div>
+
+    </main>
+
+    <!-- ===== TOAST ===== -->
+    <div class="toast" id="toast">
+        <span id="toastMessage">Success!</span>
+        <button class="toast-close" onclick="hideToast()">×</button>
+    </div>
+
+    <script>
+        // ===== DATA BASED ON MEMORIAL LOT PRICING DOCUMENT =====
+
+        // Available Grave Types (removed: Garden Type, Heroes Buried)
+        const graveTypes = [
+            'Single Niche',
+            'Mausoleum Type',
+            'Columbarium',
+            'Apartment',
+            'Bonevault'
+        ];
+
+        // Available Slots by Grave Type
+        const availableSlots = {
+            'Single Niche': 45,
+            'Mausoleum Type': 12,
+            'Columbarium': 38,
+            'Apartment': 56,
+            'Bonevault': 72,
+        };
+
+        // Total available slots: 45 + 12 + 38 + 56 + 72 = 223
+
+        // Today's Schedule (removed: visit, construction)
+        const scheduleData = [
+            { time: '09:00 AM', event: 'Burial - Section A, Block 3, Lot 15', type: 'burial' },
+            { time: '10:30 AM', event: 'Installment payment - Single Niche Lot B-042', type: 'payment' },
+            { time: '01:00 PM', event: 'Burial - Section B, Block 1, Lot 8', type: 'burial' },
+            { time: '02:30 PM', event: 'Wake setup - Chapel A (Columbarium)', type: 'wake' },
+            { time: '03:00 PM', event: 'New lot registration - Apartment Type', type: 'registration' },
+            { time: '04:00 PM', event: 'Burial - Section A, Block 5, Lot 22', type: 'burial' },
+        ];
+
+        // Recent Transactions
+        const transactions = [
+            { name: 'Rosa Mendoza', or: 'OR-2026-0342', desc: 'Installation - Single Niche', icon: 'gold' },
+            { name: 'Pedro Garcia', or: 'OR-2026-0341', desc: 'Full Payment - Columbarium', icon: 'blue' },
+            { name: 'Elena Santos', or: 'OR-2026-0340', desc: 'Installment - Bonevault', icon: 'green' },
+        ];
+
+        // Installment Payments
+        const payments = [
+            { name: 'Rosa Mendoza', amount: '₱6,250', or: 'OR-2026-0342', desc: 'Single Niche - Monthly', time: '2 hours ago',
+                avatar: 'RM', color: 'gold', installment: '6 of 12 payments' },
+            { name: 'Pedro Garcia', amount: '₱3,167', or: 'OR-2026-0341', desc: 'Columbarium - Monthly', time: '4 hours ago',
+                avatar: 'PG', color: 'blue', installment: '3 of 12 payments' },
+            { name: 'Elena Santos', amount: '₱2,500', or: 'OR-2026-0340', desc: 'Bonevault - Monthly', time: 'Yesterday',
+                avatar: 'ES', color: 'green', installment: '4 of 12 payments' },
+        ];
+
+        // ===== FILTER SCHEDULE =====
+        let currentFilter = 'all';
+
+        function filterSchedule(type, element) {
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            element.classList.add('active');
+
+            currentFilter = type;
+
+            // Get all schedule items
+            const container = document.getElementById('scheduleList');
+            const items = container.querySelectorAll('.schedule-item');
+
+            let visibleCount = 0;
+
+            items.forEach(item => {
+                if (type === 'all') {
+                    item.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    // Check if item matches the filter type
+                    if (item.classList.contains(type)) {
+                        item.style.display = 'flex';
+                        visibleCount++;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                }
+            });
+
+            // Show/hide no results message
+            let noResults = container.querySelector('.no-results');
+            if (visibleCount === 0) {
+                if (!noResults) {
+                    noResults = document.createElement('div');
+                    noResults.className = 'no-results';
+                    noResults.innerHTML = `
+                        <i class="fas fa-search"></i>
+                        No ${type === 'all' ? 'items' : type + 's'} found for today
+                    `;
+                    container.appendChild(noResults);
+                }
+                noResults.style.display = 'block';
+            } else if (noResults) {
+                noResults.style.display = 'none';
+            }
+
+            // Show toast feedback
+            const filterNames = {
+                'all': 'All items',
+                'burial': 'Burials only',
+                'payment': 'Payments only',
+                'wake': 'Wake services only',
+                'registration': 'Registrations only'
+            };
+            showToast(`🔍 Showing: ${filterNames[type] || type}`, 'info');
+        }
+
+        // ===== RENDER FUNCTIONS =====
+
+        // Render Schedule with filters
+        function renderSchedule() {
+            const container = document.getElementById('scheduleList');
+
+            // Count items by type for badges
+            const counts = {
+                burial: scheduleData.filter(item => item.type === 'burial').length,
+                payment: scheduleData.filter(item => item.type === 'payment').length,
+                wake: scheduleData.filter(item => item.type === 'wake').length,
+                registration: scheduleData.filter(item => item.type === 'registration').length,
+            };
+
+            // Update filter button counts
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                const type = btn.dataset.filter;
+                const countEl = btn.querySelector('.count');
+                if (countEl) {
+                    if (type === 'all') {
+                        countEl.textContent = scheduleData.length;
+                    } else {
+                        countEl.textContent = counts[type] || 0;
+                    }
+                }
+            });
+
+            container.innerHTML = scheduleData.map(item => `
+                <div class="schedule-item ${item.type}" data-type="${item.type}">
+                    <div class="time">${item.time}</div>
+                    <div class="event">
+                        ${item.event}
+                        <span class="location">${item.type === 'burial' ? 'Burial Service' : item.type === 'payment' ? 'Payment Processing' : item.type === 'wake' ? 'Wake Service' : 'Lot Registration'}</span>
+                    </div>
+                    <span class="type-badge ${item.type}">${item.type}</span>
+                </div>
+            `).join('');
+
+            // Apply current filter if not 'all'
+            if (currentFilter !== 'all') {
+                const activeBtn = document.querySelector(`.filter-btn[data-filter="${currentFilter}"]`);
+                if (activeBtn) {
+                    filterSchedule(currentFilter, activeBtn);
+                }
+            }
+        }
+
+        // Render Transactions
+        function renderTransactions() {
+            const container = document.getElementById('transactionList');
+            container.innerHTML = transactions.map(tx => `
+                <div class="transaction-item">
+                    <div class="tx-icon ${tx.icon}">
+                        <i class="fas fa-${tx.icon === 'gold' ? 'star' : tx.icon === 'blue' ? 'user' : 'check'}"></i>
+                    </div>
+                    <div class="tx-info">
+                        <div class="name">${tx.name}</div>
+                        <div class="desc">${tx.or} - ${tx.desc}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render Payments
+        function renderPayments() {
+            const container = document.getElementById('paymentList');
+            container.innerHTML = payments.map(pay => `
+                <div class="payment-item">
+                    <div class="pay-avatar ${pay.color}">${pay.avatar}</div>
+                    <div class="pay-info">
+                        <div class="name">${pay.name}</div>
+                        <div class="desc">${pay.or} - ${pay.desc}</div>
+                        <div class="installment">${pay.installment}</div>
+                    </div>
+                    <div class="pay-amount">${pay.amount}</div>
+                    <div class="pay-time">${pay.time}</div>
+                </div>
+            `).join('');
+        }
+
+        // ===== TOAST =====
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMessage');
+            toastMsg.textContent = message;
+            toast.className = `toast ${type}`;
+            toast.classList.add('show');
+
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => {
+                hideToast();
+            }, 3500);
+        }
+
+        function hideToast() {
+            document.getElementById('toast').classList.remove('show');
+        }
+
+        // ===== ACTION FUNCTIONS =====
+        function viewFullSchedule() {
+            showToast('📅 Opening full schedule view...', 'info');
+            setTimeout(() => {
+                showToast('✅ Full schedule loaded successfully!', 'success');
+            }, 800);
+        }
+
+        function viewAllTransactions() {
+            showToast('📋 Loading all transactions...', 'info');
+            setTimeout(() => {
+                showToast('✅ All transactions loaded!', 'success');
+            }, 800);
+        }
+
+        function viewAllPayments() {
+            showToast('💰 Loading all installment payments...', 'info');
+            setTimeout(() => {
+                showToast('✅ All payments loaded!', 'success');
+            }, 800);
+        }
+
+        // ===== SIDEBAR TOGGLE =====
+        (function() {
+            const sidebar = document.getElementById('sidebar');
+            const toggleBtn = document.getElementById('toggleSidebar');
+            const icon = toggleBtn.querySelector('i');
+
+            const savedState = localStorage.getItem('sidebarCollapsed');
+            if (savedState === 'true') {
+                sidebar.classList.add('collapsed');
+                document.body.classList.add('sidebar-collapsed');
+                icon.className = 'fas fa-chevron-right';
+            } else {
+                icon.className = 'fas fa-chevron-left';
+            }
+
+            toggleBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const isCollapsed = sidebar.classList.toggle('collapsed');
+                document.body.classList.toggle('sidebar-collapsed', isCollapsed);
+                icon.className = isCollapsed ? 'fas fa-chevron-right' : 'fas fa-chevron-left';
+                localStorage.setItem('sidebarCollapsed', isCollapsed);
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.altKey && e.key === 's') {
+                    e.preventDefault();
+                    toggleBtn.click();
+                }
+            });
+
+            const navLinks = document.querySelectorAll('.sidebar-nav a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            const dateBadge = document.querySelector('.date-badge');
+            if (dateBadge) {
+                const now = new Date();
+                const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
+                    'October', 'November', 'December'
+                ];
+                dateBadge.innerHTML =
+                    `<i class="fas fa-calendar-alt"></i> ${months[now.getMonth()]} ${now.getFullYear()}`;
+            }
+        })();
+
+        // ===== INIT =====
+        renderSchedule();
+        renderTransactions();
+        renderPayments();
+
+        // Log available slots by grave type (for reference)
+        console.log('Available Slots by Grave Type:', availableSlots);
+        console.log('Total Available Slots:', Object.values(availableSlots).reduce((a, b) => a + b, 0));
+    </script>
+
+</body>
+</html>
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-20T21:20:37+08:00.
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from Claude Sonnet 4.6 (Thinking) to Gemini 3.1 Pro (High). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>
