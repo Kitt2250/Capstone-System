@@ -179,3 +179,8 @@
     grid-template-columns: 1fr;
   }
 }
+.fam-btn-primary { background: #0073d1; color: white; border: none; padding: 0.6rem 1.5rem; border-radius: 10px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-weight: 500; font-size: 0.9rem; transition: 0.3s; }
+.fam-btn-primary:hover { background: #005a9e; }
+
+.fam-btn-secondary { background: white; color: #0073d1; border: 1px solid #0073d1; padding: 0.6rem 1.5rem; border-radius: 10px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-weight: 500; font-size: 0.9rem; transition: 0.3s; }
+.fam-btn-secondary:hover { background: #f0f8ff; }

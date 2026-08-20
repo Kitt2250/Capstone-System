@@ -130,9 +130,6 @@ function MyPayments() {
               </div>
               <div className="fmpay-progress-footer">
                 <span><i className="fas fa-info-circle"></i> Monthly Installment: <strong>{peso(summary?.monthly)}</strong></span>
-                <button className="fam-btn-primary" style={{ padding: "0.5rem 1rem", fontSize: "0.85rem" }}>
-                  <i className="fas fa-credit-card"></i> Pay Now
-                </button>
               </div>
             </div>
           </div>

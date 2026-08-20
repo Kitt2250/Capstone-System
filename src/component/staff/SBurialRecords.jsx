@@ -1,520 +1,484 @@
 import { useState } from "react";
 import "./sburial-records.css";
+import StaffTopbar from "./StaffTopbar";
 
 const INITIAL_RECORDS = [
-  {
-    id: "B-2847",
-    deceasedName: "Alejandro Reyes Sr.",
-    dob: "1945-05-12",
-    dod: "2025-11-20",
-    dateBuried: "2025-11-23",
-    graveNumber: "A-142",
-    section: "A",
-    block: "3",
-    type: "Ground",
-    clientName: "Ana Reyes",
-    contactPhone: "0917-123-4567",
-    status: "Active",
-  },
-  {
-    id: "B-2846",
-    deceasedName: "Carmen Dela Cruz",
-    dob: "1950-02-18",
-    dod: "2025-11-18",
-    dateBuried: "2025-11-21",
-    graveNumber: "B-045",
-    section: "B",
-    block: "4",
-    type: "Apartment",
-    clientName: "Roberto Dela Cruz",
-    contactPhone: "0917-234-5678",
-    status: "Active",
-  },
-  {
-    id: "B-2845",
-    deceasedName: "Jose Santos",
-    dob: "1938-09-03",
-    dod: "2025-11-15",
-    dateBuried: "2025-11-18",
-    graveNumber: "C-128",
-    section: "C",
-    block: "2",
-    type: "Mausoleum",
-    clientName: "Maria Santos Jr.",
-    contactPhone: "0917-345-6789",
-    status: "Active",
-  },
-  {
-    id: "B-2844",
-    deceasedName: "Lourdes Garcia",
-    dob: "1942-07-25",
-    dod: "2025-11-10",
-    dateBuried: "2025-11-13",
-    graveNumber: "A-200",
-    section: "A",
-    block: "5",
-    type: "Ground",
-    clientName: "Pedro Garcia",
-    contactPhone: "0917-456-7890",
-    status: "Active",
-  },
-  {
-    id: "B-2843",
-    deceasedName: "Miguel Tan",
-    dob: "1955-01-30",
-    dod: "2025-11-05",
-    dateBuried: "2025-11-08",
-    graveNumber: "D-012",
-    section: "D",
-    block: "1",
-    type: "Bone Vault",
-    clientName: "Carlos Tan",
-    contactPhone: "0917-567-8901",
-    status: "Active",
-  },
-  {
-    id: "B-2842",
-    deceasedName: "Felipe Mendoza",
-    dob: "1948-12-14",
-    dod: "2025-10-28",
-    dateBuried: "2025-10-31",
-    graveNumber: "B-098",
-    section: "B",
-    block: "2",
-    type: "Apartment",
-    clientName: "Rosa Mendoza",
-    contactPhone: "0917-678-9012",
-    status: "Active",
-  },
+  { id: 'B-2847', name: 'Alejandro Reyes Sr.', grave: 'A-142', type: 'Single Niche', date: '2025-11-23', contact: 'Ana Reyes', phone: '0917-123-4567', payment: 'Installment', contract: '2026-11-23', interment: true, docs: true },
+  { id: 'B-2846', name: 'Carmen Dela Cruz', grave: 'B-045', type: 'Apartment', date: '2025-11-21', contact: 'Roberto Dela Cruz', phone: '0918-234-5678', payment: 'Fully Paid', contract: '2028-11-21', interment: true, docs: false },
+  { id: 'B-2845', name: 'Jose Santos', grave: 'C-128', type: 'Mausoleum', date: '2025-11-18', contact: 'Maria Santos Jr.', phone: '0919-345-6789', payment: 'DP Only', contract: '2027-11-18', interment: false, docs: true },
+  { id: 'B-2844', name: 'Lourdes Garcia', grave: 'A-200', type: 'Garden Type', date: '2025-11-13', contact: 'Pedro Garcia', phone: '0920-456-7890', payment: 'Installment', contract: '2026-11-13', interment: true, docs: true },
+  { id: 'B-2843', name: 'Miguel Tan', grave: 'D-012', type: 'Bonevault', date: '2025-11-08', contact: 'Carlos Tan', phone: '0921-567-8901', payment: 'Fully Paid', contract: '2033-11-08', interment: true, docs: true },
+  { id: 'B-2842', name: 'Felipe Mendoza', grave: 'B-098', type: 'Heroes Buried', date: '2025-10-31', contact: 'Rosa Mendoza', phone: '0922-678-9012', payment: 'Installment', contract: '2026-10-31', interment: true, docs: true },
+  { id: 'B-2841', name: 'Teresita Cruz', grave: 'E-003', type: 'Columbarium', date: '2025-10-28', contact: 'Jose Cruz', phone: '0923-789-0123', payment: 'Fully Paid', contract: '2045-10-28', interment: true, docs: false }
 ];
 
-const EMPTY_FORM = {
-  deceasedName: "",
-  dob: "",
-  dod: "",
-  dateBuried: "",
-  graveNumber: "",
-  section: "",
-  block: "",
-  type: "",
-  clientName: "",
-  contactPhone: "",
+const graveTypeClasses = {
+  'Single Niche': 'single-niche',
+  'Mausoleum': 'mausoleum',
+  'Columbarium': 'columbarium',
+  'Apartment': 'apartment',
+  'Bonevault': 'bonevault',
+  'Garden Type': 'garden',
+  'Heroes Buried': 'heroes'
+};
+const graveTypeIcons = {
+  'Single Niche': 'fa-crown',
+  'Mausoleum': 'fa-landmark',
+  'Columbarium': 'fa-dove',
+  'Apartment': 'fa-building',
+  'Bonevault': 'fa-box',
+  'Garden Type': 'fa-tree',
+  'Heroes Buried': 'fa-medal'
 };
 
-function EyeIcon() {
+function Toast({ toast, onClose }) {
+  if (!toast) return null;
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
-      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-      <circle cx="12" cy="12" r="3" />
-    </svg>
-  );
-}
-
-function EditIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
-      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-      <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z" />
-    </svg>
-  );
-}
-
-function PrintIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
-      <polyline points="6 9 6 2 18 2 18 9" />
-      <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
-      <rect x="6" y="14" width="12" height="8" />
-    </svg>
-  );
-}
-
-function CloseIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
-      <line x1="18" y1="6" x2="6" y2="18" />
-      <line x1="6" y1="6" x2="18" y2="18" />
-    </svg>
-  );
-}
-
-function SearchIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
-      <circle cx="11" cy="11" r="8" />
-      <line x1="21" y1="21" x2="16.65" y2="16.65" />
-    </svg>
-  );
-}
-
-function PlusIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" width="14" height="14">
-      <line x1="12" y1="5" x2="12" y2="19" />
-      <line x1="5" y1="12" x2="19" y2="12" />
-    </svg>
+    <div className={`toast ${toast.type} ${toast.visible ? 'show' : ''}`}>
+      <span>{toast.message}</span>
+      <button className="toast-close" onClick={onClose}>×</button>
+    </div>
   );
 }
 
 function SBurialRecords() {
   const [records, setRecords] = useState(INITIAL_RECORDS);
-  const [search, setSearch] = useState("");
-  const [modal, setModal] = useState(null); // "view" | "edit" | "register" | null
-  const [selectedRecord, setSelectedRecord] = useState(null);
-  const [form, setForm] = useState(EMPTY_FORM);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [typeFilter, setTypeFilter] = useState('all');
+  const [paymentFilter, setPaymentFilter] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 5;
 
-  const filteredRecords = records.filter((r) => {
-    const q = search.toLowerCase();
-    return (
-      r.deceasedName.toLowerCase().includes(q) ||
-      r.graveNumber.toLowerCase().includes(q) ||
-      r.id.toLowerCase().includes(q)
-    );
+  const [toast, setToast] = useState(null);
+  const showToast = (message, type = 'success') => {
+    setToast({ message, type, visible: true });
+    setTimeout(() => setToast(t => (t ? { ...t, visible: false } : null)), 3500);
+  };
+
+  const [addModal, setAddModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+  const [viewModal, setViewModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
+  
+  const [targetRecord, setTargetRecord] = useState(null);
+
+  // Form states
+  const [form, setForm] = useState({
+    name: '', grave: '', type: 'Single Niche', date: new Date().toISOString().slice(0, 10),
+    payment: 'Fully Paid', contract: '', interment: true, contact: '', phone: '', docs: true
   });
 
-  const openView = (record) => {
-    setSelectedRecord(record);
-    setModal("view");
+  // Filter
+  const filteredRecords = records.filter(r => {
+    const s = searchTerm.toLowerCase();
+    const matchSearch = s === '' || r.name.toLowerCase().includes(s) || r.grave.toLowerCase().includes(s) || r.id.toLowerCase().includes(s) || r.contact.toLowerCase().includes(s);
+    const matchType = typeFilter === 'all' || r.type === typeFilter;
+    const matchPayment = paymentFilter === 'all' || r.payment === paymentFilter;
+    return matchSearch && matchType && matchPayment;
+  });
+
+  const totalPages = Math.ceil(filteredRecords.length / rowsPerPage);
+  const start = (currentPage - 1) * rowsPerPage;
+  const pageRecords = filteredRecords.slice(start, start + rowsPerPage);
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1);
+  };
+  const handleClearSearch = () => {
+    setSearchTerm('');
+    setCurrentPage(1);
   };
 
-  const openEdit = (record) => {
-    setSelectedRecord(record);
+  const openAdd = () => {
     setForm({
-      deceasedName: record.deceasedName,
-      dob: record.dob,
-      dod: record.dod,
-      dateBuried: record.dateBuried,
-      graveNumber: record.graveNumber,
-      section: record.section,
-      block: record.block,
-      type: record.type,
-      clientName: record.clientName,
-      contactPhone: record.contactPhone,
+      name: '', grave: '', type: 'Single Niche', date: new Date().toISOString().slice(0, 10),
+      payment: 'Fully Paid', contract: '', interment: true, contact: '', phone: '', docs: true
     });
-    setModal("edit");
+    setAddModal(true);
   };
 
-  const openRegister = () => {
-    setForm(EMPTY_FORM);
-    setModal("register");
+  const confirmAdd = () => {
+    if (!form.name || !form.grave || !form.date || !form.contact) {
+      showToast('⚠️ Please fill in all required fields', 'warning'); return;
+    }
+    const newId = `B-${Math.floor(Math.random() * 9000 + 1000)}`;
+    setRecords([{ ...form, id: newId }, ...records]);
+    setAddModal(false);
+    showToast(`✅ ${form.name} registered successfully! (ID: ${newId})`, 'success');
   };
 
-  const closeModal = () => {
-    setModal(null);
-    setSelectedRecord(null);
-    setForm(EMPTY_FORM);
+  const openEdit = (r) => {
+    setTargetRecord(r);
+    setForm({ ...r });
+    setEditModal(true);
   };
 
-  const handleSaveEdit = () => {
-    setRecords((prev) =>
-      prev.map((r) => (r.id === selectedRecord.id ? { ...r, ...form } : r))
-    );
-    closeModal();
+  const confirmEdit = () => {
+    if (!form.name || !form.grave || !form.date || !form.contact) {
+      showToast('⚠️ Please fill in all required fields', 'warning'); return;
+    }
+    setRecords(records.map(x => x.id === targetRecord.id ? { ...form, id: targetRecord.id } : x));
+    setEditModal(false);
+    showToast(`✅ ${form.name}'s record updated!`, 'success');
   };
 
-  const handleSaveRegister = () => {
-    const newId = `B-${2848 + records.length}`;
-    const newRecord = { id: newId, ...form, status: "Active" };
-    setRecords((prev) => [newRecord, ...prev]);
-    closeModal();
+  const openDelete = (r) => {
+    setTargetRecord(r);
+    setDeleteModal(true);
+  };
+
+  const confirmDelete = () => {
+    setRecords(records.filter(x => x.id !== targetRecord.id));
+    setDeleteModal(false);
+    showToast(`🗑️ ${targetRecord.name}'s record deleted`, 'success');
+  };
+
+  const openView = (r) => {
+    setTargetRecord(r);
+    setViewModal(true);
+  };
+
+  const exportRecords = () => {
+    showToast(`📥 Exporting ${filteredRecords.length} records...`, 'info');
+    setTimeout(() => showToast(`✅ ${filteredRecords.length} records exported!`, 'success'), 1500);
   };
 
   return (
-    <div className="sbr-page">
-      <div className="sbr-topbar">
-        <span>Cherubim of Heaven Memorial Park</span>
-      </div>
+    <div className="main-content" style={{ padding: "0 1.5rem" }}>
+      <Toast toast={toast} onClose={() => setToast(null)} />
+      
+      <StaffTopbar title="Burial Records" greeting="Manage all burial records, payments, and documents" />
 
-      <div className="sbr-header">
-        <div>
-          <h1>Burial Records</h1>
-          <p>{records.length} total records</p>
+      <div className="records-container">
+        {/* Header */}
+        <div className="records-header">
+          <div className="records-header-left">
+            <h2><i className="fas fa-cross" style={{ color: "#d4af37", marginRight: "8px" }}></i>All Records</h2>
+            <span className="record-count">{filteredRecords.length} total</span>
+          </div>
+          <div className="records-header-right">
+            <button className="btn-secondary" onClick={exportRecords}><i className="fas fa-file-export"></i> Export</button>
+            <button className="btn-primary" onClick={openAdd}><i className="fas fa-plus-circle"></i> Register Burial</button>
+          </div>
         </div>
-        <button className="sbr-register-btn" onClick={openRegister}>
-          <PlusIcon /> Register Burial
-        </button>
-      </div>
 
-      <div className="sbr-search-row">
-        <div className="sbr-search-wrap">
-          <span className="sbr-search-icon"><SearchIcon /></span>
-          <input
-            type="text"
-            placeholder="Search by name, grave number, or ID..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+        {/* Search & Filter */}
+        <div className="search-filter-bar">
+          <div className="search-wrapper">
+            <i className="fas fa-search search-icon"></i>
+            <input type="text" placeholder="Search by name, grave number, or ID..." value={searchTerm} onChange={handleSearch} />
+            {searchTerm && <button className="clear-btn visible" onClick={handleClearSearch}><i className="fas fa-times"></i></button>}
+          </div>
+          <div className="filter-group">
+            <select value={typeFilter} onChange={e => { setTypeFilter(e.target.value); setCurrentPage(1); }}>
+              <option value="all">All Grave Types</option>
+              <option value="Single Niche">🟡 Single Niche</option>
+              <option value="Mausoleum">🟣 Mausoleum</option>
+              <option value="Columbarium">🔵 Columbarium</option>
+              <option value="Apartment">🟢 Apartment</option>
+              <option value="Bonevault">⚪ Bonevault</option>
+              <option value="Garden Type">🌿 Garden Type</option>
+              <option value="Heroes Buried">🔴 Heroes Buried</option>
+            </select>
+            <select value={paymentFilter} onChange={e => { setPaymentFilter(e.target.value); setCurrentPage(1); }}>
+              <option value="all">All Payment Status</option>
+              <option value="Fully Paid">✅ Fully Paid</option>
+              <option value="Installment">📅 Installment</option>
+              <option value="DP Only">💰 DP Only</option>
+            </select>
+          </div>
         </div>
-      </div>
 
-      <div className="sbr-table-card">
-        <table className="sbr-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Deceased</th>
-              <th>Grave No.</th>
-              <th>Type</th>
-              <th>Date Buried</th>
-              <th>Contact</th>
-              <th className="sbr-th-actions">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredRecords.map((r) => (
-              <tr key={r.id}>
-                <td className="sbr-td-id">{r.id}</td>
-                <td className="sbr-td-name">{r.deceasedName}</td>
-                <td>{r.graveNumber}</td>
-                <td>
-                  <span className={`sbr-type-badge sbr-type-${r.type.toLowerCase().replace(" ", "-")}`}>
-                    {r.type}
-                  </span>
-                </td>
-                <td>{r.dateBuried}</td>
-                <td className="sbr-td-contact">{r.clientName}</td>
-                <td>
-                  <div className="sbr-action-icons">
-                    <button className="sbr-icon-btn" title="View" onClick={() => openView(r)}>
-                      <EyeIcon />
-                    </button>
-                    <button className="sbr-icon-btn" title="Edit" onClick={() => openEdit(r)}>
-                      <EditIcon />
-                    </button>
-                    <button className="sbr-icon-btn" title="Print">
-                      <PrintIcon />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-            {filteredRecords.length === 0 && (
+        {/* Table */}
+        <div className="table-wrapper">
+          <table>
+            <thead>
               <tr>
-                <td colSpan={7} className="sbr-no-results">No burial records found.</td>
+                <th><i className="fas fa-hashtag"></i>ID</th>
+                <th><i className="fas fa-user"></i>Deceased</th>
+                <th><i className="fas fa-map-pin"></i>Grave</th>
+                <th><i className="fas fa-layer-group"></i>Type</th>
+                <th><i className="fas fa-coins"></i>Payment</th>
+                <th><i className="fas fa-calendar-alt"></i>Contract</th>
+                <th><i className="fas fa-file"></i>Docs</th>
+                <th style={{ textAlign: "center" }}><i className="fas fa-cog"></i>Actions</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {pageRecords.length === 0 ? (
+                <tr>
+                  <td colSpan="8" style={{ textAlign: "center", padding: "2rem", color: "#8aaccc" }}>
+                    <i className="fas fa-search" style={{ fontSize: "1.5rem", display: "block", marginBottom: "0.5rem" }}></i>
+                    No records found
+                  </td>
+                </tr>
+              ) : (
+                pageRecords.map(r => {
+                  const icon = graveTypeIcons[r.type] || 'fa-circle';
+                  const typeClass = graveTypeClasses[r.type] || '';
+                  const paymentClass = r.payment === 'Fully Paid' ? 'fully-paid' : r.payment === 'Installment' ? 'installment' : 'dp-only';
+                  
+                  return (
+                    <tr key={r.id}>
+                      <td><strong>{r.id}</strong></td>
+                      <td><strong>{r.name}</strong></td>
+                      <td>{r.grave}</td>
+                      <td><span className={`grave-badge ${typeClass}`}><i className={`fas ${icon}`}></i> {r.type}</span></td>
+                      <td><span className={`payment-badge ${paymentClass}`}>{r.payment}</span></td>
+                      <td style={{ fontSize: "0.75rem", color: new Date(r.contract) < new Date() ? "#c0392b" : "#27ae60" }}>
+                        {r.contract} {new Date(r.contract) < new Date() ? '⚠️' : ''}
+                      </td>
+                      <td>
+                        <span className={`doc-status ${r.docs ? 'complete' : 'incomplete'}`}>
+                          <i className={`fas ${r.docs ? 'fa-check-circle' : 'fa-times-circle'}`}></i> {r.docs ? 'Complete' : 'Incomplete'}
+                        </span>
+                      </td>
+                      <td>
+                        <div className="action-buttons">
+                          <button className="btn-action-view" onClick={() => openView(r)}><i className="fas fa-eye"></i></button>
+                          <button className="btn-action-edit" onClick={() => openEdit(r)}><i className="fas fa-pen"></i></button>
+                          <button className="btn-action-delete" onClick={() => openDelete(r)}><i className="fas fa-trash"></i></button>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Pagination */}
+        {totalPages > 0 && (
+          <div className="pagination">
+            <div className="pagination-info">Showing {start + 1} to {Math.min(start + rowsPerPage, filteredRecords.length)} of {filteredRecords.length} records</div>
+            <div className="pagination-controls">
+              <button disabled={currentPage === 1} onClick={() => setCurrentPage(p => p - 1)}><i className="fas fa-chevron-left"></i></button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+                <button key={p} className={currentPage === p ? 'active' : ''} onClick={() => setCurrentPage(p)}>{p}</button>
+              ))}
+              <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(p => p + 1)}><i className="fas fa-chevron-right"></i></button>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* VIEW MODAL */}
-      {modal === "view" && selectedRecord && (
-        <div className="sbr-overlay" onClick={closeModal}>
-          <div className="sbr-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="sbr-modal-header">
-              <h2>Burial Record Details</h2>
-              <button className="sbr-modal-close" onClick={closeModal}>
-                <CloseIcon />
-              </button>
+      {/* Modals */}
+      {addModal && (
+        <div className="modal-overlay active" onClick={(e) => { if (e.target.className.includes('modal-overlay')) setAddModal(false) }}>
+          <div className="modal">
+            <div className="modal-icon" style={{ color: "#d4af37" }}><i className="fas fa-plus-circle"></i></div>
+            <h3>Register New Burial</h3>
+            <p className="modal-subtitle">Enter complete burial record details</p>
+            
+            <hr className="section-divider" />
+            <div className="section-label"><i className="fas fa-user"></i> Basic Information</div>
+            <div className="form-group">
+              <label>Full Name of Deceased</label>
+              <input type="text" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
+            </div>
+            <div className="form-row">
+              <div className="form-group">
+                <label>Grave Number</label>
+                <input type="text" value={form.grave} onChange={e => setForm({ ...form, grave: e.target.value })} />
+              </div>
+              <div className="form-group">
+                <label>Grave Type</label>
+                <select value={form.type} onChange={e => setForm({ ...form, type: e.target.value })}>
+                  <option value="Single Niche">🟡 Single Niche</option>
+                  <option value="Mausoleum">🟣 Mausoleum</option>
+                  <option value="Columbarium">🔵 Columbarium</option>
+                  <option value="Apartment">🟢 Apartment</option>
+                  <option value="Bonevault">⚪ Bonevault</option>
+                  <option value="Garden Type">🌿 Garden Type</option>
+                  <option value="Heroes Buried">🔴 Heroes Buried</option>
+                </select>
+              </div>
+            </div>
+            <div className="form-group">
+              <label>Date Buried</label>
+              <input type="date" value={form.date} onChange={e => setForm({ ...form, date: e.target.value })} />
             </div>
 
-            <div className="sbr-modal-grid">
-              <div>
-                <div className="sbr-modal-label">Record ID:</div>
-                <div className="sbr-modal-value">{selectedRecord.id}</div>
+            <hr className="section-divider" />
+            <div className="section-label"><i className="fas fa-coins"></i> Payment & Contract</div>
+            <div className="form-row">
+              <div className="form-group">
+                <label>Payment Status</label>
+                <select value={form.payment} onChange={e => setForm({ ...form, payment: e.target.value })}>
+                  <option value="Fully Paid">✅ Fully Paid</option>
+                  <option value="Installment">📅 Installment</option>
+                  <option value="DP Only">💰 DP Only</option>
+                </select>
               </div>
-              <div>
-                <div className="sbr-modal-label">Status:</div>
-                <span className="sbr-status-active">{selectedRecord.status}</span>
+              <div className="form-group">
+                <label>Contract Expiry</label>
+                <input type="date" value={form.contract} onChange={e => setForm({ ...form, contract: e.target.value })} />
               </div>
-
-              <div className="sbr-modal-full">
-                <div className="sbr-modal-label">Deceased Name:</div>
-                <div className="sbr-modal-value">{selectedRecord.deceasedName}</div>
-              </div>
-
-              <div>
-                <div className="sbr-modal-label">Date of Birth:</div>
-                <div className="sbr-modal-value">{selectedRecord.dob}</div>
-              </div>
-              <div>
-                <div className="sbr-modal-label">Date of Death:</div>
-                <div className="sbr-modal-value">{selectedRecord.dod}</div>
-              </div>
-
-              <div>
-                <div className="sbr-modal-label">Date Buried:</div>
-                <div className="sbr-modal-value">{selectedRecord.dateBuried}</div>
-              </div>
-              <div>
-                <div className="sbr-modal-label">Grave Number:</div>
-                <div className="sbr-modal-value">{selectedRecord.graveNumber}</div>
-              </div>
-
-              <div>
-                <div className="sbr-modal-label">Section/Block:</div>
-                <div className="sbr-modal-value">{selectedRecord.section} / {selectedRecord.block}</div>
-              </div>
-              <div>
-                <div className="sbr-modal-label">Type:</div>
-                <div className="sbr-modal-value">{selectedRecord.type}</div>
-              </div>
-
-              <div>
-                <div className="sbr-modal-label">Client Name:</div>
-                <div className="sbr-modal-value">{selectedRecord.clientName}</div>
-              </div>
-              <div>
-                <div className="sbr-modal-label">Contact Phone:</div>
-                <div className="sbr-modal-value">{selectedRecord.contactPhone}</div>
+            </div>
+            <div className="form-group">
+              <div className="checkbox-group">
+                <input type="checkbox" id="addInterment" checked={form.interment} onChange={e => setForm({ ...form, interment: e.target.checked })} />
+                <label htmlFor="addInterment">Yes, interment fee is paid</label>
               </div>
             </div>
 
-            <button className="sbr-modal-close-btn" onClick={closeModal}>Close</button>
+            <hr className="section-divider" />
+            <div className="section-label"><i className="fas fa-file-alt"></i> Documents & Contact</div>
+            <div className="form-row">
+              <div className="form-group">
+                <label>Contact Person</label>
+                <input type="text" value={form.contact} onChange={e => setForm({ ...form, contact: e.target.value })} />
+              </div>
+              <div className="form-group">
+                <label>Contact Number</label>
+                <input type="text" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} />
+              </div>
+            </div>
+            <div className="form-group">
+              <div className="checkbox-group">
+                <input type="checkbox" id="addDocs" checked={form.docs} onChange={e => setForm({ ...form, docs: e.target.checked })} />
+                <label htmlFor="addDocs">All documents complete</label>
+              </div>
+            </div>
+
+            <div className="modal-actions">
+              <button className="btn-cancel" onClick={() => setAddModal(false)}>Cancel</button>
+              <button className="btn-confirm" onClick={confirmAdd}><i className="fas fa-check"></i> Register Burial</button>
+            </div>
           </div>
         </div>
       )}
 
-      {/* EDIT MODAL */}
-      {modal === "edit" && (
-        <div className="sbr-overlay" onClick={closeModal}>
-          <div className="sbr-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="sbr-modal-header">
-              <h2>Edit Burial Record</h2>
-              <button className="sbr-modal-close" onClick={closeModal}>
-                <CloseIcon />
-              </button>
+      {editModal && targetRecord && (
+        <div className="modal-overlay active" onClick={(e) => { if (e.target.className.includes('modal-overlay')) setEditModal(false) }}>
+          <div className="modal">
+            <div className="modal-icon" style={{ color: "#f39c12" }}><i className="fas fa-pen"></i></div>
+            <h3>Edit Burial Record</h3>
+            <p className="modal-subtitle">Update all burial record details</p>
+            
+            <hr className="section-divider" />
+            <div className="section-label"><i className="fas fa-user"></i> Basic Information</div>
+            <div className="form-group">
+              <label>Full Name of Deceased</label>
+              <input type="text" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
+            </div>
+            <div className="form-row">
+              <div className="form-group">
+                <label>Grave Number</label>
+                <input type="text" value={form.grave} onChange={e => setForm({ ...form, grave: e.target.value })} />
+              </div>
+              <div className="form-group">
+                <label>Grave Type</label>
+                <select value={form.type} onChange={e => setForm({ ...form, type: e.target.value })}>
+                  <option value="Single Niche">🟡 Single Niche</option>
+                  <option value="Mausoleum">🟣 Mausoleum</option>
+                  <option value="Columbarium">🔵 Columbarium</option>
+                  <option value="Apartment">🟢 Apartment</option>
+                  <option value="Bonevault">⚪ Bonevault</option>
+                  <option value="Garden Type">🌿 Garden Type</option>
+                  <option value="Heroes Buried">🔴 Heroes Buried</option>
+                </select>
+              </div>
+            </div>
+            <div className="form-group">
+              <label>Date Buried</label>
+              <input type="date" value={form.date} onChange={e => setForm({ ...form, date: e.target.value })} />
             </div>
 
-            <BurialForm form={form} setForm={setForm} />
+            <hr className="section-divider" />
+            <div className="section-label"><i className="fas fa-coins"></i> Payment & Contract</div>
+            <div className="form-row">
+              <div className="form-group">
+                <label>Payment Status</label>
+                <select value={form.payment} onChange={e => setForm({ ...form, payment: e.target.value })}>
+                  <option value="Fully Paid">✅ Fully Paid</option>
+                  <option value="Installment">📅 Installment</option>
+                  <option value="DP Only">💰 DP Only</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Contract Expiry</label>
+                <input type="date" value={form.contract} onChange={e => setForm({ ...form, contract: e.target.value })} />
+              </div>
+            </div>
+            <div className="form-group">
+              <div className="checkbox-group">
+                <input type="checkbox" id="editInterment" checked={form.interment} onChange={e => setForm({ ...form, interment: e.target.checked })} />
+                <label htmlFor="editInterment">Yes, interment fee is paid</label>
+              </div>
+            </div>
 
-            <div className="sbr-modal-actions">
-              <button className="sbr-btn-secondary" onClick={closeModal}>Cancel</button>
-              <button className="sbr-btn-primary" onClick={handleSaveEdit}>Save Record</button>
+            <hr className="section-divider" />
+            <div className="section-label"><i className="fas fa-file-alt"></i> Documents & Contact</div>
+            <div className="form-row">
+              <div className="form-group">
+                <label>Contact Person</label>
+                <input type="text" value={form.contact} onChange={e => setForm({ ...form, contact: e.target.value })} />
+              </div>
+              <div className="form-group">
+                <label>Contact Number</label>
+                <input type="text" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} />
+              </div>
+            </div>
+            <div className="form-group">
+              <div className="checkbox-group">
+                <input type="checkbox" id="editDocs" checked={form.docs} onChange={e => setForm({ ...form, docs: e.target.checked })} />
+                <label htmlFor="editDocs">All documents complete</label>
+              </div>
+            </div>
+
+            <div className="modal-actions">
+              <button className="btn-cancel" onClick={() => setEditModal(false)}>Cancel</button>
+              <button className="btn-confirm" onClick={confirmEdit}><i className="fas fa-save"></i> Save Changes</button>
             </div>
           </div>
         </div>
       )}
 
-      {/* REGISTER MODAL */}
-      {modal === "register" && (
-        <div className="sbr-overlay" onClick={closeModal}>
-          <div className="sbr-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="sbr-modal-header">
-              <h2>Register New Burial</h2>
-              <button className="sbr-modal-close" onClick={closeModal}>
-                <CloseIcon />
-              </button>
-            </div>
-
-            <BurialForm form={form} setForm={setForm} />
-
-            <div className="sbr-modal-actions">
-              <button className="sbr-btn-secondary" onClick={closeModal}>Cancel</button>
-              <button className="sbr-btn-primary" onClick={handleSaveRegister}>Save Record</button>
+      {deleteModal && targetRecord && (
+        <div className="modal-overlay active" onClick={(e) => { if (e.target.className.includes('modal-overlay')) setDeleteModal(false) }}>
+          <div className="modal">
+            <div className="modal-icon" style={{ color: "#c0392b" }}><i className="fas fa-exclamation-triangle"></i></div>
+            <h3>Delete Record?</h3>
+            <p>Are you sure you want to delete the burial record of <strong>{targetRecord.name}</strong>? This action cannot be undone.</p>
+            <div className="modal-actions">
+              <button className="btn-cancel" onClick={() => setDeleteModal(false)}>Cancel</button>
+              <button className="btn-danger-modal" onClick={confirmDelete}><i className="fas fa-trash"></i> Delete</button>
             </div>
           </div>
         </div>
       )}
-    </div>
-  );
-}
 
-function BurialForm({ form, setForm }) {
-  const update = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
+      {viewModal && targetRecord && (
+        <div className="modal-overlay active" onClick={(e) => { if (e.target.className.includes('modal-overlay')) setViewModal(false) }}>
+          <div className="modal" style={{ maxWidth: "600px" }}>
+            <div className="modal-icon" style={{ color: "#3670AF" }}><i className="fas fa-user-circle"></i></div>
+            <h3>Burial Record</h3>
+            <p className="modal-subtitle">Complete burial details</p>
 
-  return (
-    <div className="sbr-form">
-      <div className="sbr-form-group">
-        <label>Deceased Name</label>
-        <input
-          type="text"
-          value={form.deceasedName}
-          onChange={(e) => update("deceasedName", e.target.value)}
-        />
-      </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.8rem 1.5rem", marginBottom: "1.5rem" }}>
+              <div><span style={{ color: "#8aaccc", fontSize: "0.75rem" }}>ID</span><br /><strong>{targetRecord.id}</strong></div>
+              <div><span style={{ color: "#8aaccc", fontSize: "0.75rem" }}>Grave Number</span><br /><strong>{targetRecord.grave}</strong></div>
+              <div><span style={{ color: "#8aaccc", fontSize: "0.75rem" }}>Grave Type</span><br /><span>{targetRecord.type}</span></div>
+              <div><span style={{ color: "#8aaccc", fontSize: "0.75rem" }}>Date Buried</span><br /><strong>{targetRecord.date}</strong></div>
+              <div><span style={{ color: "#8aaccc", fontSize: "0.75rem" }}>Payment Status</span><br /><span>{targetRecord.payment}</span></div>
+              <div><span style={{ color: "#8aaccc", fontSize: "0.75rem" }}>Contract Expiry</span><br /><strong>{targetRecord.contract}</strong></div>
+              <div><span style={{ color: "#8aaccc", fontSize: "0.75rem" }}>Interment Fee</span><br /><span>{targetRecord.interment ? '✅ Paid' : '❌ Pending'}</span></div>
+              <div><span style={{ color: "#8aaccc", fontSize: "0.75rem" }}>Documents</span><br /><span>{targetRecord.docs ? 'Complete' : 'Incomplete'}</span></div>
+              <div><span style={{ color: "#8aaccc", fontSize: "0.75rem" }}>Contact Person</span><br /><strong>{targetRecord.contact}</strong></div>
+              <div><span style={{ color: "#8aaccc", fontSize: "0.75rem" }}>Contact Number</span><br /><strong>{targetRecord.phone}</strong></div>
+            </div>
 
-      <div className="sbr-form-row">
-        <div className="sbr-form-group">
-          <label>Date of Birth</label>
-          <input
-            type="date"
-            value={form.dob}
-            onChange={(e) => update("dob", e.target.value)}
-          />
+            <div className="modal-actions">
+              <button className="btn-cancel" onClick={() => setViewModal(false)}>Close</button>
+              <button className="btn-confirm" onClick={() => setViewModal(false)}><i className="fas fa-check"></i> Done</button>
+            </div>
+          </div>
         </div>
-        <div className="sbr-form-group">
-          <label>Date of Death</label>
-          <input
-            type="date"
-            value={form.dod}
-            onChange={(e) => update("dod", e.target.value)}
-          />
-        </div>
-      </div>
+      )}
 
-      <div className="sbr-form-row">
-        <div className="sbr-form-group">
-          <label>Date Buried</label>
-          <input
-            type="date"
-            value={form.dateBuried}
-            onChange={(e) => update("dateBuried", e.target.value)}
-          />
-        </div>
-        <div className="sbr-form-group">
-          <label>Grave Number</label>
-          <input
-            type="text"
-            value={form.graveNumber}
-            onChange={(e) => update("graveNumber", e.target.value)}
-          />
-        </div>
-      </div>
-
-      <div className="sbr-form-row sbr-form-row--three">
-        <div className="sbr-form-group">
-          <label>Section</label>
-          <input
-            type="text"
-            value={form.section}
-            onChange={(e) => update("section", e.target.value)}
-          />
-        </div>
-        <div className="sbr-form-group">
-          <label>Block</label>
-          <input
-            type="text"
-            value={form.block}
-            onChange={(e) => update("block", e.target.value)}
-          />
-        </div>
-        <div className="sbr-form-group">
-          <label>Type</label>
-          <select value={form.type} onChange={(e) => update("type", e.target.value)}>
-            <option value="">Select</option>
-            <option value="Ground">Ground</option>
-            <option value="Apartment">Apartment</option>
-            <option value="Mausoleum">Mausoleum</option>
-            <option value="Bone Vault">Bone Vault</option>
-          </select>
-        </div>
-      </div>
-
-      <div className="sbr-form-row">
-        <div className="sbr-form-group">
-          <label>Client Name</label>
-          <input
-            type="text"
-            value={form.clientName}
-            onChange={(e) => update("clientName", e.target.value)}
-          />
-        </div>
-        <div className="sbr-form-group">
-          <label>Contact Phone</label>
-          <input
-            type="text"
-            value={form.contactPhone}
-            onChange={(e) => update("contactPhone", e.target.value)}
-          />
-        </div>
-      </div>
     </div>
   );
 }
