@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import "./dashboards.css";
 import StaffTopbar from "./StaffTopbar";
-
 const SCHEDULE_DATA = [
   { id: 1, time: '09:00 AM', event: 'Burial - Section A, Block 3, Lot 15', type: 'burial' },
   { id: 2, time: '10:30 AM', event: 'Installment payment - Single Niche Lot B-042', type: 'payment' },
@@ -131,38 +130,7 @@ function DashboardS() {
       <Toast toasts={toasts} removeToast={removeToast} />
 
       {/* ── Top Bar ── */}
-      <div className="ds-topbar">
-        <div className="ds-topbar-left">
-          <h1 className="ds-title">Operational Overview <span className="ds-title-star">✦</span></h1>
-          <p className="ds-greeting">Welcome back, Staff</p>
-        </div>
-        <div className="ds-topbar-right">
-          <div className="ds-date-badge">
-            <i className="fas fa-calendar-alt"></i> {monthYear}
-          </div>
-
-          {/* Bell with dropdown */}
-          <div className="ds-bell-wrapper" ref={bellRef}>
-            <button
-              className="ds-bell-btn"
-              onClick={() => setBellOpen(o => !o)}
-              title="Notifications"
-            >
-              <i className="fas fa-bell"></i>
-              {unreadAlerts > 0 && <span className="ds-bell-dot" />}
-            </button>
-
-            {bellOpen && (
-              <NotificationDropdown
-                alerts={systemAlerts}
-                onMarkRead={handleMarkAlertRead}
-                onMarkAllRead={handleMarkAllAlertsRead}
-                onClose={() => setBellOpen(false)}
-              />
-            )}
-          </div>
-        </div>
-      </div>
+      <StaffTopbar title="Operational Overview" greeting="Welcome back, Staff" />
 
       {/* ── Stats Grid ── */}
       <div className="ds-stats-grid">

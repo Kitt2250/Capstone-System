@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import "./dashboarda.css";
 import AdminTopbar from "./AdminTopbar";
-
 // ── Static seed data ────────────────────────────────────────────────────────
 const EXPIRING_INIT = [
   { id: 1, lot: "Lot A-142", owner: "Juan Dela Cruz", type: "Ground Grave", daysLeft: 5  },
@@ -252,38 +251,7 @@ function DashboardA() {
       <Toast toasts={toasts} removeToast={removeToast} />
 
       {/* ── Top Bar ── */}
-      <div className="da-topbar">
-        <div className="da-topbar-left">
-          <h1 className="da-title">System Overview <span className="da-title-star">✦</span></h1>
-          <p className="da-greeting">Welcome back, Administrator</p>
-        </div>
-        <div className="da-topbar-right">
-          <div className="da-date-badge">
-            <i className="fas fa-calendar-alt"></i> {monthYear}
-          </div>
-
-          {/* Bell with dropdown */}
-          <div className="da-bell-wrapper" ref={bellRef}>
-            <button
-              className="da-bell-btn"
-              onClick={() => setBellOpen(o => !o)}
-              title="Notifications"
-            >
-              <i className="fas fa-bell"></i>
-              {unreadAlerts > 0 && <span className="da-bell-dot" />}
-            </button>
-
-            {bellOpen && (
-              <NotificationDropdown
-                alerts={systemAlerts}
-                onMarkRead={handleMarkAlertRead}
-                onMarkAllRead={handleMarkAllAlertsRead}
-                onClose={() => setBellOpen(false)}
-              />
-            )}
-          </div>
-        </div>
-      </div>
+      <AdminTopbar title="System Overview" greeting="Welcome back, Administrator" />
 
       {/* ── Stats Grid ── */}
       <div className="da-stats-grid">
