@@ -1,151 +1,207 @@
+import { useState, useEffect } from "react";
 import "./dashboards.css";
 
-const STATS = [
-  { label: "Burials Today",       value: "3" },
-  { label: "Available Lots",      value: "240" },
-  { label: "Pending Payments",    value: "12" },
-  { label: "Wake Reservations",   value: "2" },
-];
-
-const ALERTS = [
-  { text: "5 installment payments overdue",        level: "warning" },
-  { text: "Wake space Chapel B reserved for tomorrow", level: "info" },
-  { text: "3 contracts expiring this week",         level: "warning" },
-];
-
-const SCHEDULE = [
-  { time: "09:00 AM", title: "Burial - Section A, Block 3, Lot 15",        tag: "burial" },
-  { time: "10:30 AM", title: "Payment processing - Lot B-042 installment", tag: "payment" },
-  { time: "11:00 AM", title: "Family visit - Locate Grave C-128",          tag: "visit" },
-  { time: "01:00 PM", title: "Burial - Section B, Block 1, Lot 8",         tag: "burial" },
-  { time: "02:30 PM", title: "Wake setup - Chapel A",                     tag: "wake" },
-  { time: "03:00 PM", title: "New lot registration - Ground burial",      tag: "registration" },
-  { time: "04:00 PM", title: "Burial - Section A, Block 5, Lot 22",       tag: "burial" },
+const SCHEDULE_DATA = [
+  { time: '09:00 AM', event: 'Burial - Section A, Block 3, Lot 15', type: 'burial' },
+  { time: '10:30 AM', event: 'Installment payment - Single Niche Lot B-042', type: 'payment' },
+  { time: '01:00 PM', event: 'Burial - Section B, Block 1, Lot 8', type: 'burial' },
+  { time: '02:30 PM', event: 'Wake setup - Chapel A (Columbarium)', type: 'wake' },
+  { time: '03:00 PM', event: 'New lot registration - Apartment Type', type: 'registration' },
+  { time: '04:00 PM', event: 'Burial - Section A, Block 5, Lot 22', type: 'burial' },
 ];
 
 const TRANSACTIONS = [
-  { name: "Rosa Mendoza",  ref: "OR-2026-0342 - Installment", amount: 15000, time: "2 hours ago" },
-  { name: "Pedro Garcia",  ref: "OR-2026-0341 - Full Payment", amount: 85000, time: "4 hours ago" },
-  { name: "Elena Santos",  ref: "OR-2026-0340 - Installment", amount: 10000, time: "Yesterday" },
+  { name: 'Rosa Mendoza', or: 'OR-2026-0342', desc: 'Installation - Single Niche', icon: 'gold' },
+  { name: 'Pedro Garcia', or: 'OR-2026-0341', desc: 'Full Payment - Columbarium', icon: 'blue' },
+  { name: 'Elena Santos', or: 'OR-2026-0340', desc: 'Installment - Bonevault', icon: 'green' },
 ];
 
-const peso = (n) => "₱" + n.toLocaleString("en-PH");
-
-function StatIcon({ index }) {
-  if (index === 0) return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-      <polyline points="14 2 14 8 20 8" />
-    </svg>
-  );
-  if (index === 1) return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
-      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-      <circle cx="12" cy="10" r="3" />
-    </svg>
-  );
-  if (index === 2) return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
-      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-      <line x1="16" y1="2" x2="16" y2="6" />
-      <line x1="8" y1="2" x2="8" y2="6" />
-      <line x1="3" y1="10" x2="21" y2="10" />
-    </svg>
-  );
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
-      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-      <line x1="16" y1="2" x2="16" y2="6" />
-      <line x1="8" y1="2" x2="8" y2="6" />
-      <line x1="3" y1="10" x2="21" y2="10" />
-    </svg>
-  );
-}
-
-function AlertIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="#d97706" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
-      <circle cx="12" cy="12" r="10" />
-      <line x1="12" y1="8" x2="12" y2="12" />
-      <line x1="12" y1="16" x2="12.01" y2="16" />
-    </svg>
-  );
-}
+const PAYMENTS = [
+  { name: 'Rosa Mendoza', amount: '₱6,250', or: 'OR-2026-0342', desc: 'Single Niche - Monthly', time: '2 hours ago', avatar: 'RM', color: 'gold', installment: '6 of 12 payments' },
+  { name: 'Pedro Garcia', amount: '₱3,167', or: 'OR-2026-0341', desc: 'Columbarium - Monthly', time: '4 hours ago', avatar: 'PG', color: 'blue', installment: '3 of 12 payments' },
+  { name: 'Elena Santos', amount: '₱2,500', or: 'OR-2026-0340', desc: 'Bonevault - Monthly', time: 'Yesterday', avatar: 'ES', color: 'green', installment: '4 of 12 payments' },
+];
 
 function DashboardS() {
+  const [filter, setFilter] = useState('all');
+
+  const filteredSchedule = SCHEDULE_DATA.filter(item => filter === 'all' || item.type === filter);
+
   return (
     <div className="ds-page">
+      {/* TOP BAR */}
       <div className="ds-topbar">
-        <span>Cherubim of Heaven Memorial Park</span>
-      </div>
-
-      <div className="ds-header">
-        <h1>Operational Overview</h1>
-        <p>Welcome back, Staff</p>
-      </div>
-
-      {/* Stats */}
-      <div className="ds-stats">
-        {STATS.map((stat, i) => (
-          <div className="ds-stat-card" key={stat.label}>
-            <div className="ds-stat-top">
-              <span className="ds-stat-label">{stat.label}</span>
-              <StatIcon index={i} />
-            </div>
-            <p className="ds-stat-value">{stat.value}</p>
+        <div className="ds-topbar-left">
+          <h1>Operational Overview <span>✦</span></h1>
+          <div className="ds-greeting">Welcome back, <strong>Staff</strong> • Here's your daily overview</div>
+        </div>
+        <div className="ds-topbar-right">
+          <div className="ds-date-badge">
+            <i className="fas fa-calendar-alt"></i> August 2026
           </div>
-        ))}
+          <button className="ds-notification-btn" title="Notifications">
+            <i className="fas fa-bell"></i>
+            <span className="ds-dot"></span>
+          </button>
+        </div>
       </div>
 
-      {/* Alerts */}
-      <div className="ds-alerts">
-        {ALERTS.map((alert, i) => (
-          <div className="ds-alert-row" key={i}>
-            <AlertIcon />
-            <span>{alert.text}</span>
+      {/* ===== STATS CARDS ===== */}
+      <div className="ds-stats-grid">
+        <div className="ds-stat-card">
+          <div className="ds-stat-icon ds-gold"><i className="fas fa-cross"></i></div>
+          <div className="ds-stat-label">Burials Today</div>
+          <div className="ds-stat-value">3</div>
+          <div className="ds-stat-change"><span>↑ 2</span> vs yesterday</div>
+        </div>
+        <div className="ds-stat-card">
+          <div className="ds-stat-icon ds-blue"><i className="fas fa-tshirt"></i></div>
+          <div className="ds-stat-label">Available Slots</div>
+          <div className="ds-stat-value">223</div>
+          <div className="ds-stat-change"><span className="ds-down">↓ 8</span> this week</div>
+        </div>
+        <div className="ds-stat-card">
+          <div className="ds-stat-icon ds-orange"><i className="fas fa-clock"></i></div>
+          <div className="ds-stat-label">Pending Installments</div>
+          <div className="ds-stat-value">12</div>
+          <div className="ds-stat-change"><span>↑ 3</span> vs last week</div>
+        </div>
+        <div className="ds-stat-card">
+          <div className="ds-stat-icon ds-green"><i className="fas fa-bed"></i></div>
+          <div className="ds-stat-label">Wake Reservations</div>
+          <div className="ds-stat-value">2</div>
+          <div className="ds-stat-change"><span>+1</span> today</div>
+        </div>
+      </div>
+
+      {/* ===== ALERT BANNER ===== */}
+      <div className="ds-alert-banner">
+        <div className="ds-alert-item">
+          <i className="fas fa-exclamation-triangle ds-red"></i>
+          <span><strong>5</strong> installment payments overdue</span>
+          <span className="ds-badge">Urgent</span>
+        </div>
+        <div className="ds-alert-item">
+          <i className="fas fa-clock ds-blue"></i>
+          <span>Wake space Chapel B reserved for <strong>tomorrow</strong></span>
+          <span className="ds-badge ds-info">Reminder</span>
+        </div>
+        <div className="ds-alert-item">
+          <i className="fas fa-calendar-times ds-orange"></i>
+          <span><strong>3</strong> contracts expiring this week</span>
+          <span className="ds-badge ds-warning">Warning</span>
+        </div>
+      </div>
+
+      {/* ===== DASHBOARD GRID ===== */}
+      <div className="ds-dashboard-grid">
+
+        {/* LEFT: Schedule with Filters */}
+        <div className="ds-schedule-section">
+          <div className="ds-section-header">
+            <h3><i className="fas fa-clock"></i> Today's Schedule</h3>
+            <span className="ds-view-all">View all →</span>
           </div>
-        ))}
-      </div>
 
-      {/* Bottom Grid */}
-      <div className="ds-bottom-grid">
-        {/* Today's Schedule */}
-        <div className="ds-card">
-          <h2 className="ds-card-title">Today's Schedule</h2>
+          {/* Filter Tabs */}
+          <div className="ds-schedule-filters">
+            <button className={`ds-filter-btn ${filter === 'all' ? 'ds-active' : ''}`} onClick={() => setFilter('all')}>
+              <i className="fas fa-list"></i> All
+              <span className="ds-count">{SCHEDULE_DATA.length}</span>
+            </button>
+            <button className={`ds-filter-btn ${filter === 'burial' ? 'ds-active' : ''}`} onClick={() => setFilter('burial')}>
+              <i className="fas fa-cross"></i> Burials
+              <span className="ds-count">{SCHEDULE_DATA.filter(i => i.type === 'burial').length}</span>
+            </button>
+            <button className={`ds-filter-btn ${filter === 'payment' ? 'ds-active' : ''}`} onClick={() => setFilter('payment')}>
+              <i className="fas fa-coins"></i> Payments
+              <span className="ds-count">{SCHEDULE_DATA.filter(i => i.type === 'payment').length}</span>
+            </button>
+            <button className={`ds-filter-btn ${filter === 'wake' ? 'ds-active' : ''}`} onClick={() => setFilter('wake')}>
+              <i className="fas fa-bed"></i> Wake
+              <span className="ds-count">{SCHEDULE_DATA.filter(i => i.type === 'wake').length}</span>
+            </button>
+            <button className={`ds-filter-btn ${filter === 'registration' ? 'ds-active' : ''}`} onClick={() => setFilter('registration')}>
+              <i className="fas fa-file-signature"></i> Registrations
+              <span className="ds-count">{SCHEDULE_DATA.filter(i => i.type === 'registration').length}</span>
+            </button>
+          </div>
+
           <div className="ds-schedule-list">
-            {SCHEDULE.map((item, i) => (
-              <div className="ds-schedule-row" key={i}>
-                <span className="ds-schedule-time">{item.time}</span>
-                <span className="ds-schedule-desc">{item.title}</span>
-                <span className={`ds-tag ds-tag--${item.tag}`}>{item.tag}</span>
+            {filteredSchedule.length > 0 ? filteredSchedule.map((item, idx) => (
+              <div key={idx} className={`ds-schedule-item ds-${item.type}`}>
+                <div className="ds-time">{item.time}</div>
+                <div className="ds-event">
+                  {item.event}
+                  <span className="ds-location">
+                    {item.type === 'burial' ? 'Burial Service' : item.type === 'payment' ? 'Payment Processing' : item.type === 'wake' ? 'Wake Service' : 'Lot Registration'}
+                  </span>
+                </div>
+                <span className={`ds-type-badge ds-${item.type}`}>{item.type}</span>
               </div>
-            ))}
+            )) : (
+              <div className="ds-no-results">
+                <i className="fas fa-search"></i>
+                No items found for today
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Recent Transactions */}
-        <div className="ds-card">
-          <h2 className="ds-card-title">Recent Transactions</h2>
-          <div className="ds-transaction-list">
-            {TRANSACTIONS.map((tx, i) => (
-              <div className="ds-transaction-row" key={i}>
-                <div>
-                  <p className="ds-tx-name">{tx.name}</p>
-                  <p className="ds-tx-ref">{tx.ref}</p>
+        {/* RIGHT: Recent Transactions + Payments */}
+        <div className="ds-right-panel">
+
+          {/* Recent Transactions */}
+          <div className="ds-transactions-section">
+            <div className="ds-section-header">
+              <h3><i className="fas fa-receipt"></i> Recent Transactions</h3>
+              <span className="ds-view-all">View all →</span>
+            </div>
+            <div className="ds-transaction-list">
+              {TRANSACTIONS.map((tx, idx) => (
+                <div key={idx} className="ds-transaction-item">
+                  <div className={`ds-tx-icon ds-${tx.icon}`}>
+                    <i className={`fas fa-${tx.icon === 'gold' ? 'star' : tx.icon === 'blue' ? 'user' : 'check'}`}></i>
+                  </div>
+                  <div className="ds-tx-info">
+                    <div className="ds-name">{tx.name}</div>
+                    <div className="ds-desc">{tx.or} - {tx.desc}</div>
+                  </div>
                 </div>
-                <div className="ds-tx-right">
-                  <p className="ds-tx-amount">{peso(tx.amount)}</p>
-                  <p className="ds-tx-time">{tx.time}</p>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
+
+          {/* Payments Overview */}
+          <div className="ds-payments-section">
+            <div className="ds-section-header">
+              <h3><i className="fas fa-coins"></i> Installment Payments</h3>
+              <span className="ds-view-all">View all →</span>
+            </div>
+            <div>
+              {PAYMENTS.map((pay, idx) => (
+                <div key={idx} className="ds-payment-item">
+                  <div className={`ds-pay-avatar ds-${pay.color}`}>{pay.avatar}</div>
+                  <div className="ds-pay-info">
+                    <div className="ds-name">{pay.name}</div>
+                    <div className="ds-desc">{pay.or} - {pay.desc}</div>
+                    <div className="ds-installment">{pay.installment}</div>
+                  </div>
+                  <div className="ds-pay-amount">{pay.amount}</div>
+                  <div className="ds-pay-time">{pay.time}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
         </div>
+      </div>
+      
+      {/* FOOTER */}
+      <div style={{marginTop: '1rem', textAlign: 'center', fontSize: '0.7rem', color: '#8aaccc', borderTop: '1px solid rgba(212,175,55,0.08)', paddingTop: '1.5rem'}}>
+          <i className="fas fa-dove" style={{color: '#d4af37', margin: '0 4px'}}></i>
+          Cherubim of Heaven Memorial Park · Staff Dashboard v2.0
+          <i className="fas fa-dove" style={{color: '#d4af37', margin: '0 4px'}}></i>
       </div>
     </div>
   );

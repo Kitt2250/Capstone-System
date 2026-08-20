@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { NavLink, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase.config";
-import "./staff-navigation.css";
+import "./dashboards.css";
 import DashboardS from "./DashboardS";
 import SBurialRecords from "./SBurialRecords";
 import GraveInventory from "./GraveInventory";
@@ -10,8 +10,9 @@ import InstallmentPayments from "./InstallmentPayments";
 import WakeScheduling from "./WakeScheduling";
 import Reports from "./Reports";
 import MyAccount from "./MyAccount";
+import SNotifications from "./Notifications";
+import POSTransactions from "./POSTransactions";
 
-// ── Fallback Route Helper ───────────────────────────────────────────────────
 function FallbackRoute({ to }) {
   const navigate = useNavigate();
   useEffect(() => {
@@ -20,21 +21,6 @@ function FallbackRoute({ to }) {
   }, [navigate, to]);
   return null;
 }
-import SNotifications from "./Notifications";
-import POSTransactions from "./POSTransactions";
-
-const menuItems = [
-  { key: "dashboard",    label: "Dashboard",           path: "/staff/dashboard" },
-  { key: "burial",       label: "Burial Records",      path: "/staff/burial" },
-  { key: "inventory",    label: "Grave Inventory",     path: "/staff/inventory" },
-  { key: "mapping",      label: "Grave Mapping",       path: "/staff/mapping" },
-  { key: "pos",          label: "POS Transactions",    path: "/staff/pos" },
-  { key: "installment",  label: "Installment Payments",path: "/staff/installment" },
-  { key: "wake",         label: "Wake Scheduling",     path: "/staff/wake" },
-  { key: "notifications",label: "Notifications",       path: "/staff/notifications" },
-  { key: "reports",      label: "Reports",             path: "/staff/reports" },
-  { key: "account",      label: "My Account",          path: "/staff/account" },
-];
 
 function getInitials(name) {
   return (name || "")
@@ -45,108 +31,21 @@ function getInitials(name) {
     .toUpperCase();
 }
 
-function StaffNavIcon({ navKey }) {
-  if (navKey === "dashboard") return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
-      <rect x="3" y="3" width="7" height="7" rx="1" />
-      <rect x="14" y="3" width="7" height="7" rx="1" />
-      <rect x="14" y="14" width="7" height="7" rx="1" />
-      <rect x="3" y="14" width="7" height="7" rx="1" />
-    </svg>
-  );
-  if (navKey === "burial") return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-      <polyline points="14 2 14 8 20 8" />
-      <line x1="16" y1="13" x2="8" y2="13" />
-      <line x1="16" y1="17" x2="8" y2="17" />
-    </svg>
-  );
-  if (navKey === "inventory") return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
-      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-      <circle cx="12" cy="10" r="3" />
-    </svg>
-  );
-  if (navKey === "mapping") return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
-      <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" />
-      <line x1="8" y1="2" x2="8" y2="18" />
-      <line x1="16" y1="6" x2="16" y2="22" />
-    </svg>
-  );
-  if (navKey === "pos") return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
-      <circle cx="9" cy="21" r="1" />
-      <circle cx="20" cy="21" r="1" />
-      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-    </svg>
-  );
-  if (navKey === "installment") return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
-      <line x1="12" y1="1" x2="12" y2="23" />
-      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-    </svg>
-  );
-  if (navKey === "wake") return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
-      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-      <line x1="16" y1="2" x2="16" y2="6" />
-      <line x1="8" y1="2" x2="8" y2="6" />
-      <line x1="3" y1="10" x2="21" y2="10" />
-    </svg>
-  );
-  if (navKey === "notifications") return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
-      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-      <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-    </svg>
-  );
-  if (navKey === "reports") return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
-      <line x1="18" y1="20" x2="18" y2="10" />
-      <line x1="12" y1="20" x2="12" y2="4" />
-      <line x1="6" y1="20" x2="6" y2="14" />
-    </svg>
-  );
-  if (navKey === "account") return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-      <circle cx="12" cy="7" r="4" />
-    </svg>
-  );
-  return null;
-}
-
 function PagePlaceholder({ title }) {
   return (
-    <div className="sn-placeholder">
-      <div className="sn-placeholder-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-          stroke="#d1d5db" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="48" height="48">
-          <rect x="3" y="3" width="18" height="18" rx="2" />
-          <line x1="3" y1="9" x2="21" y2="9" />
-          <line x1="9" y1="21" x2="9" y2="9" />
-        </svg>
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px', padding: '40px', textAlign: 'center' }}>
+      <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '8px' }}>
+        <i className="fas fa-hammer" style={{ fontSize: '2rem', color: '#d1d5db' }}></i>
       </div>
-      <h2 className="sn-placeholder-title">{title}</h2>
-      <p className="sn-placeholder-sub">This section is under construction.</p>
+      <h2 style={{ fontSize: '18px', fontWeight: 600, color: '#111827' }}>{title}</h2>
+      <p style={{ fontSize: '13px', color: '#9ca3af' }}>This section is under construction.</p>
     </div>
   );
 }
 
 function StaffNavigation({ onSignOut }) {
   const [currentUser, setCurrentUser] = useState(null);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -162,69 +61,89 @@ function StaffNavigation({ onSignOut }) {
       }
     };
     fetchCurrentUser();
+
+    const savedState = localStorage.getItem('sidebarCollapsed');
+    if (savedState === 'true') {
+      setIsCollapsed(true);
+    }
   }, []);
 
+  const toggleSidebar = () => {
+    const newState = !isCollapsed;
+    setIsCollapsed(newState);
+    localStorage.setItem('sidebarCollapsed', newState);
+  };
+
   return (
-    <div className="sn-wrapper">
-      {/* SIDEBAR */}
-      <aside className="sn-sidebar">
-        <div className="sn-brand">
-          <div className="sn-brand-logo">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-              fill="none" stroke="white" strokeWidth="1.8"
-              strokeLinecap="round" strokeLinejoin="round" width="20" height="20">
-              <circle cx="12" cy="8" r="3" />
-              <path d="M6 20v-2a6 6 0 0 1 12 0v2" />
-            </svg>
+    <div className={isCollapsed ? 'staff-body-collapsed' : ''} style={{ background: '#e8edf4', minHeight: '100vh', display: 'flex', width: '100%' }}>
+      {/* ===== SIDEBAR ===== */}
+      <aside className={`ds-sidebar ${isCollapsed ? 'collapsed' : ''}`}>
+        <div className="ds-sidebar-brand">
+          <div className="ds-brand-content">
+            <div className="ds-icon-ornament">
+              <i className="fas fa-dove"></i>
+            </div>
+            <div className="ds-brand-text">
+              <h2>Cherubim of Heaven</h2>
+              <div className="ds-sub">Memorial Park</div>
+            </div>
           </div>
-          <div>
-            <div className="sn-brand-name">Cherubim of Heaven</div>
-            <div className="sn-brand-sub">Staff Panel</div>
-          </div>
+          <button className="ds-toggle-btn" onClick={toggleSidebar}>
+            <i className={`fas fa-chevron-${isCollapsed ? 'right' : 'left'}`}></i>
+          </button>
         </div>
 
-        <nav className="sn-nav">
-          {menuItems.map((item) => (
-            <NavLink
-              key={item.key}
-              to={item.path}
-              className={({ isActive }) => `sn-nav-btn ${isActive ? "sn-nav-btn--active" : ""}`}
-            >
-              <StaffNavIcon navKey={item.key} />
-              {item.label}
-            </NavLink>
-          ))}
+        <nav className="ds-sidebar-nav">
+          <div className="ds-nav-label">Main</div>
+          <NavLink to="/staff/dashboard" className={({ isActive }) => isActive ? "active" : ""}>
+            <i className="fas fa-th-large"></i> <span>Dashboard</span>
+          </NavLink>
+          <NavLink to="/staff/burial" className={({ isActive }) => isActive ? "active" : ""}>
+            <i className="fas fa-cross"></i> <span>Burial Records</span>
+          </NavLink>
+          <NavLink to="/staff/inventory" className={({ isActive }) => isActive ? "active" : ""}>
+            <i className="fas fa-map-marked-alt"></i> <span>Map Availability</span>
+          </NavLink>
+          <NavLink to="/staff/installment" className={({ isActive }) => isActive ? "active" : ""}>
+            <i className="fas fa-coins"></i> <span>Payments</span>
+          </NavLink>
+          
+          <div className="ds-nav-label" style={{ marginTop: '1.2rem' }}>Management</div>
+          <NavLink to="/staff/wake" className={({ isActive }) => isActive ? "active" : ""}>
+            <i className="fas fa-calendar-check"></i> <span>Reservations</span>
+          </NavLink>
+          <NavLink to="/staff/pos" className={({ isActive }) => isActive ? "active" : ""}>
+            <i className="fas fa-receipt"></i> <span>POS Transact</span>
+          </NavLink>
+          <NavLink to="/staff/reports" className={({ isActive }) => isActive ? "active" : ""}>
+            <i className="fas fa-file-alt"></i> <span>Reports</span>
+          </NavLink>
+          <NavLink to="/staff/account" className={({ isActive }) => isActive ? "active" : ""}>
+            <i className="fas fa-user-circle"></i> <span>My Account</span>
+          </NavLink>
         </nav>
 
-        {/* FOOTER */}
-        <div className="sn-footer">
-          <div className="sn-user-row">
-            <div className="sn-avatar">
-              {getInitials(currentUser?.name) || "—"}
+        <div className="ds-sidebar-footer">
+          <div className="ds-user-card">
+            <div className="ds-avatar">{getInitials(currentUser?.name) || 'S'}</div>
+            <div className="ds-info">
+              <div className="ds-name">{currentUser?.name || "Loading..."}</div>
+              <div className="ds-email">{currentUser?.email || auth.currentUser?.email || ""}</div>
             </div>
-            <div className="sn-user-info">
-              <div className="sn-user-name">
-                {currentUser?.name || "Loading..."}
-              </div>
-              <div className="sn-user-email">
-                {currentUser?.email || auth.currentUser?.email || ""}
-              </div>
-            </div>
+            <button 
+              onClick={onSignOut} 
+              className="ds-badge" 
+              style={{ background: '#c0392b', border: 'none', cursor: 'pointer', color: 'white' }}
+              title="Sign Out"
+            >
+              Exit
+            </button>
           </div>
-          <button className="sn-signout-btn" onClick={onSignOut}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-              <polyline points="16 17 21 12 16 7" />
-              <line x1="21" y1="12" x2="9" y2="12" />
-            </svg>
-            Sign Out
-          </button>
         </div>
       </aside>
 
-      {/* MAIN CONTENT — nested routes */}
-      <main className="sn-content">
+      {/* ===== MAIN CONTENT ===== */}
+      <main className="ds-main-content">
         <Routes>
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<DashboardS />} />
