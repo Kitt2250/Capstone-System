@@ -3,6 +3,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase.config";
 import { logAudit } from "../../utils/logAudit";
 import "./settings.css";
+import AdminTopbar from "./AdminTopbar";
 
 const DEFAULT_SETTINGS = {
   siteName: "Cherubim of Heaven Memorial Park",

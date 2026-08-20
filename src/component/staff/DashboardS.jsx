@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import "./dashboards.css";
+import StaffTopbar from "./StaffTopbar";
 
 const SCHEDULE_DATA = [
   { id: 1, time: '09:00 AM', event: 'Burial - Section A, Block 3, Lot 15', type: 'burial' },
@@ -104,21 +105,7 @@ function DashboardS() {
   const [filter, setFilter] = useState('all');
   const [toasts, setToasts] = useState([]);
   
-  // Bell dropdown state
-  const [bellOpen, setBellOpen]           = useState(false);
-  const [systemAlerts, setSystemAlerts]   = useState(SYSTEM_ALERTS_INIT);
-  const bellRef                           = useRef(null);
   const toastIdRef                        = useRef(0);
-
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (bellRef.current && !bellRef.current.contains(e.target)) {
-        setBellOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   useEffect(() => {
     if (toasts.length === 0) return;
@@ -133,17 +120,7 @@ function DashboardS() {
 
   const removeToast = (id) => setToasts(prev => prev.filter(t => t.id !== id));
 
-  const handleMarkAlertRead = (id) => {
-    setSystemAlerts(prev => prev.map(a => a.id === id ? { ...a, read: true } : a));
-  };
-
-  const handleMarkAllAlertsRead = () => {
-    setSystemAlerts(prev => prev.map(a => ({ ...a, read: true })));
-    addToast("All alerts marked as read.", "info");
-  };
-
   const filteredSchedule = SCHEDULE_DATA.filter(item => filter === 'all' || item.type === filter);
-  const unreadAlerts = systemAlerts.filter(a => !a.read).length;
 
   const now = new Date();
   const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];

@@ -12,6 +12,7 @@ import {
 import { db, auth, firebaseConfig } from "../../firebase.config";
 import { logAudit } from "../../utils/logAudit";
 import "./user-management.css";
+import AdminTopbar from "./AdminTopbar";
 
 // ── helpers ───────────────────────────────────────────────────────────────────
 function getInitials(name) {
@@ -235,17 +236,7 @@ function UserManagement() {
       <Toast toast={toast} onClose={() => setToast(null)} />
 
       {/* Top Bar */}
-      <div className="um-topbar">
-        <div className="um-topbar-left">
-          <h1 className="um-title">User Management <span className="um-title-star">✦</span></h1>
-          <p className="um-greeting">Manage system users and their permissions</p>
-        </div>
-        <div className="um-topbar-right">
-          <div className="um-date-badge">
-            <i className="fas fa-calendar-alt"></i> {MONTH_YEAR}
-          </div>
-        </div>
-      </div>
+      <AdminTopbar title="User Management" greeting="Manage system users and their permissions" />
 
       {/* Card */}
       <div className="um-card">

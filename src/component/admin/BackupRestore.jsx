@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { auth } from "../../firebase.config";
 import { logAudit } from "../../utils/logAudit";
 import "./backup-restore.css";
+import AdminTopbar from "./AdminTopbar";
 
 const INITIAL_HISTORY = [
   { id: 1, date: '2026-03-15 14:30:22', name: 'backup_full_2026-03-15.sql', size: '156.2 MB', status: 'success' },

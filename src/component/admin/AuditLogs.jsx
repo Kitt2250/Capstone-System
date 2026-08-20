@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "../../firebase.config";
 import "./audit-logs.css";
+import AdminTopbar from "./AdminTopbar";
 
 // ── helpers ───────────────────────────────────────────────────────────────────
 const ROWS_PER_PAGE = 8;
@@ -189,18 +190,7 @@ function AuditLogs() {
       <Toast toast={toast} onClose={() => setToast(null)} />
 
       {/* ── TOP BAR ── */}
-      <div className="al-topbar">
-        <div className="al-topbar-left">
-          <h1>Audit Logs <span style={{ color: "#d4af37" }}>✦</span></h1>
-          <div className="al-greeting">Monitor all user activity and system events</div>
-        </div>
-        <div className="al-topbar-right">
-          <div className="al-date-badge">
-            <i className="fas fa-calendar-alt" style={{ color: "#d4af37", marginRight: 6 }}></i>
-            {currentMonthYear}
-          </div>
-        </div>
-      </div>
+      <AdminTopbar title="Audit Logs" greeting="Monitor all user activity and system events" />
 
       {/* ── SYSTEM STATUS ── */}
       <div className="al-system-status">

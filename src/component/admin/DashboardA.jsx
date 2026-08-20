@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import "./dashboarda.css";
+import AdminTopbar from "./AdminTopbar";
 
 // ── Static seed data ────────────────────────────────────────────────────────
 const EXPIRING_INIT = [
@@ -189,22 +190,7 @@ function DashboardA() {
   const [showFilterPanel, setShowFilterPanel] = useState(false);
   const [statusFilter, setStatusFilter]   = useState("All");
 
-  // Bell dropdown state
-  const [bellOpen, setBellOpen]           = useState(false);
-  const [systemAlerts, setSystemAlerts]   = useState(SYSTEM_ALERTS_INIT);
-  const bellRef                           = useRef(null);
   const toastIdRef                        = useRef(0);
-
-  // Close bell dropdown on outside click
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (bellRef.current && !bellRef.current.contains(e.target)) {
-        setBellOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   // Auto-remove toasts
   useEffect(() => {
@@ -219,17 +205,6 @@ function DashboardA() {
   };
 
   const removeToast = (id) => setToasts(prev => prev.filter(t => t.id !== id));
-
-  // Mark single alert as read
-  const handleMarkAlertRead = (id) => {
-    setSystemAlerts(prev => prev.map(a => a.id === id ? { ...a, read: true } : a));
-  };
-
-  // Mark all alerts as read
-  const handleMarkAllAlertsRead = () => {
-    setSystemAlerts(prev => prev.map(a => ({ ...a, read: true })));
-    addToast("All alerts marked as read.", "info");
-  };
 
   const handleReminder = (kind, id) => {
     setReminderSent(prev => ({ ...prev, [`${kind}-${id}`]: true }));
@@ -267,7 +242,6 @@ function DashboardA() {
   });
 
   const freeSlots = lots.filter(l => l.status === "Available").length;
-  const unreadAlerts = systemAlerts.filter(a => !a.read).length;
 
   const now = new Date();
   const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
