@@ -425,12 +425,12 @@
   /* Main content fills full width */
   .admin-content {
     margin-left: 0 !important;
-    padding: 60px 16px 16px;
+    padding: 16px;
     width: 100%;
   }
 }
 
 @media (max-width: 480px) {
-  .admin-content { padding: 60px 12px 12px; }
+  .admin-content { padding: 12px; }
   .admin-hamburger { top: 10px; left: 10px; }
 }

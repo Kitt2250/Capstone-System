@@ -436,14 +436,14 @@
 
   .fam-content {
     margin-left: 0 !important;
-    padding: 60px 0 0;
+    padding: 0;
     width: 100%;
   }
   .fam-page-wrapper { padding: 16px; }
 }
 
 @media (max-width: 480px) {
-  .fam-content { padding: 56px 0 0; }
+  .fam-content { padding: 0; }
   .fam-page-wrapper { padding: 12px; }
   .fam-hamburger { top: 10px; left: 10px; }
 }

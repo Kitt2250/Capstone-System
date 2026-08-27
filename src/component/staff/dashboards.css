@@ -1204,3 +1204,14 @@
   .ds-recent-section { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .ds-stats-grid { grid-template-columns: 1fr !important; }
 }
+/* -- Hamburger Topbar Fix (=768px) ------------- */
+@media (max-width: 768px) {
+  .ds-topbar { padding-left: 52px; padding-top: 6px; }
+  .ds-title { font-size: 1.3rem; }
+  .ds-greeting { font-size: 0.85rem; }
+  .ds-notif-dropdown { right: -16px; width: 320px; max-width: 90vw; }
+}
+@media (max-width: 480px) {
+  .ds-notif-dropdown { right: -12px; width: calc(100vw - 24px); }
+  .ds-title { font-size: 1.15rem; }
+}

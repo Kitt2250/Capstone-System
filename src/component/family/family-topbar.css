@@ -203,3 +203,14 @@
   .fam-topbar-left h1 { font-size: 1.1rem; }
   .fam-topbar-right .fam-date-badge { display: none; }
 }
+/* ── Hamburger Topbar Fix (≤768px) ───────────── */
+@media (max-width: 768px) {
+  .fam-topbar { padding-left: 52px; padding-top: 6px; }
+  .fam-topbar-left h1 { font-size: 1.3rem; }
+  .fam-greeting { font-size: 0.85rem; }
+  .fam-notif-dropdown { right: -16px; width: 320px; max-width: 90vw; }
+}
+@media (max-width: 480px) {
+  .fam-notif-dropdown { right: -12px; width: calc(100vw - 24px); }
+  .fam-topbar-left h1 { font-size: 1.15rem; }
+}

@@ -419,13 +419,13 @@
 
   .sn-content {
     margin-left: 0 !important;
-    padding: 60px 16px 16px;
+    padding: 16px;
     width: 100%;
   }
 }
 
 @media (max-width: 480px) {
-  .sn-content { padding: 60px 12px 12px; }
+  .sn-content { padding: 12px; }
   .sn-hamburger { top: 10px; left: 10px; }
 }
 
