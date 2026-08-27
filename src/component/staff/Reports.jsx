@@ -1,290 +1,790 @@
-import { useState } from "react";
-import "./reports.css";
+import React, { useState } from 'react';
+import './reports.css';
 
-const WEEKLY_DATA = {
-  burials: 12,
-  transactions: 51,
-  revenue: 860000,
-  wakeRevenue: 111000,
-  overdue: 5,
-  expiring: 23,
-  chart: [
-    { label: "Mon", lotSales: 90000,  wakeSpace: 20000 },
-    { label: "Tue", lotSales: 70000,  wakeSpace: 15000 },
-    { label: "Wed", lotSales: 140000, wakeSpace: 25000 },
-    { label: "Thu", lotSales: 100000, wakeSpace: 18000 },
-    { label: "Fri", lotSales: 170000, wakeSpace: 22000 },
-    { label: "Sat", lotSales: 55000,  wakeSpace: 8000 },
-    { label: "Sun", lotSales: 40000,  wakeSpace: 3000 },
-  ],
-};
+export default function Reports() {
+    const [activeTab, setActiveTab] = useState('overview');
 
-const MONTHLY_DATA = {
-  burials: 48,
-  transactions: 274,
-  revenue: 3144500,
-  wakeRevenue: 602000,
-  overdue: 5,
-  expiring: 23,
-  chart: [
-    { label: "Jan", lotSales: 300000, wakeSpace: 90000 },
-    { label: "Feb", lotSales: 280000, wakeSpace: 85000 },
-    { label: "Mar", lotSales: 380000, wakeSpace: 100000 },
-    { label: "Apr", lotSales: 350000, wakeSpace: 95000 },
-    { label: "May", lotSales: 390000, wakeSpace: 110000 },
-    { label: "Jun", lotSales: 400000, wakeSpace: 120000 },
-  ],
-};
+    return (
+        <div className="wk-page">
+            
 
-const peso = (n) => "₱" + n.toLocaleString("en-PH");
+        <div className="topbar">
 
-function DownloadIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14">
-      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-      <polyline points="7 10 12 15 17 10" />
-      <line x1="12" y1="15" x2="12" y2="3" />
-    </svg>
-  );
-}
+            <div className="topbar-left">
 
-function CloseIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
-      <line x1="18" y1="6" x2="6" y2="18" />
-      <line x1="6" y1="6" x2="18" y2="18" />
-    </svg>
-  );
-}
+                <h1>Reports <span>✦</span></h1>
 
-function CsvIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="20" height="20">
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-      <polyline points="14 2 14 8 20 8" />
-      <line x1="9" y1="15" x2="9" y2="17" />
-      <line x1="12" y1="13" x2="12" y2="17" />
-      <line x1="15" y1="15" x2="15" y2="17" />
-    </svg>
-  );
-}
+                <div className="greeting">Analytics and insights for Cherubim of Heaven Memorial Park</div>
 
-function PdfIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="20" height="20">
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-      <polyline points="14 2 14 8 20 8" />
-      <line x1="16" y1="13" x2="8" y2="13" />
-      <line x1="16" y1="17" x2="8" y2="17" />
-      <line x1="10" y1="9" x2="8" y2="9" />
-    </svg>
-  );
-}
-
-function BarChart({ data }) {
-  const maxVal = Math.max(...data.flatMap((d) => [d.lotSales, d.wakeSpace]));
-  const niceMax = Math.ceil(maxVal / 55000) * 55000 || 220000;
-  const yTicks = [0, 0.25, 0.5, 0.75, 1].map((f) => Math.round(niceMax * f));
-
-  return (
-    <div className="srp-barchart">
-      <div className="srp-barchart-yaxis">
-        {yTicks.slice().reverse().map((tick, i) => (
-          <span key={i}>₱{tick >= 1000 ? `${Math.round(tick / 1000)}k` : tick}</span>
-        ))}
-      </div>
-      <div className="srp-barchart-body">
-        {data.map((d) => (
-          <div className="srp-bar-group" key={d.label}>
-            <div className="srp-bar-track">
-              <div
-                className="srp-bar srp-bar--sales"
-                style={{ height: `${(d.lotSales / niceMax) * 100}%` }}
-                title={`Lot Sales: ${peso(d.lotSales)}`}
-              />
-              <div
-                className="srp-bar srp-bar--wake"
-                style={{ height: `${(d.wakeSpace / niceMax) * 100}%` }}
-                title={`Wake Space: ${peso(d.wakeSpace)}`}
-              />
             </div>
-            <span className="srp-bar-label">{d.label}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+
+            <div className="topbar-right">
+
+                <div className="date-badge"><i className="fas fa-calendar-alt"></i> August 2026</div>
+
+                <button className="notification-btn"><i className="fas fa-bell"></i><span className="dot"></span></button>
+
+            </div>
+
+        </div>
+
+
+
+        {/* ===== REPORTS ===== */}
+
+        <div className="reports-container">
+
+
+
+            {/* Header */}
+
+            <div className="reports-header">
+
+                <div className="reports-header-left">
+
+                    <h2><i className="fas fa-chart-pie" style={{color: '#d4af37', marginRight: '8px'}}></i>Analytics Dashboard</h2>
+
+                </div>
+
+                <div className="reports-header-right">
+
+                    <button className="btn-secondary" onClick={() => {}}><i className="fas fa-file-export"></i> Export PDF</button>
+
+                    <button className="btn-secondary" onClick={() => {}}><i className="fas fa-file-csv"></i> Export CSV</button>
+
+                </div>
+
+            </div>
+
+
+
+            {/* Date Filter */}
+
+            <div className="date-filter-bar">
+
+                <span className="filter-label"><i className="fas fa-calendar-alt"></i> Period:</span>
+
+                <input type="date" id="startDate" />
+
+                <span style={{color: '#8aaccc'}}>to</span>
+
+                <input type="date" id="endDate" />
+
+                <div className="quick-filters">
+
+                    <button className="qf-btn" onClick={() => {}}>Today</button>
+
+                    <button className="qf-btn" onClick={() => {}}>This Week</button>
+
+                    <button className="qf-btn active" onClick={() => {}}>This Month</button>
+
+                    <button className="qf-btn" onClick={() => {}}>This Quarter</button>
+
+                    <button className="qf-btn" onClick={() => {}}>This Year</button>
+
+                </div>
+
+            </div>
+
+
+
+            {/* Report Tabs */}
+
+            <div className="report-tabs">
+
+                <button className="tab-btn active" data-tab="overview" onClick={() => {}}>
+
+                    <i className="fas fa-chart-pie"></i> Overview
+
+                </button>
+
+                <button className="tab-btn" data-tab="revenue" onClick={() => {}}>
+
+                    <i className="fas fa-coins"></i> Revenue
+
+                </button>
+
+                <button className="tab-btn" data-tab="occupancy" onClick={() => {}}>
+
+                    <i className="fas fa-tshirt"></i> Occupancy
+
+                </button>
+
+                <button className="tab-btn" data-tab="payments" onClick={() => {}}>
+
+                    <i className="fas fa-credit-card"></i> Payments
+
+                </button>
+
+                <button className="tab-btn" data-tab="expiry" onClick={() => {}}>
+
+                    <i className="fas fa-clock"></i> Expiry
+
+                </button>
+
+            </div>
+
+
+
+            {/* ===== TAB 1: OVERVIEW ===== */}
+
+            <div id="tab-overview" className="tab-content" style={{display: 'block'}}>
+
+
+
+                {/* Stats Cards */}
+
+                <div className="stats-grid">
+
+                    <div className="stat-card">
+
+                        <div className="stat-icon gold"><i className="fas fa-cross"></i></div>
+
+                        <div className="stat-label">Total Graves</div>
+
+                        <div className="stat-value" id="totalGraves">223</div>
+
+                        <div className="stat-change"><span className="up">↑ 5</span> vs last month</div>
+
+                    </div>
+
+                    <div className="stat-card">
+
+                        <div className="stat-icon blue"><i className="fas fa-map-pin"></i></div>
+
+                        <div className="stat-label">Occupancy Rate</div>
+
+                        <div className="stat-value" id="occupancyRate">68%</div>
+
+                        <div className="stat-change"><span className="up">↑ 3%</span> vs last month</div>
+
+                    </div>
+
+                    <div className="stat-card">
+
+                        <div className="stat-icon green"><i className="fas fa-coins"></i></div>
+
+                        <div className="stat-label">Total Revenue</div>
+
+                        <div className="stat-value" id="totalRevenue">₱2.8M</div>
+
+                        <div className="stat-change"><span className="up">↑ 12%</span> vs last month</div>
+
+                    </div>
+
+                    <div className="stat-card">
+
+                        <div className="stat-icon orange"><i className="fas fa-clock"></i></div>
+
+                        <div className="stat-label">Expiring Soon</div>
+
+                        <div className="stat-value" id="expiringSoon">23</div>
+
+                        <div className="stat-change"><span className="down">↑ 8</span> vs last month</div>
+
+                    </div>
+
+                </div>
+
+
+
+                {/* Charts */}
+
+                <div className="chart-grid">
+
+                    <div className="chart-box">
+
+                        <div className="chart-title">
+
+                            Revenue by Grave Type
+
+                            <span className="chart-sub">This month</span>
+
+                        </div>
+
+                        <div className="bar-chart" id="revenueByType">
+
+                            {/* Rendered by JS */}
+
+                        </div>
+
+                    </div>
+
+                    <div className="chart-box">
+
+                        <div className="chart-title">
+
+                            Payment Status Distribution
+
+                            <span className="chart-sub">All accounts</span>
+
+                        </div>
+
+                        <div className="donut-container" id="paymentDonut">
+
+                            {/* Rendered by JS */}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                {/* Recent Transactions */}
+
+                <div className="chart-box" style={{marginTop: '0'}}>
+
+                    <div className="chart-title">
+
+                        Recent Transactions
+
+                        <span className="chart-sub">Last 5 transactions</span>
+
+                    </div>
+
+                    <div className="table-wrapper">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th><i className="fas fa-hashtag"></i> Receipt</th>
+
+                                    <th><i className="fas fa-user"></i> Client</th>
+
+                                    <th><i className="fas fa-tag"></i> Type</th>
+
+                                    <th style={{textAlign: 'right'}}><i className="fas fa-coins"></i> Amount</th>
+
+                                    <th><i className="fas fa-calendar-alt"></i> Date</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="recentTransactions">
+
+                                {/* Rendered by JS */}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            {/* ===== TAB 2: REVENUE ===== */}
+
+            <div id="tab-revenue" className="tab-content" style={{display: 'none'}}>
+
+                <div className="stats-grid">
+
+                    <div className="stat-card">
+
+                        <div className="stat-icon gold"><i className="fas fa-hand-holding-usd"></i></div>
+
+                        <div className="stat-label">This Month Revenue</div>
+
+                        <div className="stat-value">₱1.2M</div>
+
+                        <div className="stat-change"><span className="up">↑ 8%</span> vs last month</div>
+
+                    </div>
+
+                    <div className="stat-card">
+
+                        <div className="stat-icon blue"><i className="fas fa-chart-line"></i></div>
+
+                        <div className="stat-label">This Quarter Revenue</div>
+
+                        <div className="stat-value">₱3.5M</div>
+
+                        <div className="stat-change"><span className="up">↑ 15%</span> vs last quarter</div>
+
+                    </div>
+
+                    <div className="stat-card">
+
+                        <div className="stat-icon green"><i className="fas fa-calendar-year"></i></div>
+
+                        <div className="stat-label">This Year Revenue</div>
+
+                        <div className="stat-value">₱12.8M</div>
+
+                        <div className="stat-change"><span className="up">↑ 22%</span> vs last year</div>
+
+                    </div>
+
+                    <div className="stat-card">
+
+                        <div className="stat-icon purple"><i className="fas fa-receipt"></i></div>
+
+                        <div className="stat-label">Average Transaction</div>
+
+                        <div className="stat-value">₱45,200</div>
+
+                        <div className="stat-change"><span className="neutral">→ 0%</span> vs last month</div>
+
+                    </div>
+
+                </div>
+
+
+
+                <div className="chart-box">
+
+                    <div className="chart-title">
+
+                        Monthly Revenue Trend
+
+                        <span className="chart-sub">Last 12 months</span>
+
+                    </div>
+
+                    <div className="bar-chart" id="revenueTrend" style={{height: '200px'}}>
+
+                        {/* Rendered by JS */}
+
+                    </div>
+
+                </div>
+
+
+
+                <div className="chart-box" style={{marginTop: '1rem'}}>
+
+                    <div className="chart-title">
+
+                        Revenue Breakdown
+
+                        <span className="chart-sub">By category</span>
+
+                    </div>
+
+                    <div className="table-wrapper">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Category</th>
+
+                                    <th style={{textAlign: 'right'}}>Amount</th>
+
+                                    <th style={{textAlign: 'right'}}>Percentage</th>
+
+                                    <th>Trend</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                <tr>
+
+                                    <td>🪦 Grave Lot Sales</td>
+
+                                    <td style={{textAlign: 'right'}}>₱1,850,000</td>
+
+                                    <td style={{textAlign: 'right'}}>65%</td>
+
+                                    <td><span style={{color: '#27ae60'}}>↑ 12%</span></td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <td>🛏️ Wake Space Rental</td>
+
+                                    <td style={{textAlign: 'right'}}>₱450,000</td>
+
+                                    <td style={{textAlign: 'right'}}>16%</td>
+
+                                    <td><span style={{color: '#27ae60'}}>↑ 8%</span></td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <td>💰 Installment Payments</td>
+
+                                    <td style={{textAlign: 'right'}}>₱380,000</td>
+
+                                    <td style={{textAlign: 'right'}}>13%</td>
+
+                                    <td><span style={{color: '#f39c12'}}>→ 0%</span></td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <td>📋 Other Fees</td>
+
+                                    <td style={{textAlign: 'right'}}>₱120,000</td>
+
+                                    <td style={{textAlign: 'right'}}>6%</td>
+
+                                    <td><span style={{color: '#c0392b'}}>↓ 3%</span></td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            {/* ===== TAB 3: OCCUPANCY ===== */}
+
+            <div id="tab-occupancy" className="tab-content" style={{display: 'none'}}>
+
+                <div className="stats-grid">
+
+                    <div className="stat-card">
+
+                        <div className="stat-icon blue"><i className="fas fa-tshirt"></i></div>
+
+                        <div className="stat-label">Total Lots</div>
+
+                        <div className="stat-value">223</div>
+
+                        <div className="stat-change"><span className="up">↑ 5</span> vs last month</div>
+
+                    </div>
+
+                    <div className="stat-card">
+
+                        <div className="stat-icon green"><i className="fas fa-check-circle"></i></div>
+
+                        <div className="stat-label">Available</div>
+
+                        <div className="stat-value">71</div>
+
+                        <div className="stat-change"><span className="up">↑ 3</span> vs last month</div>
+
+                    </div>
+
+                    <div className="stat-card">
+
+                        <div className="stat-icon red"><i className="fas fa-circle"></i></div>
+
+                        <div className="stat-label">Occupied</div>
+
+                        <div className="stat-value">142</div>
+
+                        <div className="stat-change"><span className="down">↑ 2</span> vs last month</div>
+
+                    </div>
+
+                    <div className="stat-card">
+
+                        <div className="stat-icon orange"><i className="fas fa-clock"></i></div>
+
+                        <div className="stat-label">Reserved</div>
+
+                        <div className="stat-value">10</div>
+
+                        <div className="stat-change"><span className="neutral">→ 0</span> vs last month</div>
+
+                    </div>
+
+                </div>
+
+
+
+                <div className="chart-grid">
+
+                    <div className="chart-box">
+
+                        <div className="chart-title">
+
+                            Occupancy by Grave Type
+
+                            <span className="chart-sub">Available vs Occupied</span>
+
+                        </div>
+
+                        <div className="bar-chart" id="occupancyByType" style={{height: '180px'}}>
+
+                            {/* Rendered by JS */}
+
+                        </div>
+
+                    </div>
+
+                    <div className="chart-box">
+
+                        <div className="chart-title">
+
+                            Occupancy Rate by Section
+
+                            <span className="chart-sub">All sections</span>
+
+                        </div>
+
+                        <div className="bar-chart" id="occupancyBySection" style={{height: '180px'}}>
+
+                            {/* Rendered by JS */}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <div className="chart-box" style={{marginTop: '0'}}>
+
+                    <div className="chart-title">
+
+                        Grave Type Inventory
+
+                        <span className="chart-sub">Detailed breakdown</span>
+
+                    </div>
+
+                    <div className="table-wrapper">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Grave Type</th>
+
+                                    <th style={{textAlign: 'center'}}>Total</th>
+
+                                    <th style={{textAlign: 'center'}}>Available</th>
+
+                                    <th style={{textAlign: 'center'}}>Occupied</th>
+
+                                    <th style={{textAlign: 'center'}}>Reserved</th>
+
+                                    <th style={{textAlign: 'right'}}>Occupancy Rate</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="occupancyTable">
+
+                                {/* Rendered by JS */}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            {/* ===== TAB 4: PAYMENTS ===== */}
+
+            <div id="tab-payments" className="tab-content" style={{display: 'none'}}>
+
+                <div className="stats-grid">
+
+                    <div className="stat-card">
+
+                        <div className="stat-icon green"><i className="fas fa-check-circle"></i></div>
+
+                        <div className="stat-label">Fully Paid</div>
+
+                        <div className="stat-value">156</div>
+
+                        <div className="stat-change"><span className="up">↑ 8</span> vs last month</div>
+
+                    </div>
+
+                    <div className="stat-card">
+
+                        <div className="stat-icon orange"><i className="fas fa-clock"></i></div>
+
+                        <div className="stat-label">On Installment</div>
+
+                        <div className="stat-value">42</div>
+
+                        <div className="stat-change"><span className="down">↓ 3</span> vs last month</div>
+
+                    </div>
+
+                    <div className="stat-card">
+
+                        <div className="stat-icon red"><i className="fas fa-exclamation-triangle"></i></div>
+
+                        <div className="stat-label">Overdue</div>
+
+                        <div className="stat-value">12</div>
+
+                        <div className="stat-change"><span className="down">↑ 4</span> vs last month</div>
+
+                    </div>
+
+                    <div className="stat-card">
+
+                        <div className="stat-icon purple"><i className="fas fa-coins"></i></div>
+
+                        <div className="stat-label">Total Outstanding</div>
+
+                        <div className="stat-value">₱850K</div>
+
+                        <div className="stat-change"><span className="down">↓ 5%</span> vs last month</div>
+
+                    </div>
+
+                </div>
+
+
+
+                <div className="chart-grid">
+
+                    <div className="chart-box">
+
+                        <div className="chart-title">
+
+                            Payment Status Overview
+
+                            <span className="chart-sub">All accounts</span>
+
+                        </div>
+
+                        <div className="donut-container" id="paymentStatusDonut">
+
+                            {/* Rendered by JS */}
+
+                        </div>
+
+                    </div>
+
+                    <div className="chart-box">
+
+                        <div className="chart-title">
+
+                            Overdue Accounts by Days
+
+                            <span className="chart-sub">Current overdue</span>
+
+                        </div>
+
+                        <div className="bar-chart" id="overdueByDays" style={{height: '150px'}}>
+
+                            {/* Rendered by JS */}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <div className="chart-box" style={{marginTop: '0'}}>
+
+                    <div className="chart-title">
+
+                        Overdue Accounts
+
+                        <span className="chart-sub">Requires immediate attention</span>
+
+                    </div>
+
+                    <div className="table-wrapper">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th><i className="fas fa-user"></i> Client</th>
+
+                                    <th><i className="fas fa-tshirt"></i> Lot</th>
+
+                                    <th><i className="fas fa-coins"></i> Amount Due</th>
+
+                                    <th><i className="fas fa-calendar-alt"></i> Overdue Since</th>
+
+                                    <th><i className="fas fa-clock"></i> Days</th>
+
+                                    <th>Status</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="overdueTable">
+
+                                {/* Rendered by JS */}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            {/* ===== TAB 5: EXPIRY ===== */}
+
+            <div id="tab-expiry" className="tab-content" style={{display: 'none'}}>
+
+                <div className="stats-grid">
+
+                    <div className="stat-card">
+
+                        <div className="stat-icon red"><i className="fas fa-exclamation-triangle"></i></div>
+
+                        <div className="stat-label">Expiring This Week</div>
+
+                        <div className="stat-value">5</div>
+
+                        <div className="stat-change"><span className="down">Urgent</span></div>
+
+                    </div>
+
+                    <div className="stat-card">
+
+                        <div className="stat-icon orange"><i className="fas fa-clock"></i></div>
+
+                        <div className="stat-label">Expiring This Month</div>
+
+                        <div className="stat-value">18</div>
+
+                        <div className="stat-change"><span className="up">↑ 6</span> vs last month</div>
+
+                    </div>
+
+                    <div className="stat-card">
+
+                        </div></div></div></div>
+        </div>
+    );
 }
-
-function ExportModal({ period, data, onClose }) {
-  const [format, setFormat] = useState("pdf");
-
-  const handleExport = () => {
-    onClose();
-  };
-
-  return (
-    <div className="srp-overlay" onClick={onClose}>
-      <div className="srp-modal" onClick={(e) => e.stopPropagation()}>
-        <div className="srp-modal-header">
-          <h2>Export Operational Report</h2>
-          <button className="srp-modal-close" onClick={onClose}>
-            <CloseIcon />
-          </button>
-        </div>
-
-        <div className="srp-export-label">Export Summary</div>
-        <div className="srp-summary-box">
-          <div className="srp-summary-row">
-            <span>Total Records</span>
-            <span className="srp-summary-value">{data.chart.length} entries</span>
-          </div>
-          <div className="srp-summary-row">
-            <span>Report Type</span>
-            <span className="srp-summary-value">
-              {period === "weekly" ? "Weekly Operations" : "Monthly Operations"}
-            </span>
-          </div>
-          <div className="srp-summary-row">
-            <span>Period</span>
-            <span className="srp-summary-value">
-              {period === "weekly" ? "Mar 9 – Mar 15, 2026" : "Jan – Jun 2026"}
-            </span>
-          </div>
-          <div className="srp-summary-row">
-            <span>Total Revenue</span>
-            <span className="srp-summary-value">{peso(data.revenue)}</span>
-          </div>
-          <div className="srp-summary-row">
-            <span>Generated By</span>
-            <span className="srp-summary-value">Staff</span>
-          </div>
-        </div>
-
-        <div className="srp-format-label">Choose Format</div>
-        <div className="srp-format-options">
-          <button
-            className={`srp-format-card ${format === "csv" ? "srp-format-active" : ""}`}
-            onClick={() => setFormat("csv")}
-          >
-            <CsvIcon />
-            <div className="srp-format-title">CSV File</div>
-            <div className="srp-format-sub">Spreadsheet compatible</div>
-          </button>
-          <button
-            className={`srp-format-card ${format === "pdf" ? "srp-format-active" : ""}`}
-            onClick={() => setFormat("pdf")}
-          >
-            <PdfIcon />
-            <div className="srp-format-title">PDF File</div>
-            <div className="srp-format-sub">Print-ready document</div>
-          </button>
-        </div>
-
-        <div className="srp-modal-actions">
-          <button className="srp-btn-secondary" onClick={onClose}>Cancel</button>
-          <button className="srp-btn-primary" onClick={handleExport}>
-            <DownloadIcon /> Export
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function Reports() {
-  const [period, setPeriod] = useState("weekly");
-  const [showExport, setShowExport] = useState(false);
-
-  const data = period === "weekly" ? WEEKLY_DATA : MONTHLY_DATA;
-
-  return (
-    <div className="srp-page">
-      <div className="srp-topbar">
-        <span>Cherubim of Heaven Memorial Park</span>
-      </div>
-
-      <div className="srp-header">
-        <div>
-          <h1>Operational Reports</h1>
-          <p>{period === "weekly" ? "Weekly operational summary" : "Monthly operational summary"}</p>
-        </div>
-        <div className="srp-header-actions">
-          <div className="srp-period-toggle">
-            <button
-              className={`srp-period-btn ${period === "weekly" ? "srp-period-active" : ""}`}
-              onClick={() => setPeriod("weekly")}
-            >
-              Weekly
-            </button>
-            <button
-              className={`srp-period-btn ${period === "monthly" ? "srp-period-active" : ""}`}
-              onClick={() => setPeriod("monthly")}
-            >
-              Monthly
-            </button>
-          </div>
-          <button className="srp-export-btn" onClick={() => setShowExport(true)}>
-            <DownloadIcon /> Export
-          </button>
-        </div>
-      </div>
-
-      {/* Stats */}
-      <div className="srp-stats">
-        <div className="srp-stat-card">
-          <p className="srp-stat-label">Burials This {period === "weekly" ? "Week" : "Month"}</p>
-          <p className="srp-stat-value">{data.burials}</p>
-        </div>
-        <div className="srp-stat-card">
-          <p className="srp-stat-label">Transactions Processed</p>
-          <p className="srp-stat-value">{data.transactions}</p>
-        </div>
-        <div className="srp-stat-card">
-          <p className="srp-stat-label">Revenue This {period === "weekly" ? "Week" : "Month"}</p>
-          <p className="srp-stat-value">{peso(data.revenue)}</p>
-        </div>
-        <div className="srp-stat-card">
-          <p className="srp-stat-label">Wake Space Revenue</p>
-          <p className="srp-stat-value">{peso(data.wakeRevenue)}</p>
-        </div>
-        <div className="srp-stat-card">
-          <p className="srp-stat-label">Overdue Payments</p>
-          <p className="srp-stat-value">{data.overdue}</p>
-        </div>
-        <div className="srp-stat-card">
-          <p className="srp-stat-label">Contracts Expiring (30d)</p>
-          <p className="srp-stat-value">{data.expiring}</p>
-        </div>
-      </div>
-
-      {/* Chart */}
-      <div className="srp-chart-card">
-        <h2 className="srp-chart-title">
-          {period === "weekly" ? "Daily Sales (This Week)" : "Monthly Sales (Jan – Jun 2026)"}
-        </h2>
-        <BarChart data={data.chart} />
-        <div className="srp-bar-legend">
-          <div className="srp-legend-item">
-            <span className="srp-legend-dot" style={{ background: "#111827" }} />
-            Lot Sales
-          </div>
-          <div className="srp-legend-item">
-            <span className="srp-legend-dot" style={{ background: "#d1d5db" }} />
-            Wake Space
-          </div>
-        </div>
-      </div>
-
-      {showExport && (
-        <ExportModal period={period} data={data} onClose={() => setShowExport(false)} />
-      )}
-    </div>
-  );
-}
-
-export default Reports;
