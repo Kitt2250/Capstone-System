@@ -326,7 +326,7 @@
 }
 
 /* ── Main Content ────────────────────────────────── */
-.admin-content { position: relative;
+.admin-content {
   flex: 1;
   height: 100vh;
   overflow-y: auto;
@@ -366,7 +366,7 @@
 /* ── Hamburger button (hidden on desktop) ─────── */
 .admin-hamburger {
   display: none;
-  position: fixed;
+  position: absolute;
   top: 12px;
   left: 12px;
   z-index: 1100;
@@ -437,7 +437,8 @@
   .admin-sidebar.mobile-open .admin-user { justify-content: flex-start; }
 
   /* Main content fills full width */
-  .admin-content { position: relative;
+  .admin-content {
+    position: relative;
     margin-left: 0 !important;
     padding: 16px;
     width: 100%;
@@ -446,5 +447,5 @@
 
 @media (max-width: 480px) {
   .admin-content { position: relative; padding: 12px; }
-  .admin-hamburger { top: 10px; left: 10px; }
+  .admin-hamburger { position: absolute; top: 10px; left: 10px; }
 }

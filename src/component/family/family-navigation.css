@@ -325,7 +325,7 @@
 }
 
 /* ── Main Content ────────────────────────────────── */
-.fam-content { position: relative;
+.fam-content {
   flex: 1;
   height: 100vh;
   overflow-y: auto;
@@ -383,7 +383,7 @@
 /* ── Hamburger button (hidden on desktop) ─────── */
 .fam-hamburger {
   display: none;
-  position: fixed;
+  position: absolute;
   top: 12px;
   left: 12px;
   z-index: 1100;
@@ -447,7 +447,8 @@
   .fam-sidebar.mobile-open .fam-menu-item { justify-content: flex-start; padding: 9px 12px; }
   .fam-sidebar.mobile-open .fam-user { justify-content: flex-start; }
 
-  .fam-content { position: relative;
+  .fam-content {
+    position: relative;
     margin-left: 0 !important;
     padding: 0;
     width: 100%;
@@ -458,4 +459,5 @@
 @media (max-width: 480px) {
   .fam-content { position: relative; padding: 0; }
   .fam-page-wrapper { padding: 12px; }
-  .fam-hamburger { top: 10px; left: 10px; }
+  .fam-hamburger { position: absolute; top: 10px; left: 10px; }
+}
