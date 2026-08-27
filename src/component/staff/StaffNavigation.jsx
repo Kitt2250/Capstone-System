@@ -3,6 +3,7 @@ import { NavLink, Routes, Route, Navigate, useNavigate } from "react-router-dom"
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase.config";
 import "./staff-navigation.css";
+import logoIcon from "../../assets/logo-icon.png";
 import DashboardS from "./DashboardS";
 import SBurialRecords from "./SBurialRecords";
 import GraveInventory from "./GraveInventory";
@@ -205,14 +206,7 @@ function StaffNavigation({ onSignOut }) {
       <aside className={`sn-sidebar${collapsed ? " collapsed" : ""}${mobileOpen ? " mobile-open" : ""}`}>
         {/* Brand */}
         <div className="sn-brand">
-          <div className="sn-brand-icon" title="Cherubim of Heaven">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-              fill="none" stroke="white" strokeWidth="1.8"
-              strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
-              <circle cx="12" cy="8" r="3" />
-              <path d="M6 20v-2a6 6 0 0 1 12 0v2" />
-            </svg>
-          </div>
+          <div className="sn-brand-icon" title="Cherubim of Heaven" style={{ background: "transparent", boxShadow: "none" }}><img src={logoIcon} alt="Logo" style={{ width: "100%", height: "100%", objectFit: "contain", transform: "scale(1.2)" }} /></div>
           <div className="sn-brand-text">
             <div className="sn-brand-title">Cherubim of Heaven</div>
             <div className="sn-brand-subtitle">Staff Panel</div>
