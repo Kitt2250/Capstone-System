@@ -4,6 +4,7 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../firebase.config";
 import { logAudit } from "../utils/logAudit";
 import heavenBg from "../assets/heaven_background.jpg";
+import logoImg from "../assets/logo.png";
 import "./login.css";
 
 function Login({ onForgotPassword, onLogin }) {
@@ -70,15 +71,7 @@ function Login({ onForgotPassword, onLogin }) {
       <div className="login-center">
         {/* ── Brand ── */}
         <div className="login-brand">
-          <div className="login-logo">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-              fill="none" stroke="white" strokeWidth="1.8"
-              strokeLinecap="round" strokeLinejoin="round" width="26" height="26">
-              <circle cx="12" cy="8" r="3" />
-              <path d="M6 20v-2a6 6 0 0 1 12 0v2" />
-            </svg>
-          </div>
-          <h1 className="login-title">Cherubim of Heaven</h1>
+          <img src={logoImg} alt="Cherubim of Heaven" className="login-logo-img" />
           <p className="login-subtitle">Memorial Services Management System</p>
         </div>
 

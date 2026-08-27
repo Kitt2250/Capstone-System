@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../firebase.config";
 import heavenBg from "../assets/heaven_background.jpg";
+import logoImg from "../assets/logo.png";
 import "./forgot-password.css";
 
 function ForgotPassword({ onBack }) {
@@ -60,15 +61,7 @@ function ForgotPassword({ onBack }) {
 
         {/* ── Brand ── */}
         <div className="fp-brand">
-          <div className="fp-logo">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-              fill="none" stroke="white" strokeWidth="1.8"
-              strokeLinecap="round" strokeLinejoin="round" width="26" height="26">
-              <circle cx="12" cy="8" r="3" />
-              <path d="M6 20v-2a6 6 0 0 1 12 0v2" />
-            </svg>
-          </div>
-          <h1 className="fp-title">Cherubim of Heaven</h1>
+          <img src={logoImg} alt="Cherubim of Heaven" className="fp-logo-img" />
           <p className="fp-subtitle">Memorial Services Management System</p>
         </div>
 
