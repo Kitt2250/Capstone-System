@@ -55,7 +55,7 @@ export default function MyAccount() {
     <div className="reports-page-wrapper">
         <div className="topbar">
             <div className="topbar-left">
-                <h1>My Account <span>✦</span></h1>
+                <h1>My Account <span>{"\u2726"}</span></h1>
                 <div className="greeting">Manage your personal profile and security settings</div>
             </div>
             <div className="topbar-right">
@@ -70,7 +70,7 @@ export default function MyAccount() {
                 <div style={{
                     width: '100px', height: '100px', borderRadius: '50%', background: 'linear-gradient(135deg, #d4af37, #b8942e)', 
                     margin: '0 auto 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', 
-                    fontSize: '2.5rem', fontWeight: 700, color: '#1a3d5c'
+                    fontSize: '2.5rem', fontWeight: 700, color: '#fff'
                 }}>
                     JD
                 </div>

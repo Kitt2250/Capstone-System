@@ -1,352 +1,138 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import './staff-shared.css';
 
+const MOCK_WAKES = [
+    { id: 'WS-001', venue: 'Chapel A', client: 'Ana Reyes', deceased: 'Alejandro Reyes Sr.', start: '2026-03-18', end: '2026-03-20', status: 'Confirmed' },
+    { id: 'WS-002', venue: 'Chapel B', client: 'Miguel Tan', deceased: 'Rosario Tan', start: '2026-03-19', end: '2026-03-21', status: 'Confirmed' },
+    { id: 'WS-003', venue: 'Open Pavilion', client: 'Jose Santos', deceased: 'Maria Santos', start: '2026-03-22', end: '2026-03-23', status: 'Pending' },
+    { id: 'WS-004', venue: 'Chapel A', client: 'Carmen Dela Cruz', deceased: 'Pedro Dela Cruz', start: '2026-03-12', end: '2026-03-14', status: 'Completed' },
+    { id: 'WS-005', venue: 'Function Hall', client: 'Lourdes Garcia', deceased: 'Antonio Garcia', start: '2026-03-25', end: '2026-03-27', status: 'Confirmed' },
+];
+
+const VENUES = [
+    { name: 'Chapel A', type: 'Premium', capacity: '50-80 pax' },
+    { name: 'Chapel B', type: 'Premium', capacity: '50-80 pax' },
+    { name: 'Open Pavilion', type: 'Standard', capacity: '100+ pax' },
+    { name: 'Function Hall', type: 'Standard', capacity: '150+ pax' },
+];
+
 export default function WakeScheduling() {
-    const [activeTab, setActiveTab] = useState('table');
-    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [wakes, setWakes] = useState(MOCK_WAKES);
+    const [viewMode, setViewMode] = useState('list'); // 'list' or 'calendar'
+    const [toast, setToast] = useState({ show: false, msg: '', type: 'success' });
+    const [dateRange, setDateRange] = useState({ start: '', end: '' });
+
+    const showToast = (msg, type = 'success') => {
+        setToast({ show: true, msg, type });
+        setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3500);
+    };
+
+    const getStatusClass = (status) => {
+        if (status === 'Confirmed') return 'confirmed';
+        if (status === 'Pending') return 'pending';
+        if (status === 'Completed') return 'completed';
+        return 'cancelled';
+    };
 
     return (
         <div className="wk-page">
-            
-
-        <div className="topbar">
-
-            <div className="topbar-left">
-
-                <h1>Wake Scheduling <span>âœ¦</span></h1>
-
-                <div className="greeting">Manage wake space reservations â€” client-first booking</div>
-
+            <div className="topbar">
+                <div className="topbar-left">
+                    <h1>Wake Scheduling <span>{\u0022\u2726\u0022}</span></h1>
+                    <div className="greeting">Manage wake space reservations — client-first booking</div>
+                </div>
+                <div className="topbar-right">
+                    <div className="date-badge"><i className="fas fa-calendar-alt"></i> August 2026</div>
+                    <button className="notification-btn"><i className="fas fa-bell"></i><span className="dot"></span></button>
+                </div>
             </div>
 
-            <div className="topbar-right">
-
-                <div className="date-badge"><i className="fas fa-calendar-alt"></i> August 2026</div>
-
-                <button className="notification-btn"><i className="fas fa-bell"></i><span className="dot"></span></button>
-
+            <div className="stats-row" style={{display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', marginBottom: '1.5rem'}}>
+                <div className="stat-box" style={{background: '#f8fafc', padding: '1rem 1.2rem', borderRadius: '12px', border: '1px solid rgba(212,175,55,0.06)'}}>
+                    <div className="stat-num blue" style={{fontSize: '1.8rem', fontWeight: 700, color: '#3670AF'}}>{wakes.length}</div>
+                    <div className="stat-label" style={{fontSize: '0.7rem', color: '#7a9fbe', fontWeight: 600, textTransform: 'uppercase'}}>Total Bookings</div>
+                </div>
+                <div className="stat-box" style={{background: '#f8fafc', padding: '1rem 1.2rem', borderRadius: '12px', border: '1px solid rgba(212,175,55,0.06)'}}>
+                    <div className="stat-num green" style={{fontSize: '1.8rem', fontWeight: 700, color: '#27ae60'}}>{wakes.filter(w => w.status === 'Confirmed').length}</div>
+                    <div className="stat-label" style={{fontSize: '0.7rem', color: '#7a9fbe', fontWeight: 600, textTransform: 'uppercase'}}>Confirmed</div>
+                </div>
+                <div className="stat-box" style={{background: '#f8fafc', padding: '1rem 1.2rem', borderRadius: '12px', border: '1px solid rgba(212,175,55,0.06)'}}>
+                    <div className="stat-num orange" style={{fontSize: '1.8rem', fontWeight: 700, color: '#f39c12'}}>{wakes.filter(w => w.status === 'Pending').length}</div>
+                    <div className="stat-label" style={{fontSize: '0.7rem', color: '#7a9fbe', fontWeight: 600, textTransform: 'uppercase'}}>Pending</div>
+                </div>
+                <div className="stat-box" style={{background: '#f8fafc', padding: '1rem 1.2rem', borderRadius: '12px', border: '1px solid rgba(212,175,55,0.06)'}}>
+                    <div className="stat-num blue" style={{fontSize: '1.8rem', fontWeight: 700, color: '#1a3d5c'}}>{wakes.filter(w => w.status === 'Completed').length}</div>
+                    <div className="stat-label" style={{fontSize: '0.7rem', color: '#7a9fbe', fontWeight: 600, textTransform: 'uppercase'}}>Completed</div>
+                </div>
             </div>
 
-        </div>
-
-
-
-        {/* ===== STATS ROW ===== */}
-
-        <div className="stats-row" id="statsRow">
-
-            <div className="stat-box">
-
-                <div className="stat-num blue" id="statTotal">0</div>
-
-                <div className="stat-label">Total Bookings</div>
-
-            </div>
-
-            <div className="stat-box">
-
-                <div className="stat-num green" id="statConfirmed">0</div>
-
-                <div className="stat-label">Confirmed</div>
-
-            </div>
-
-            <div className="stat-box">
-
-                <div className="stat-num orange" id="statPending">0</div>
-
-                <div className="stat-label">Pending</div>
-
-            </div>
-
-            <div className="stat-box">
-
-                <div className="stat-num purple" id="statCompleted">0</div>
-
-                <div className="stat-label">Completed</div>
-
-            </div>
-
-            <div className="stat-box">
-
-                <div className="stat-num blue" id="statUtilization">0%</div>
-
-                <div className="stat-label">Utilization (This Month)</div>
-
-            </div>
-
-        </div>
-
-
-
-        {/* ===== TODAY OVERVIEW ===== */}
-
-        <div className="today-overview" id="todayOverview">
-
-            <div className="today-label"><i className="fas fa-calendar-day"></i> Today's Wake Schedule</div>
-
-            <div className="today-stats" id="todayStats">
-
-                <div className="stat"><span className="num blue" id="todayTotal">0</span> Total</div>
-
-                <div className="stat"><span className="num green" id="todayConfirmed">0</span> Confirmed</div>
-
-                <div className="stat"><span className="num orange" id="todayPending">0</span> Pending</div>
-
-                <div className="stat"><span className="num purple" id="todayCompleted">0</span> Completed</div>
-
-            </div>
-
-            <div style={{marginLeft: 'auto', fontSize: '0.7rem', color: '#8aaccc'}} id="tomorrowPreview">
-
-                <i className="fas fa-arrow-right"></i> Tomorrow: <span id="tomorrowCount">0</span> wakes
-
-            </div>
-
-        </div>
-
-
-
-        {/* ===== INFO BANNER ===== */}
-
-        <div className="info-banner">
-
-            <i className="fas fa-info-circle"></i>
-
-            <span><strong>Wake Space Only:</strong> This booking is for the wake venue space only. Caskets, flowers, sound systems, and other items are <strong>not included</strong> and must be arranged separately by the family.</span>
-
-        </div>
-
-
-
-        {/* ===== QUICK AVAILABILITY CHECKER ===== */}
-
-        <div className="availability-checker">
-
-            <div className="check-label"><i className="fas fa-check-circle"></i> Check Availability</div>
-
-            <div className="date-inputs">
-
-                <input type="date" id="availStart" />
-
-                <input type="date" id="availEnd" />
-
-                <button className="btn-primary" onClick={() => {}} style={{padding: '0.4rem 1.2rem', fontSize: '0.85rem'}}>
-
-                    <i className="fas fa-search"></i> Check
-
-                </button>
-
-            </div>
-
-            <div className="check-result idle" id="availResult">
-
-                <i className="fas fa-info-circle"></i> Enter dates to check
-
-            </div>
-
-        </div>
-
-
-
-        {/* ===== VIEW TOGGLES ===== */}
-
-        <div className="view-tabs">
-
-            <button className="tab-btn active" data-view="table" onClick={() => {}}>
-
-                <i className="fas fa-list"></i> List View
-
-            </button>
-
-            <button className="tab-btn" data-view="calendar" onClick={() => {}}>
-
-                <i className="fas fa-calendar-alt"></i> Calendar View
-
-            </button>
-
-        </div>
-
-
-
-        {/* ===== CALENDAR VIEW ===== */}
-
-        <div className="calendar-view" id="calendarView">
-
-            <div className="calendar-header">
-
-                <div className="month-year"><i className="fas fa-calendar-alt"></i> <span id="calendarMonthYear">August 2026</span></div>
-
-                <div className="calendar-nav">
-
-                    <button onClick={() => {}}><i className="fas fa-chevron-left"></i></button>
-
-                    <button className="today-btn" onClick={() => {}}>Today</button>
-
-                    <button onClick={() => {}}><i className="fas fa-chevron-right"></i></button>
-
+            <div className="reports-container">
+                <div className="reports-header" style={{borderBottom: '1px solid #e8edf4', paddingBottom: '1rem', marginBottom: '1.5rem'}}>
+                    <div className="reports-header-left">
+                        <h2><i className="fas fa-clipboard-list" style={{color: '#d4af37', marginRight: '8px'}}></i> Wake Schedule</h2>
+                    </div>
+                    <div className="reports-header-right">
+                        <button className="btn-secondary" onClick={() => setViewMode(viewMode === 'list' ? 'calendar' : 'list')}>
+                            <i className={viewMode === 'list' ? "fas fa-calendar-alt" : "fas fa-list"}></i> {viewMode === 'list' ? 'Calendar View' : 'List View'}
+                        </button>
+                        <button className="btn-primary" onClick={() => showToast('New booking feature coming soon!', 'info')}><i className="fas fa-plus"></i> New Booking</button>
+                    </div>
                 </div>
 
-            </div>
-
-            <div className="calendar-grid" id="calendarGrid"></div>
-
-            <div className="calendar-legend">
-
-                <span><span className="dot confirmed"></span> Confirmed</span>
-
-                <span><span className="dot pending"></span> Pending</span>
-
-                <span><span className="dot available"></span> Available</span>
-
-                <span style={{color: '#7f8c8d'}}><i className="fas fa-check-double"></i> Completed / Cancelled (hidden)</span>
-
-            </div>
-
-            <div style={{marginTop: '0.5rem', textAlign: 'center', fontSize: '0.7rem', color: '#8aaccc'}}>
-
-                <i className="fas fa-info-circle"></i> Click on a booked day to view details
-
-            </div>
-
-        </div>
-
-
-
-        {/* ===== TABLE VIEW ===== */}
-
-        <div className="wake-container" id="tableView">
-
-            <div className="wake-header">
-
-                <div className="wake-header-left">
-
-                    <h2><i className="fas fa-calendar-check" style={{color: '#d4af37', marginRight: '8px'}}></i>All Wake Schedules</h2>
-
-                    <span className="wake-count" id="wakeCount">0 total</span>
-
+                <div className="date-filter-bar">
+                    <span className="filter-label"><i className="fas fa-calendar-alt"></i> Date:</span>
+                    <input type="date" value={dateRange.start} onChange={e => setDateRange({...dateRange, start: e.target.value})} />
+                    <span style={{color: '#8aaccc'}}>to</span>
+                    <input type="date" value={dateRange.end} onChange={e => setDateRange({...dateRange, end: e.target.value})} />
+                    <button className="btn-secondary" style={{padding: '0.4rem 1rem'}} onClick={() => showToast('Filters applied!', 'success')}>Check</button>
                 </div>
 
-                <div className="wake-header-right">
-
-                    <button className="btn-secondary" onClick={() => {}}><i className="fas fa-file-export"></i> Export</button>
-
-                    <button className="btn-primary" onClick={() => {}}><i className="fas fa-plus-circle"></i> New Reservation</button>
-
+                <div className="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th><i className="fas fa-hashtag"></i> ID</th>
+                                <th><i className="fas fa-map-marker-alt"></i> Venue</th>
+                                <th><i className="fas fa-user"></i> Client</th>
+                                <th><i className="fas fa-cross"></i> Deceased</th>
+                                <th><i className="fas fa-calendar-alt"></i> Start Date</th>
+                                <th><i className="fas fa-calendar-alt"></i> End Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {wakes.map((w, i) => (
+                                <tr key={i}>
+                                    <td><strong>{w.id}</strong></td>
+                                    <td>{w.venue}</td>
+                                    <td>{w.client}</td>
+                                    <td>{w.deceased}</td>
+                                    <td>{w.start}</td>
+                                    <td>{w.end}</td>
+                                    <td><span className={`status-badge ${getStatusClass(w.status)}`}>{w.status}</span></td>
+                                </tr>
+                            ))}
+                            {wakes.length === 0 && (
+                                <tr>
+                                    <td colSpan="7" style={{textAlign: 'center', padding: '2rem', color: '#8aaccc'}}>No wake schedules found.</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
                 </div>
 
-            </div>
-
-
-
-            <div className="search-filter-bar">
-
-                <div className="search-wrapper">
-
-                    <i className="fas fa-search search-icon"></i>
-
-                    <input type="text" id="searchInput" placeholder="Search by ID, client, or deceased..." oninput="handleSearch()" />
-
-                    <button className="clear-btn" id="clearBtn" onClick={() => {}}><i className="fas fa-times"></i></button>
-
+                <div style={{marginTop: '2rem', padding: '1rem', background: '#eafaf1', border: '1px solid #27ae60', borderRadius: '10px', color: '#1e8449', fontSize: '0.85rem'}}>
+                    <i className="fas fa-info-circle" style={{marginRight: '8px'}}></i> 
+                    <strong>Wake Space Only:</strong> This booking is for the wake venue space only. Caskets, flowers, sound systems, and other items are <strong>not included</strong> and must be arranged separately by the family.
                 </div>
+            </div>
 
-                <div className="filter-group">
-
-                    <select id="statusFilter" onChange="applyFilters()">
-
-                        <option value="all">All Status</option>
-
-                        <option value="Confirmed">âœ… Confirmed</option>
-
-                        <option value="Pending">â³ Pending</option>
-
-                        <option value="Completed">âœ”ï¸ Completed</option>
-
-                        <option value="Cancelled">âŒ Cancelled</option>
-
-                    </select>
-
+            {toast.show && (
+                <div className={`toast ${toast.type} show`}>
+                    <span>{toast.msg}</span>
+                    <button className="toast-close" onClick={() => setToast({ ...toast, show: false })}>×</button>
                 </div>
-
-            </div>
-
-
-
-            <div className="table-wrapper">
-
-                <table>
-
-                    <thead>
-
-                        <tr>
-
-                            <th><i className="fas fa-hashtag"></i>ID</th>
-
-                            <th><i className="fas fa-user"></i>Client</th>
-
-                            <th><i className="fas fa-phone"></i>Contact</th>
-
-                            <th><i className="fas fa-cross"></i>Deceased</th>
-
-                            <th><i className="fas fa-calendar-alt"></i>Start</th>
-
-                            <th><i className="fas fa-calendar-alt"></i>End</th>
-
-                            <th><i className="fas fa-circle"></i>Status</th>
-
-                            <th style={{textAlign: 'center'}}><i className="fas fa-cog"></i>Actions</th>
-
-                        </tr>
-
-                    </thead>
-
-                    <tbody id="wakeTableBody"></tbody>
-
-                </table>
-
-            </div>
-
-
-
-            <div className="pagination">
-
-                <div className="pagination-info">Showing <span id="startCount">0</span> to <span id="endCount">0</span> of <span id="totalCount">0</span> schedules</div>
-
-                <div className="pagination-controls">
-
-                    <button onClick={() => {}} id="prevBtn" disabled><i className="fas fa-chevron-left"></i></button>
-
-                    <button className="active" onClick={() => {}}>1</button>
-
-                    <button onClick={() => {}}>2</button>
-
-                    <span className="page-dots">â‹¯</span>
-
-                    <button onClick={() => {}}>3</button>
-
-                    <button onClick={() => {}} id="nextBtn"><i className="fas fa-chevron-right"></i></button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-
-        <div className="main-footer" style={{marginTop: '2rem', textAlign: 'center', fontSize: '0.7rem', color: '#8aaccc', borderTop: '1px solid rgba(212,175,55,0.08)', paddingTop: '1.5rem'}}>
-
-            <i className="fas fa-dove" style={{color: '#d4af37', margin: '0 4px'}}></i>
-
-            Cherubim of Heaven Memorial Park Â· Staff Dashboard v2.0
-
-            <i className="fas fa-dove" style={{color: '#d4af37', margin: '0 4px'}}></i>
-
-        </div>
-
-    
+            )}
         </div>
     );
 }

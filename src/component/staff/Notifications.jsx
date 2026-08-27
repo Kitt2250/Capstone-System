@@ -3,7 +3,7 @@ import "./staff-shared.css";
 
 const INITIAL_NOTIFICATIONS = [
   { id: 1, category: "expiry", title: "Contract Expiring Soon", message: "Lot A-142 (Alejandro Reyes Sr.) lease expires on April 15, 2026.", time: "10 mins ago", read: false },
-  { id: 2, category: "payments", title: "Overdue Payment", message: "Carlos Tan - Lot D-012 installment payment overdue since March 1, 2026. Amount: ₱3,000.", time: "1 hour ago", read: false },
+  { id: 2, category: "payments", title: "Overdue Payment", message: "Carlos Tan - Lot D-012 installment payment overdue since March 1, 2026. Amount: \u20B13,000.", time: "1 hour ago", read: false },
   { id: 3, category: "wake", title: "New Wake Reservation", message: "Chapel A reserved by Ana Reyes for Alejandro Reyes Sr. (March 18-20, 2026).", time: "2 hours ago", read: true },
   { id: 4, category: "system", title: "System Update", message: "The staff dashboard was successfully updated to version 2.0.", time: "1 day ago", read: true },
   { id: 5, category: "expiry", title: "Contract Expired", message: "Lot C-128 (Jose Santos) lease has expired.", time: "2 days ago", read: true }
@@ -48,7 +48,7 @@ export default function Notifications() {
     <div className="reports-page-wrapper">
         <div className="topbar">
             <div className="topbar-left">
-                <h1>Notifications <span>✦</span></h1>
+                <h1>Notifications <span>{"\u2726"}</span></h1>
                 <div className="greeting">Stay updated with the latest system alerts</div>
             </div>
             <div className="topbar-right">
