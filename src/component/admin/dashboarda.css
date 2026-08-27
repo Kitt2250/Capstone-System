@@ -63,6 +63,10 @@
   align-items: flex-start;
   flex-wrap: wrap;
   gap: 1rem;
+  margin-bottom: 1.8rem;
+}
+.da-wrapper .da-topbar {
+  margin-bottom: 0;
 }
 
 .da-title {
