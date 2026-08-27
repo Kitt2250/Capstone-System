@@ -9,7 +9,6 @@ import ResetPassword from "./component/ResetPassword";
 import FamilyNavigation from "./component/family/FamilyNavigation";
 import AdminNavigation from "./component/admin/AdminNavigation";
 import StaffNavigation from "./component/staff/StaffNavigation";
-import "./component/responsive.css";
 
 function roleHome(role) {
   if (role === "admin") return "/admin/dashboard";
