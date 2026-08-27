@@ -1,4 +1,4 @@
-﻿/* ===== REPORTS & WAKE SCHEDULING UNIFIED CSS ===== */
+/* ===== REPORTS & WAKE SCHEDULING UNIFIED CSS ===== */
 
 .reports-page-wrapper, .wk-page {
     padding: 1.8rem 2.2rem 2.5rem;
@@ -13,7 +13,6 @@
 
 .reports-page-wrapper *, .wk-page * {
     box-sizing: inherit;
-    font-family: inherit;
 }
 
 /* ----- TOP BAR ----- */
