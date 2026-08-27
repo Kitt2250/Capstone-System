@@ -543,3 +543,21 @@
     .modal .modal-actions { flex-direction: column; }
     .modal .modal-actions button { width: 100%; justify-content: center; }
 }
+/* -- Mobile additions --------------------------- */
+@media (max-width: 768px) {
+  .tracking-container { padding: 1rem; }
+  .stats-grid { grid-template-columns: 1fr !important; }
+  .account-card { flex-direction: column; align-items: stretch; }
+  .account-card .account-balance { text-align: left; }
+  .account-card .account-actions { justify-content: flex-start; flex-wrap: wrap; }
+  .detail-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .account-card .account-actions button { flex: 1; justify-content: center; }
+  .modal { padding: 1.2rem; }
+  .modal .modal-actions { flex-direction: column; }
+  .modal .modal-actions button { width: 100%; }
+  .quick-actions-row { flex-direction: column; }
+  .quick-actions-row .btn-quick { justify-content: center; }
+  .notes-input-row { flex-direction: column; }
+}

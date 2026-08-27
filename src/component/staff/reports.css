@@ -362,3 +362,13 @@
 }
 
 .srp-btn-primary:hover { background: #1f2937; }
+/* -- Mobile additions --------------------------- */
+@media (max-width: 768px) {
+  .rpt-topbar { flex-direction: column; align-items: flex-start; gap: 0.5rem; padding-top: 3.5rem; }
+  .rpt-topbar-right { width: 100%; justify-content: flex-end; }
+  .rpt-header { flex-direction: column; align-items: stretch; }
+  .rpt-table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+}
+@media (max-width: 480px) {
+  .rpt-stats-grid { grid-template-columns: 1fr; }
+}

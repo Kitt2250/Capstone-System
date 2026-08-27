@@ -573,3 +573,9 @@
   .br-modal-actions button { width: 100%; justify-content: center; }
   .br-quick-actions { flex-direction: column; }
 }
+/* -- Mobile additions (480px) ------------------- */
+@media (max-width: 480px) {
+  .br-section-actions { flex-direction: column; }
+  .br-section-actions button { width: 100%; justify-content: center; }
+  .br-file-list { overflow-x: auto; }
+}

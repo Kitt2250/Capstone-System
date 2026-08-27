@@ -573,3 +573,12 @@
   .um-modal-footer { flex-direction: column; }
   .um-modal-footer button { width: 100%; justify-content: center; }
 }
+/* -- Mobile additions (480px) ------------------- */
+@media (max-width: 480px) {
+  .um-table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .um-table { min-width: 600px; }
+  .um-card-header-right { flex-direction: column; }
+  .um-card-header-right button { width: 100%; justify-content: center; }
+  .um-filter-group { flex-direction: column; }
+  .um-topbar-left h1 { font-size: 1.2rem; }
+}

@@ -183,3 +183,14 @@
   color: #9ca3af;
   font-size: 13px;
 }
+/* -- Mobile additions --------------------------- */
+@media (max-width: 768px) {
+  .sn-notif-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; padding-top: 3.5rem; }
+  .sn-notif-header-right { width: 100%; justify-content: flex-end; }
+  .sn-notif-filters { flex-direction: column; }
+  .sn-notif-filters select, .sn-notif-filters button { width: 100%; }
+}
+@media (max-width: 480px) {
+  .sn-notif-item { flex-direction: column; gap: 0.5rem; }
+  .sn-notif-meta { width: 100%; text-align: left; }
+}

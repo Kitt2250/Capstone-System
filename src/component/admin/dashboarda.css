@@ -1194,3 +1194,9 @@
 @media (max-width: 420px) {
   .da-map-grid { grid-template-columns: 1fr; }
 }
+/* -- Mobile additions (480px) ------------------- */
+@media (max-width: 480px) {
+  .da-topbar { flex-direction: column; align-items: flex-start; gap: 0.5rem; padding-top: 3.5rem; }
+  .da-topbar-right { width: 100%; justify-content: flex-end; }
+  .da-recent-section { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+}

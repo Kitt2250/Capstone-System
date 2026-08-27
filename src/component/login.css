@@ -247,3 +247,13 @@ html, body, #root {
     font-size: 19px;
   }
 }
+/* -- Mobile additions --------------------------- */
+@media (max-width: 768px) {
+  .login-card { padding: 2rem 1.5rem; margin: 1rem; }
+  .login-logo { width: 60px; height: 60px; }
+  .login-title { font-size: 1.3rem; }
+}
+@media (max-width: 480px) {
+  .login-card { padding: 1.5rem 1rem; }
+  .login-form button { padding: 0.7rem; }
+}

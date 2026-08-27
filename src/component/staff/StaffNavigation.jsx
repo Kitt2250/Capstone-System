@@ -169,6 +169,7 @@ function StaffNavigation({ onSignOut }) {
   const [collapsed, setCollapsed] = useState(() => {
     return localStorage.getItem("staffSidebarCollapsed") === "true";
   });
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const toggleSidebar = () => {
     setCollapsed(prev => {
@@ -177,6 +178,8 @@ function StaffNavigation({ onSignOut }) {
       return next;
     });
   };
+
+  const closeMobile = () => setMobileOpen(false);
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -196,8 +199,10 @@ function StaffNavigation({ onSignOut }) {
 
   return (
     <div className="sn-layout">
+      {/* Mobile overlay backdrop */}
+      {mobileOpen && <div className="sn-mobile-overlay" onClick={closeMobile} />}
       {/* ── SIDEBAR ── */}
-      <aside className={`sn-sidebar${collapsed ? " collapsed" : ""}`}>
+      <aside className={`sn-sidebar${collapsed ? " collapsed" : ""}${mobileOpen ? " mobile-open" : ""}`}>
         {/* Brand */}
         <div className="sn-brand">
           <div className="sn-brand-icon" title="Cherubim of Heaven">
@@ -276,6 +281,13 @@ function StaffNavigation({ onSignOut }) {
 
       {/* ── MAIN CONTENT ── */}
       <main className="sn-content">
+        {/* Hamburger button — mobile only */}
+        <button className="sn-hamburger" onClick={() => setMobileOpen(true)} aria-label="Open menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="22" height="22">
+            <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
         <Routes>
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<DashboardS />} />

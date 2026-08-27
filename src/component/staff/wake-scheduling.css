@@ -287,3 +287,15 @@
 }
 
 .wk-btn-primary:hover { background: #1f2937; }
+/* -- Mobile additions --------------------------- */
+@media (max-width: 768px) {
+  .ws-topbar { flex-direction: column; align-items: flex-start; gap: 0.5rem; padding-top: 3.5rem; }
+  .ws-topbar-right { width: 100%; justify-content: flex-end; }
+  .ws-card-grid { grid-template-columns: 1fr; }
+  .ws-header { flex-direction: column; align-items: stretch; }
+}
+@media (max-width: 480px) {
+  .ws-modal .form-row { grid-template-columns: 1fr; }
+  .ws-modal-footer { flex-direction: column; }
+  .ws-modal-footer button { width: 100%; justify-content: center; }
+}

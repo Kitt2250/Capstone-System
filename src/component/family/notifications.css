@@ -154,3 +154,12 @@
   border-radius: 50%;
   border: 2px solid white;
 }
+/* -- Mobile additions --------------------------- */
+@media (max-width: 768px) {
+  .fam-notif-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; padding-top: 3.5rem; }
+  .fam-notif-filters { flex-direction: column; }
+  .fam-notif-filters button { width: 100%; justify-content: center; }
+}
+@media (max-width: 480px) {
+  .fam-notif-item { flex-direction: column; gap: 0.5rem; }
+}

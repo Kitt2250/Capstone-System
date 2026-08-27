@@ -254,3 +254,13 @@
     gap: 1rem;
   }
 }
+/* -- Mobile additions --------------------------- */
+@media (max-width: 768px) {
+  .gl-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; padding-top: 3.5rem; }
+  .gl-search-row { flex-direction: column; }
+  .gl-search-row select, .gl-search-row input { width: 100%; }
+}
+@media (max-width: 480px) {
+  .gl-grave-card { padding: 0.8rem; }
+  .gl-detail-grid { grid-template-columns: 1fr; }
+}

@@ -140,3 +140,20 @@ tbody td { padding: 0.8rem 0.8rem; color: #1a3d5c; vertical-align: middle; font-
   .filter-group select { flex:1; min-width:0; }
   .modal .form-row { grid-template-columns:1fr; }
 }
+/* -- Mobile additions --------------------------- */
+@media (max-width: 768px) {
+  .sbr-topbar { flex-direction: column; align-items: flex-start; gap: 0.5rem; padding-top: 3.5rem; }
+  .sbr-topbar-right { width: 100%; justify-content: flex-end; }
+  .sbr-table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .sbr-table { min-width: 700px; }
+}
+@media (max-width: 480px) {
+  .sbr-container { padding: 1rem; }
+  .sbr-header { flex-direction: column; align-items: stretch; }
+  .sbr-header-right { flex-direction: column; }
+  .sbr-header-right button { width: 100%; justify-content: center; }
+  .sbr-search-filter { flex-direction: column; }
+  .sbr-filter-group { flex-direction: column; }
+  .sbr-filter-group select { width: 100%; }
+  .sbr-modal .form-row { grid-template-columns: 1fr; }
+}

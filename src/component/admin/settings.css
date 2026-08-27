@@ -414,3 +414,9 @@
   .set-modal-actions { flex-direction: column; }
   .set-modal-actions button { width: 100%; justify-content: center; }
 }
+/* -- Mobile additions (480px) ------------------- */
+@media (max-width: 480px) {
+  .st-section { padding: 1rem; }
+  .st-form-row { grid-template-columns: 1fr; }
+  .st-section-header { flex-direction: column; gap: 0.5rem; }
+}

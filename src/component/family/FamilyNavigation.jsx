@@ -120,6 +120,9 @@ function FamilyNavigation({ onSignOut }) {
     });
   };
 
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const closeMobile = () => setMobileOpen(false);
+
   useEffect(() => {
     const fetchCurrentUser = async () => {
       const uid = auth.currentUser?.uid;
@@ -136,8 +139,11 @@ function FamilyNavigation({ onSignOut }) {
 
   return (
     <div className="fam-layout">
+      {/* Mobile overlay backdrop */}
+      {mobileOpen && <div className="fam-mobile-overlay" onClick={closeMobile} />}
+
       {/* ── SIDEBAR ── */}
-      <aside className={`fam-sidebar${collapsed ? " collapsed" : ""}`}>
+      <aside className={`fam-sidebar${collapsed ? " collapsed" : ""}${mobileOpen ? " mobile-open" : ""}`}>
 
         {/* Brand */}
         <div className="fam-brand">
@@ -220,6 +226,13 @@ function FamilyNavigation({ onSignOut }) {
 
       {/* ── MAIN CONTENT ── */}
       <main className="fam-content">
+        {/* Hamburger button — mobile only */}
+        <button className="fam-hamburger" onClick={() => setMobileOpen(true)} aria-label="Open menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="22" height="22">
+            <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
         <Routes>
           <Route index element={<Navigate to="burial" replace />} />
           <Route path="burial"        element={<BurialRecords />} />

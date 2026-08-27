@@ -700,3 +700,23 @@
 }
 
 .pos-btn-primary:hover { background: #1f2937; }
+/* -- Mobile additions --------------------------- */
+@media (max-width: 768px) {
+  .pos-topbar { flex-direction: column; align-items: flex-start; gap: 0.5rem; padding-top: 3.5rem; }
+  .pos-topbar-right { width: 100%; justify-content: flex-end; }
+  .pos-header { flex-direction: column; align-items: stretch; }
+  .pos-header-right { flex-direction: column; }
+  .pos-header-right button { width: 100%; justify-content: center; }
+  .pos-table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .pos-table { min-width: 700px; }
+  .pos-search-bar { flex-direction: column; }
+  .pos-filter-group { flex-direction: column; }
+  .pos-filter-group select { width: 100%; }
+  .pos-stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+  .pos-stats-grid { grid-template-columns: 1fr; }
+  .pos-modal-form .form-row { grid-template-columns: 1fr; }
+  .pos-pagination { flex-direction: column; align-items: stretch; text-align: center; }
+  .pos-pagination-controls { justify-content: center; }
+}

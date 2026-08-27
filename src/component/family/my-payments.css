@@ -214,3 +214,14 @@
   background: #f8fafc;
   border-radius: 8px;
 }
+/* -- Mobile additions --------------------------- */
+@media (max-width: 768px) {
+  .mp-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; padding-top: 3.5rem; }
+  .mp-table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .mp-table { min-width: 550px; }
+  .mp-search-row { flex-direction: column; }
+}
+@media (max-width: 480px) {
+  .mp-stats-grid { grid-template-columns: 1fr; }
+  .mp-payment-card { flex-direction: column; gap: 0.5rem; }
+}
