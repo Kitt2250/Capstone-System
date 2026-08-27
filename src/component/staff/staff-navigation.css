@@ -326,7 +326,7 @@
 }
 
 /* ── Main Content ────────────────────────────────── */
-.sn-content {
+.sn-content { position: relative;
   flex: 1;
   height: 100vh;
   overflow-y: auto;
@@ -430,7 +430,7 @@
   .sn-sidebar.mobile-open .sn-menu-item { justify-content: flex-start; padding: 9px 12px; }
   .sn-sidebar.mobile-open .sn-user { justify-content: flex-start; }
 
-  .sn-content {
+  .sn-content { position: relative;
     margin-left: 0 !important;
     padding: 16px;
     width: 100%;
@@ -438,6 +438,6 @@
 }
 
 @media (max-width: 480px) {
-  .sn-content { padding: 12px; }
+  .sn-content { position: relative; padding: 12px; }
   .sn-hamburger { top: 10px; left: 10px; }
 }

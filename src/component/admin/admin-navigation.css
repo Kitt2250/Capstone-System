@@ -326,7 +326,7 @@
 }
 
 /* ── Main Content ────────────────────────────────── */
-.admin-content {
+.admin-content { position: relative;
   flex: 1;
   height: 100vh;
   overflow-y: auto;
@@ -437,7 +437,7 @@
   .admin-sidebar.mobile-open .admin-user { justify-content: flex-start; }
 
   /* Main content fills full width */
-  .admin-content {
+  .admin-content { position: relative;
     margin-left: 0 !important;
     padding: 16px;
     width: 100%;
@@ -445,6 +445,6 @@
 }
 
 @media (max-width: 480px) {
-  .admin-content { padding: 12px; }
+  .admin-content { position: relative; padding: 12px; }
   .admin-hamburger { top: 10px; left: 10px; }
 }

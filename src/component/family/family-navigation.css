@@ -325,7 +325,7 @@
 }
 
 /* ── Main Content ────────────────────────────────── */
-.fam-content {
+.fam-content { position: relative;
   flex: 1;
   height: 100vh;
   overflow-y: auto;
@@ -447,7 +447,7 @@
   .fam-sidebar.mobile-open .fam-menu-item { justify-content: flex-start; padding: 9px 12px; }
   .fam-sidebar.mobile-open .fam-user { justify-content: flex-start; }
 
-  .fam-content {
+  .fam-content { position: relative;
     margin-left: 0 !important;
     padding: 0;
     width: 100%;
@@ -456,6 +456,6 @@
 }
 
 @media (max-width: 480px) {
-  .fam-content { padding: 0; }
+  .fam-content { position: relative; padding: 0; }
   .fam-page-wrapper { padding: 12px; }
   .fam-hamburger { top: 10px; left: 10px; }

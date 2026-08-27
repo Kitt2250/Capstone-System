@@ -195,9 +195,7 @@
 
 /* -- Mobile additions --------------------------- */
 @media (max-width: 768px) {
-  .fam-topbar-inner { flex-direction: column; align-items: flex-start; gap: 0.5rem; padding-top: 3.5rem; }
-  .fam-topbar-right { width: 100%; justify-content: flex-end; }
-  .fam-topbar-left h1 { font-size: 1.3rem; }
+
 }
 @media (max-width: 480px) {
   .fam-topbar-left h1 { font-size: 1.1rem; }
