@@ -57,7 +57,7 @@ export default function Notifications() {
             </div>
         </div>
 
-        <div className="reports-container" style={{maxWidth: '800px', margin: '0 auto'}}>
+        <div className="reports-container">
             <div className="reports-header" style={{borderBottom: '1px solid #e8edf4', paddingBottom: '1rem', marginBottom: '1.5rem'}}>
                 <div className="reports-header-left">
                     <h2><i className="fas fa-bell" style={{color: '#d4af37', marginRight: '8px'}}></i> Alert Center</h2>
