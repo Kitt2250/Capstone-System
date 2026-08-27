@@ -38,7 +38,7 @@ export default function WakeScheduling() {
         <div className="wk-page">
             <div className="topbar">
                 <div className="topbar-left">
-                    <h1>Wake Scheduling <span>{\u0022\u2726\u0022}</span></h1>
+                    <h1>Wake Scheduling <span>{"\u2726"}</span></h1>
                     <div className="greeting">Manage wake space reservations — client-first booking</div>
                 </div>
                 <div className="topbar-right">
