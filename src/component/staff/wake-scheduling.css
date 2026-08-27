@@ -2,30 +2,12 @@
 
         /* ----- RESET & BASE ----- */
 
-        * {
-
-            margin: 0;
-
-            padding: 0;
-
-            box-sizing: border-box;
-
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-
-        }
+        
 
 
 
 
-        body {
-
-            background: #e8edf4;
-
-            min-height: 100vh;
-
-            display: flex;
-
-        }
+        
 
 
         .brand-content {
@@ -149,23 +131,7 @@
 
         /* ----- MAIN CONTENT ----- */
 
-        .main-content {
-
-            margin-left: 260px;
-
-            padding: 1.8rem 2.2rem 2.5rem;
-
-            flex: 1;
-
-            min-height: 100vh;
-
-            transition: margin-left 280ms cubic-bezier(0.4, 0, 0.2, 1);
-
-            width: 100%;
-
-            background: #e8edf4;
-
-        }
+        
 
 
 
@@ -2696,7 +2662,7 @@
             .stats-row { grid-template-columns: repeat(2, 1fr); }
 
 
-            .main-content { margin-left: 72px; padding: 1.2rem; }
+            
 
 
             .wake-container { padding: 1.2rem; }
@@ -2772,7 +2738,7 @@
             .topbar-right .date-badge { display: none; }
 
 
-            .main-content { padding: 1rem; margin-left: 72px; }
+            
 
 
             .wake-header-left { flex-wrap: wrap; }
@@ -2841,7 +2807,7 @@
             .availability-checker .check-result { font-size: 0.75rem; padding: 0.2rem 0.6rem; }
 
 
-            .main-content { margin-left: 0 !important; padding: 20px !important; }
+            
 
 
             .wake-container { box-shadow: none !important; border: 1px solid #ddd !important; }

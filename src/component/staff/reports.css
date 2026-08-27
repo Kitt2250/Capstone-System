@@ -2,30 +2,12 @@
 
         /* ----- RESET & BASE ----- */
 
-        * {
-
-            margin: 0;
-
-            padding: 0;
-
-            box-sizing: border-box;
-
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-
-        }
+        
 
 
 
 
-        body {
-
-            background: #e8edf4;
-
-            min-height: 100vh;
-
-            display: flex;
-
-        }
+        
 
 
         .brand-content {
@@ -149,23 +131,7 @@
 
         /* ----- MAIN CONTENT ----- */
 
-        .main-content {
-
-            margin-left: 260px;
-
-            padding: 1.8rem 2.2rem 2.5rem;
-
-            flex: 1;
-
-            min-height: 100vh;
-
-            transition: margin-left 280ms cubic-bezier(0.4, 0, 0.2, 1);
-
-            width: 100%;
-
-            background: #e8edf4;
-
-        }
+        
 
 
 
@@ -1389,13 +1355,7 @@
             .date-filter-bar .quick-filters { margin-left: 0; justify-content: center; }
 
 
-            .main-content {
-
-                margin-left: 72px;
-
-                padding: 1.2rem;
-
-            }
+            
 
 
             .reports-container { padding: 1.2rem; }
@@ -1451,7 +1411,7 @@
             .topbar-right .date-badge { display: none; }
 
 
-            .main-content { padding: 1rem; margin-left: 72px; }
+            
 
 
             .stats-grid { grid-template-columns: 1fr 1fr; gap: 0.3rem; }
@@ -1493,7 +1453,7 @@
             .report-tabs .tab-btn i { font-size: 0.5rem; }
 
 
-            .main-content { margin-left: 0 !important; padding: 20px !important; }
+            
 
 
             .reports-container {
