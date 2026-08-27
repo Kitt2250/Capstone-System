@@ -1201,9 +1201,16 @@
 }
 /* -- Hamburger Topbar Fix (=768px) ------------- */
 @media (max-width: 768px) {
-  .da-topbar { padding-left: 52px; padding-top: 6px; }
-  .da-title { font-size: 1.3rem; }
-  .da-greeting { font-size: 0.85rem; }
+  .da-topbar { 
+    padding-left: 52px !important; 
+    padding-top: 6px; 
+    flex-wrap: nowrap; 
+    align-items: center; 
+  }
+  .da-topbar-left { flex: 1; min-width: 0; }
+  .da-topbar-right { flex-shrink: 0; }
+  .da-title { font-size: 1.3rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .da-greeting { font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .da-notif-dropdown { right: -16px; width: 320px; max-width: 90vw; }
 }
 @media (max-width: 480px) {
