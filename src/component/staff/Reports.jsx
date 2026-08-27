@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import './reports.css';
+﻿import React, { useState, useEffect } from 'react';
+import './staff-shared.css';
 
 const graveTypes = [
     { name: 'Single Niche', total: 45, available: 12, occupied: 28, reserved: 5 },
@@ -57,14 +57,14 @@ export default function Reports() {
         else if (range === 'quarter') { start = new Date(today.getFullYear(), Math.floor(today.getMonth() / 3) * 3, 1).toISOString().slice(0, 10); }
         else if (range === 'year') { start = new Date(today.getFullYear(), 0, 1).toISOString().slice(0, 10); }
         setStartDate(start); setEndDate(end);
-        if (start) showToast(`📅 Date range updated: ${range}`, 'info');
+        if (start) showToast(`ðŸ“… Date range updated: ${range}`, 'info');
     };
 
     return (
         <div className="reports-page-wrapper">
             <div className="topbar">
                 <div className="topbar-left">
-                    <h1>Reports <span>✦</span></h1>
+                    <h1>Reports <span>âœ¦</span></h1>
                     <div className="greeting">Analytics and insights for Cherubim of Heaven Memorial Park</div>
                 </div>
                 <div className="topbar-right">
@@ -78,8 +78,8 @@ export default function Reports() {
                         <h2><i className="fas fa-chart-pie" style={{color: '#d4af37', marginRight: '8px'}}></i>Analytics Dashboard</h2>
                     </div>
                     <div className="reports-header-right">
-                        <button className="btn-secondary" onClick={() => showToast('📄 Generating PDF...', 'info')}><i className="fas fa-file-export"></i> Export PDF</button>
-                        <button className="btn-secondary" onClick={() => showToast('📊 Exporting CSV...', 'info')}><i className="fas fa-file-csv"></i> Export CSV</button>
+                        <button className="btn-secondary" onClick={() => showToast('ðŸ“„ Generating PDF...', 'info')}><i className="fas fa-file-export"></i> Export PDF</button>
+                        <button className="btn-secondary" onClick={() => showToast('ðŸ“Š Exporting CSV...', 'info')}><i className="fas fa-file-csv"></i> Export CSV</button>
                     </div>
                 </div>
 
@@ -114,10 +114,10 @@ export default function Reports() {
                 {currentTab === 'overview' && (
                     <div className="tab-content">
                         <div className="stats-grid">
-                            <div className="stat-card"><div className="stat-icon gold"><i className="fas fa-cross"></i></div><div className="stat-label">Total Graves</div><div className="stat-value">223</div><div className="stat-change"><span className="up">↑ 5</span> vs last month</div></div>
-                            <div className="stat-card"><div className="stat-icon blue"><i className="fas fa-map-pin"></i></div><div className="stat-label">Occupancy Rate</div><div className="stat-value">68%</div><div className="stat-change"><span className="up">↑ 3%</span> vs last month</div></div>
-                            <div className="stat-card"><div className="stat-icon green"><i className="fas fa-coins"></i></div><div className="stat-label">Total Revenue</div><div className="stat-value">₱2.8M</div><div className="stat-change"><span className="up">↑ 12%</span> vs last month</div></div>
-                            <div className="stat-card"><div className="stat-icon orange"><i className="fas fa-clock"></i></div><div className="stat-label">Expiring Soon</div><div className="stat-value">23</div><div className="stat-change"><span className="down">↑ 8</span> vs last month</div></div>
+                            <div className="stat-card"><div className="stat-icon gold"><i className="fas fa-cross"></i></div><div className="stat-label">Total Graves</div><div className="stat-value">223</div><div className="stat-change"><span className="up">â†‘ 5</span> vs last month</div></div>
+                            <div className="stat-card"><div className="stat-icon blue"><i className="fas fa-map-pin"></i></div><div className="stat-label">Occupancy Rate</div><div className="stat-value">68%</div><div className="stat-change"><span className="up">â†‘ 3%</span> vs last month</div></div>
+                            <div className="stat-card"><div className="stat-icon green"><i className="fas fa-coins"></i></div><div className="stat-label">Total Revenue</div><div className="stat-value">â‚±2.8M</div><div className="stat-change"><span className="up">â†‘ 12%</span> vs last month</div></div>
+                            <div className="stat-card"><div className="stat-icon orange"><i className="fas fa-clock"></i></div><div className="stat-label">Expiring Soon</div><div className="stat-value">23</div><div className="stat-change"><span className="down">â†‘ 8</span> vs last month</div></div>
                         </div>
 
                         <div className="chart-grid">
@@ -163,7 +163,7 @@ export default function Reports() {
                                     <thead><tr><th><i className="fas fa-hashtag"></i> Receipt</th><th><i className="fas fa-user"></i> Client</th><th><i className="fas fa-tag"></i> Type</th><th style={{textAlign: 'right'}}><i className="fas fa-coins"></i> Amount</th><th><i className="fas fa-calendar-alt"></i> Date</th></tr></thead>
                                     <tbody>
                                         {recentTransactions.map((t, i) => (
-                                            <tr key={i}><td><strong>{t.receipt}</strong></td><td>{t.client}</td><td>{t.type}</td><td style={{textAlign: 'right', fontWeight: 600, color: '#27ae60'}}>₱{t.amount.toLocaleString()}</td><td>{t.date}</td></tr>
+                                            <tr key={i}><td><strong>{t.receipt}</strong></td><td>{t.client}</td><td>{t.type}</td><td style={{textAlign: 'right', fontWeight: 600, color: '#27ae60'}}>â‚±{t.amount.toLocaleString()}</td><td>{t.date}</td></tr>
                                         ))}
                                     </tbody>
                                 </table>
@@ -175,10 +175,10 @@ export default function Reports() {
                 {currentTab === 'revenue' && (
                     <div className="tab-content">
                         <div className="stats-grid">
-                            <div className="stat-card"><div className="stat-icon gold"><i className="fas fa-hand-holding-usd"></i></div><div className="stat-label">This Month Revenue</div><div className="stat-value">₱1.2M</div><div className="stat-change"><span className="up">↑ 8%</span> vs last month</div></div>
-                            <div className="stat-card"><div className="stat-icon blue"><i className="fas fa-chart-line"></i></div><div className="stat-label">This Quarter Revenue</div><div className="stat-value">₱3.5M</div><div className="stat-change"><span className="up">↑ 15%</span> vs last quarter</div></div>
-                            <div className="stat-card"><div className="stat-icon green"><i className="fas fa-calendar-year"></i></div><div className="stat-label">This Year Revenue</div><div className="stat-value">₱12.8M</div><div className="stat-change"><span className="up">↑ 22%</span> vs last year</div></div>
-                            <div className="stat-card"><div className="stat-icon purple"><i className="fas fa-receipt"></i></div><div className="stat-label">Average Transaction</div><div className="stat-value">₱45,200</div><div className="stat-change"><span className="neutral">→ 0%</span> vs last month</div></div>
+                            <div className="stat-card"><div className="stat-icon gold"><i className="fas fa-hand-holding-usd"></i></div><div className="stat-label">This Month Revenue</div><div className="stat-value">â‚±1.2M</div><div className="stat-change"><span className="up">â†‘ 8%</span> vs last month</div></div>
+                            <div className="stat-card"><div className="stat-icon blue"><i className="fas fa-chart-line"></i></div><div className="stat-label">This Quarter Revenue</div><div className="stat-value">â‚±3.5M</div><div className="stat-change"><span className="up">â†‘ 15%</span> vs last quarter</div></div>
+                            <div className="stat-card"><div className="stat-icon green"><i className="fas fa-calendar-year"></i></div><div className="stat-label">This Year Revenue</div><div className="stat-value">â‚±12.8M</div><div className="stat-change"><span className="up">â†‘ 22%</span> vs last year</div></div>
+                            <div className="stat-card"><div className="stat-icon purple"><i className="fas fa-receipt"></i></div><div className="stat-label">Average Transaction</div><div className="stat-value">â‚±45,200</div><div className="stat-change"><span className="neutral">â†’ 0%</span> vs last month</div></div>
                         </div>
 
                         <div className="chart-box">
@@ -189,7 +189,7 @@ export default function Reports() {
                                     const max = 1650000;
                                     return (
                                         <div className="bar-group" key={i}>
-                                            <div className="bar gold" style={{height: `${(vals[i]/max)*100}%`}}><span className="bar-value">₱{Math.round(vals[i]/1000)}K</span></div>
+                                            <div className="bar gold" style={{height: `${(vals[i]/max)*100}%`}}><span className="bar-value">â‚±{Math.round(vals[i]/1000)}K</span></div>
                                             <div className="bar-label">{m}</div>
                                         </div>
                                     );
@@ -203,10 +203,10 @@ export default function Reports() {
                                 <table>
                                     <thead><tr><th>Category</th><th style={{textAlign: 'right'}}>Amount</th><th style={{textAlign: 'right'}}>Percentage</th><th>Trend</th></tr></thead>
                                     <tbody>
-                                        <tr><td>🪦 Grave Lot Sales</td><td style={{textAlign: 'right'}}>₱1,850,000</td><td style={{textAlign: 'right'}}>65%</td><td><span style={{color: '#27ae60'}}>↑ 12%</span></td></tr>
-                                        <tr><td>🛏️ Wake Space Rental</td><td style={{textAlign: 'right'}}>₱450,000</td><td style={{textAlign: 'right'}}>16%</td><td><span style={{color: '#27ae60'}}>↑ 8%</span></td></tr>
-                                        <tr><td>💰 Installment Payments</td><td style={{textAlign: 'right'}}>₱380,000</td><td style={{textAlign: 'right'}}>13%</td><td><span style={{color: '#f39c12'}}>→ 0%</span></td></tr>
-                                        <tr><td>📋 Other Fees</td><td style={{textAlign: 'right'}}>₱120,000</td><td style={{textAlign: 'right'}}>6%</td><td><span style={{color: '#c0392b'}}>↓ 3%</span></td></tr>
+                                        <tr><td>ðŸª¦ Grave Lot Sales</td><td style={{textAlign: 'right'}}>â‚±1,850,000</td><td style={{textAlign: 'right'}}>65%</td><td><span style={{color: '#27ae60'}}>â†‘ 12%</span></td></tr>
+                                        <tr><td>ðŸ›ï¸ Wake Space Rental</td><td style={{textAlign: 'right'}}>â‚±450,000</td><td style={{textAlign: 'right'}}>16%</td><td><span style={{color: '#27ae60'}}>â†‘ 8%</span></td></tr>
+                                        <tr><td>ðŸ’° Installment Payments</td><td style={{textAlign: 'right'}}>â‚±380,000</td><td style={{textAlign: 'right'}}>13%</td><td><span style={{color: '#f39c12'}}>â†’ 0%</span></td></tr>
+                                        <tr><td>ðŸ“‹ Other Fees</td><td style={{textAlign: 'right'}}>â‚±120,000</td><td style={{textAlign: 'right'}}>6%</td><td><span style={{color: '#c0392b'}}>â†“ 3%</span></td></tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -217,10 +217,10 @@ export default function Reports() {
                 {currentTab === 'occupancy' && (
                     <div className="tab-content">
                         <div className="stats-grid">
-                            <div className="stat-card"><div className="stat-icon blue"><i className="fas fa-tshirt"></i></div><div className="stat-label">Total Lots</div><div className="stat-value">223</div><div className="stat-change"><span className="up">↑ 5</span> vs last month</div></div>
-                            <div className="stat-card"><div className="stat-icon green"><i className="fas fa-check-circle"></i></div><div className="stat-label">Available</div><div className="stat-value">71</div><div className="stat-change"><span className="up">↑ 3</span> vs last month</div></div>
-                            <div className="stat-card"><div className="stat-icon red"><i className="fas fa-circle"></i></div><div className="stat-label">Occupied</div><div className="stat-value">142</div><div className="stat-change"><span className="down">↑ 2</span> vs last month</div></div>
-                            <div className="stat-card"><div className="stat-icon orange"><i className="fas fa-clock"></i></div><div className="stat-label">Reserved</div><div className="stat-value">10</div><div className="stat-change"><span className="neutral">→ 0</span> vs last month</div></div>
+                            <div className="stat-card"><div className="stat-icon blue"><i className="fas fa-tshirt"></i></div><div className="stat-label">Total Lots</div><div className="stat-value">223</div><div className="stat-change"><span className="up">â†‘ 5</span> vs last month</div></div>
+                            <div className="stat-card"><div className="stat-icon green"><i className="fas fa-check-circle"></i></div><div className="stat-label">Available</div><div className="stat-value">71</div><div className="stat-change"><span className="up">â†‘ 3</span> vs last month</div></div>
+                            <div className="stat-card"><div className="stat-icon red"><i className="fas fa-circle"></i></div><div className="stat-label">Occupied</div><div className="stat-value">142</div><div className="stat-change"><span className="down">â†‘ 2</span> vs last month</div></div>
+                            <div className="stat-card"><div className="stat-icon orange"><i className="fas fa-clock"></i></div><div className="stat-label">Reserved</div><div className="stat-value">10</div><div className="stat-change"><span className="neutral">â†’ 0</span> vs last month</div></div>
                         </div>
 
                         <div className="chart-grid">
@@ -289,10 +289,10 @@ export default function Reports() {
                 {currentTab === 'payments' && (
                     <div className="tab-content">
                         <div className="stats-grid">
-                            <div className="stat-card"><div className="stat-icon green"><i className="fas fa-check-circle"></i></div><div className="stat-label">Fully Paid</div><div className="stat-value">156</div><div className="stat-change"><span className="up">↑ 8</span> vs last month</div></div>
-                            <div className="stat-card"><div className="stat-icon orange"><i className="fas fa-clock"></i></div><div className="stat-label">On Installment</div><div className="stat-value">42</div><div className="stat-change"><span className="down">↓ 3</span> vs last month</div></div>
-                            <div className="stat-card"><div className="stat-icon red"><i className="fas fa-exclamation-triangle"></i></div><div className="stat-label">Overdue</div><div className="stat-value">12</div><div className="stat-change"><span className="down">↑ 4</span> vs last month</div></div>
-                            <div className="stat-card"><div className="stat-icon purple"><i className="fas fa-coins"></i></div><div className="stat-label">Total Outstanding</div><div className="stat-value">₱850K</div><div className="stat-change"><span className="down">↓ 5%</span> vs last month</div></div>
+                            <div className="stat-card"><div className="stat-icon green"><i className="fas fa-check-circle"></i></div><div className="stat-label">Fully Paid</div><div className="stat-value">156</div><div className="stat-change"><span className="up">â†‘ 8</span> vs last month</div></div>
+                            <div className="stat-card"><div className="stat-icon orange"><i className="fas fa-clock"></i></div><div className="stat-label">On Installment</div><div className="stat-value">42</div><div className="stat-change"><span className="down">â†“ 3</span> vs last month</div></div>
+                            <div className="stat-card"><div className="stat-icon red"><i className="fas fa-exclamation-triangle"></i></div><div className="stat-label">Overdue</div><div className="stat-value">12</div><div className="stat-change"><span className="down">â†‘ 4</span> vs last month</div></div>
+                            <div className="stat-card"><div className="stat-icon purple"><i className="fas fa-coins"></i></div><div className="stat-label">Total Outstanding</div><div className="stat-value">â‚±850K</div><div className="stat-change"><span className="down">â†“ 5%</span> vs last month</div></div>
                         </div>
                         
                         <div className="chart-grid">
@@ -338,7 +338,7 @@ export default function Reports() {
                                             <tr key={i}>
                                                 <td><strong>{o.client}</strong></td>
                                                 <td>{o.lot}</td>
-                                                <td style={{fontWeight: 600, color: '#c0392b'}}>₱{o.amount.toLocaleString()}</td>
+                                                <td style={{fontWeight: 600, color: '#c0392b'}}>â‚±{o.amount.toLocaleString()}</td>
                                                 <td>{o.overdueSince}</td>
                                                 <td style={{fontWeight: 600, color: o.days > 30 ? '#c0392b' : o.days > 15 ? '#f39c12' : '#e67e22'}}>{o.days}</td>
                                                 <td><span className={`status-badge ${o.days > 30 ? 'dp-only' : o.days > 15 ? 'installment' : 'reserved'}`}>{o.days > 30 ? 'Critical' : o.days > 15 ? 'Overdue' : 'Urgent'}</span></td>
@@ -355,9 +355,9 @@ export default function Reports() {
                     <div className="tab-content">
                         <div className="stats-grid">
                             <div className="stat-card"><div className="stat-icon red"><i className="fas fa-exclamation-triangle"></i></div><div className="stat-label">Expiring This Week</div><div className="stat-value">5</div><div className="stat-change"><span className="down">Urgent</span></div></div>
-                            <div className="stat-card"><div className="stat-icon orange"><i className="fas fa-clock"></i></div><div className="stat-label">Expiring This Month</div><div className="stat-value">18</div><div className="stat-change"><span className="up">↑ 6</span> vs last month</div></div>
-                            <div className="stat-card"><div className="stat-icon blue"><i className="fas fa-calendar-alt"></i></div><div className="stat-label">Expiring Next 3 Months</div><div className="stat-value">47</div><div className="stat-change"><span className="neutral">→ 0</span> vs last month</div></div>
-                            <div className="stat-card"><div className="stat-icon green"><i className="fas fa-check-circle"></i></div><div className="stat-label">Renewed This Month</div><div className="stat-value">9</div><div className="stat-change"><span className="up">↑ 3</span> vs last month</div></div>
+                            <div className="stat-card"><div className="stat-icon orange"><i className="fas fa-clock"></i></div><div className="stat-label">Expiring This Month</div><div className="stat-value">18</div><div className="stat-change"><span className="up">â†‘ 6</span> vs last month</div></div>
+                            <div className="stat-card"><div className="stat-icon blue"><i className="fas fa-calendar-alt"></i></div><div className="stat-label">Expiring Next 3 Months</div><div className="stat-value">47</div><div className="stat-change"><span className="neutral">â†’ 0</span> vs last month</div></div>
+                            <div className="stat-card"><div className="stat-icon green"><i className="fas fa-check-circle"></i></div><div className="stat-label">Renewed This Month</div><div className="stat-value">9</div><div className="stat-change"><span className="up">â†‘ 3</span> vs last month</div></div>
                         </div>
 
                         <div className="chart-box">
@@ -401,7 +401,7 @@ export default function Reports() {
             </div>
 
             {toast.show && (
-                <div className={`toast ${toast.type} show`}><span>{toast.msg}</span><button className="toast-close" onClick={() => setToast({ ...toast, show: false })}>×</button></div>
+                <div className={`toast ${toast.type} show`}><span>{toast.msg}</span><button className="toast-close" onClick={() => setToast({ ...toast, show: false })}>Ã—</button></div>
             )}
         </div>
     );

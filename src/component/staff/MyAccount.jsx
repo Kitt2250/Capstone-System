@@ -1,7 +1,7 @@
-import { useState } from "react";
-import "./my-account.css";
+import React, { useState } from "react";
+import "./staff-shared.css";
 
-function SMyAccount() {
+export default function MyAccount() {
   const [form, setForm] = useState({
     fullName: "Juan Dela Cruz",
     email: "staff@cherubim.ph",
@@ -18,248 +18,141 @@ function SMyAccount() {
     confirm: "",
   });
 
-  const [saved, setSaved] = useState(false);
-  const [pwSaved, setPwSaved] = useState(false);
-  const [pwError, setPwError] = useState("");
+  const [toast, setToast] = useState({ show: false, msg: '', type: 'success' });
 
-  const handleFormChange = (e) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-    setSaved(false);
+  const showToast = (msg, type = 'success') => {
+    setToast({ show: true, msg, type });
+    setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3500);
   };
 
-  const handleSave = (e) => {
+  const handleProfileSave = (e) => {
     e.preventDefault();
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+    showToast("Profile details updated successfully!", "success");
   };
 
-  const handlePasswordChange = (e) => {
-    setPasswords((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-    setPwError("");
-    setPwSaved(false);
-  };
-
-  const handleUpdatePassword = (e) => {
+  const handlePasswordSave = (e) => {
     e.preventDefault();
-    if (!passwords.current || !passwords.newPass || !passwords.confirm) {
-      setPwError("Please fill in all password fields.");
-      return;
-    }
     if (passwords.newPass !== passwords.confirm) {
-      setPwError("New passwords do not match.");
+      showToast("New passwords do not match!", "error");
       return;
     }
-    if (passwords.newPass.length < 6) {
-      setPwError("Password must be at least 6 characters.");
-      return;
-    }
-    setPwSaved(true);
+    showToast("Password updated successfully!", "success");
     setPasswords({ current: "", newPass: "", confirm: "" });
-    setTimeout(() => setPwSaved(false), 3000);
+  };
+
+  const inputStyle = {
+    width: '100%', padding: '0.6rem 1rem', border: '1px solid #dce3ec', 
+    borderRadius: '8px', fontSize: '0.9rem', color: '#1a3d5c', 
+    background: '#f8fafc', marginBottom: '1rem', transition: '0.3s'
+  };
+
+  const labelStyle = {
+    display: 'block', fontSize: '0.8rem', fontWeight: 600, 
+    color: '#1a3d5c', marginBottom: '0.4rem'
   };
 
   return (
-    <div className="sma-page">
-      <div className="sma-topbar">
-        <span>Cherubim of Heaven Memorial Park</span>
-      </div>
-
-      <div className="sma-header">
-        <h1>My Account</h1>
-        <p>Manage your account settings</p>
-      </div>
-
-      {/* Profile Information */}
-      <div className="sma-card">
-        <div className="sma-card-heading">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-            stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-            <circle cx="12" cy="7" r="4" />
-          </svg>
-          <span>Profile Information</span>
+    <div className="reports-page-wrapper">
+        <div className="topbar">
+            <div className="topbar-left">
+                <h1>My Account <span>✦</span></h1>
+                <div className="greeting">Manage your personal profile and security settings</div>
+            </div>
+            <div className="topbar-right">
+                <div className="date-badge"><i className="fas fa-calendar-alt"></i> August 2026</div>
+                <button className="notification-btn"><i className="fas fa-bell"></i><span className="dot"></span></button>
+            </div>
         </div>
 
-        <div className="sma-profile-row">
-          <div className="sma-profile-avatar">JDC</div>
-          <div>
-            <p className="sma-profile-name">{form.fullName}</p>
-            <p className="sma-profile-role">Staff Account</p>
-          </div>
+        <div style={{display: 'flex', gap: '1.5rem', flexWrap: 'wrap', alignItems: 'flex-start'}}>
+            {/* Left Column: Profile Avatar & Basic Info */}
+            <div className="reports-container" style={{flex: '1 1 300px', textAlign: 'center'}}>
+                <div style={{
+                    width: '100px', height: '100px', borderRadius: '50%', background: 'linear-gradient(135deg, #d4af37, #b8942e)', 
+                    margin: '0 auto 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', 
+                    fontSize: '2.5rem', fontWeight: 700, color: '#1a3d5c'
+                }}>
+                    JD
+                </div>
+                <h3 style={{margin: '0 0 0.2rem', color: '#1a3d5c', fontSize: '1.2rem'}}>{form.fullName}</h3>
+                <p style={{margin: '0 0 1.5rem', color: '#6a8aaa', fontSize: '0.9rem'}}>{form.position}</p>
+                <div style={{background: '#f8fafc', padding: '1rem', borderRadius: '10px', textAlign: 'left', marginBottom: '1.5rem'}}>
+                    <div style={{marginBottom: '0.8rem'}}>
+                        <span style={{fontSize: '0.7rem', color: '#8aaccc', textTransform: 'uppercase', letterSpacing: '0.5px'}}>Employee ID</span>
+                        <div style={{fontWeight: 600, color: '#1a3d5c'}}>{form.employeeId}</div>
+                    </div>
+                    <div>
+                        <span style={{fontSize: '0.7rem', color: '#8aaccc', textTransform: 'uppercase', letterSpacing: '0.5px'}}>Department</span>
+                        <div style={{fontWeight: 600, color: '#1a3d5c'}}>{form.department}</div>
+                    </div>
+                </div>
+                <button className="btn-secondary" style={{width: '100%', justifyContent: 'center'}}><i className="fas fa-camera"></i> Change Photo</button>
+            </div>
+
+            {/* Right Column: Forms */}
+            <div style={{flex: '2 1 600px', display: 'flex', flexDirection: 'column', gap: '1.5rem'}}>
+                
+                {/* Profile Form */}
+                <div className="reports-container">
+                    <div className="reports-header" style={{borderBottom: '1px solid #e8edf4', paddingBottom: '1rem', marginBottom: '1.5rem'}}>
+                        <h2 style={{fontSize: '1.2rem', color: '#1a3d5c', margin: 0}}><i className="fas fa-user-edit" style={{color: '#d4af37', marginRight: '8px'}}></i> Edit Profile</h2>
+                    </div>
+                    <form onSubmit={handleProfileSave}>
+                        <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '0 1.5rem'}}>
+                            <div>
+                                <label style={labelStyle}>Full Name</label>
+                                <input style={inputStyle} type="text" value={form.fullName} onChange={e => setForm({...form, fullName: e.target.value})} required />
+                            </div>
+                            <div>
+                                <label style={labelStyle}>Email Address</label>
+                                <input style={inputStyle} type="email" value={form.email} onChange={e => setForm({...form, email: e.target.value})} required />
+                            </div>
+                            <div>
+                                <label style={labelStyle}>Phone Number</label>
+                                <input style={inputStyle} type="tel" value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} required />
+                            </div>
+                            <div>
+                                <label style={labelStyle}>Home Address</label>
+                                <input style={inputStyle} type="text" value={form.address} onChange={e => setForm({...form, address: e.target.value})} required />
+                            </div>
+                        </div>
+                        <div style={{display: 'flex', justifyContent: 'flex-end', marginTop: '1rem'}}>
+                            <button type="submit" className="btn-primary"><i className="fas fa-save"></i> Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+
+                {/* Security Form */}
+                <div className="reports-container">
+                    <div className="reports-header" style={{borderBottom: '1px solid #e8edf4', paddingBottom: '1rem', marginBottom: '1.5rem'}}>
+                        <h2 style={{fontSize: '1.2rem', color: '#1a3d5c', margin: 0}}><i className="fas fa-shield-alt" style={{color: '#d4af37', marginRight: '8px'}}></i> Security Settings</h2>
+                    </div>
+                    <form onSubmit={handlePasswordSave}>
+                        <div style={{maxWidth: '400px'}}>
+                            <label style={labelStyle}>Current Password</label>
+                            <input style={inputStyle} type="password" value={passwords.current} onChange={e => setPasswords({...passwords, current: e.target.value})} required />
+                            
+                            <label style={labelStyle}>New Password</label>
+                            <input style={inputStyle} type="password" value={passwords.newPass} onChange={e => setPasswords({...passwords, newPass: e.target.value})} required />
+                            
+                            <label style={labelStyle}>Confirm New Password</label>
+                            <input style={inputStyle} type="password" value={passwords.confirm} onChange={e => setPasswords({...passwords, confirm: e.target.value})} required />
+                        </div>
+                        <div style={{display: 'flex', marginTop: '1rem'}}>
+                            <button type="submit" className="btn-secondary"><i className="fas fa-key"></i> Update Password</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
         </div>
 
-        <form onSubmit={handleSave} className="sma-form">
-          <div className="sma-field">
-            <label className="sma-label">Full Name</label>
-            <input
-              type="text"
-              name="fullName"
-              className="sma-input"
-              value={form.fullName}
-              onChange={handleFormChange}
-            />
-          </div>
-
-          <div className="sma-field">
-            <label className="sma-label">Email</label>
-            <input
-              type="email"
-              name="email"
-              className="sma-input sma-input--disabled"
-              value={form.email}
-              disabled
-            />
-            <p className="sma-field-note">Contact your administrator to change your email</p>
-          </div>
-
-          <div className="sma-form-row">
-            <div className="sma-field">
-              <label className="sma-label">Phone</label>
-              <input
-                type="text"
-                name="phone"
-                className="sma-input"
-                value={form.phone}
-                onChange={handleFormChange}
-              />
+        {toast.show && (
+            <div className={`toast ${toast.type} show`}>
+                <span>{toast.msg}</span>
+                <button className="toast-close" onClick={() => setToast({ ...toast, show: false })}>×</button>
             </div>
-            <div className="sma-field">
-              <label className="sma-label">Address</label>
-              <input
-                type="text"
-                name="address"
-                className="sma-input"
-                value={form.address}
-                onChange={handleFormChange}
-              />
-            </div>
-          </div>
-
-          <div className="sma-form-row sma-form-row--three">
-            <div className="sma-field">
-              <label className="sma-label">Employee ID</label>
-              <input
-                type="text"
-                className="sma-input sma-input--disabled"
-                value={form.employeeId}
-                disabled
-              />
-            </div>
-            <div className="sma-field">
-              <label className="sma-label">Department</label>
-              <input
-                type="text"
-                className="sma-input sma-input--disabled"
-                value={form.department}
-                disabled
-              />
-            </div>
-            <div className="sma-field">
-              <label className="sma-label">Position</label>
-              <input
-                type="text"
-                className="sma-input sma-input--disabled"
-                value={form.position}
-                disabled
-              />
-            </div>
-          </div>
-
-          <button type="submit" className="sma-save-btn">
-            {saved ? (
-              <>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" width="14" height="14">
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-                Saved!
-              </>
-            ) : (
-              <>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14">
-                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
-                  <polyline points="17 21 17 13 7 13 7 21" />
-                  <polyline points="7 3 7 8 15 8" />
-                </svg>
-                Save Changes
-              </>
-            )}
-          </button>
-        </form>
-      </div>
-
-      {/* Change Password */}
-      <div className="sma-card">
-        <div className="sma-card-heading">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-            stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
-            <circle cx="12" cy="12" r="10" />
-            <polyline points="12 6 12 12 16 14" />
-          </svg>
-          <span>Change Password</span>
-        </div>
-
-        <form onSubmit={handleUpdatePassword} className="sma-form">
-          <div className="sma-field">
-            <label className="sma-label">Current Password</label>
-            <input
-              type="password"
-              name="current"
-              className="sma-input"
-              value={passwords.current}
-              onChange={handlePasswordChange}
-              placeholder="Enter current password"
-            />
-          </div>
-
-          <div className="sma-field">
-            <label className="sma-label">New Password</label>
-            <input
-              type="password"
-              name="newPass"
-              className="sma-input"
-              value={passwords.newPass}
-              onChange={handlePasswordChange}
-              placeholder="Enter new password"
-            />
-          </div>
-
-          <div className="sma-field">
-            <label className="sma-label">Confirm New Password</label>
-            <input
-              type="password"
-              name="confirm"
-              className="sma-input"
-              value={passwords.confirm}
-              onChange={handlePasswordChange}
-              placeholder="Confirm new password"
-            />
-          </div>
-
-          {pwError && <p className="sma-error">{pwError}</p>}
-
-          <button type="submit" className="sma-pw-btn">
-            {pwSaved ? (
-              <>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" width="14" height="14">
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-                Password Updated!
-              </>
-            ) : (
-              "Update Password"
-            )}
-          </button>
-        </form>
-      </div>
-
-      <p className="sma-footer-note">
-        Employee ID, Department, and Position are managed by the administrator. Contact admin for changes.
-      </p>
+        )}
     </div>
   );
 }
-
-export default SMyAccount;

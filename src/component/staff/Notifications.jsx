@@ -1,206 +1,115 @@
-import { useState } from "react";
-import "./notifications.css";
+import React, { useState } from "react";
+import "./staff-shared.css";
 
 const INITIAL_NOTIFICATIONS = [
-  {
-    id: 1,
-    category: "expiry",
-    title: "Contract Expiring Soon",
-    message: "Lot A-142 (Alejandro Reyes Sr.) lease expires on April 15, 2026. Contact family for renewal.",
-    time: "10 mins ago",
-    read: false,
-  },
-  {
-    id: 2,
-    category: "payments",
-    title: "Overdue Payment",
-    message: "Carlos Tan - Lot D-012 installment payment overdue since March 1, 2026. Amount: ₱3,000.",
-    time: "1 hour ago",
-    read: false,
-  },
-  {
-    id: 3,
-    category: "reservations",
-    title: "Wake Reservation Tomorrow",
-    message: "Chapel A reserved for Ana Reyes family starting March 18, 2026. Prepare venue.",
-    time: "2 hours ago",
-    read: false,
-  },
-  {
-    id: 4,
-    category: "system",
-    title: "System Backup Completed",
-    message: "Daily automated backup completed successfully at 08:00 AM.",
-    time: "5 hours ago",
-    read: true,
-  },
-  {
-    id: 5,
-    category: "expiry",
-    title: "Contract Expiring Soon",
-    message: "Lot B-045 (Carmen Dela Cruz) lease expires on May 21, 2026. Contact family for renewal.",
-    time: "6 hours ago",
-    read: true,
-  },
-  {
-    id: 5,
-    type: "new_inquiry",
-    title: "New Inquiry Submitted",
-    message: "John Doe submitted a new inquiry regarding lot availability in Section C.",
-    time: "3 hours ago",
-    read: true,
-  },
-  {
-    id: 6,
-    category: "payments",
-    title: "Overdue Payment",
-    message: "Pedro Garcia - Lot A-150 installment payment overdue since March 15, 2026. Amount: ₱5,000.",
-    time: "Yesterday",
-    read: true,
-  },
-  {
-    id: 8,
-    category: "expiry",
-    title: "Multiple Contracts Expiring",
-    message: "23 burial contracts expiring within the next 30 days. Review required.",
-    time: "2 days ago",
-    read: true,
-  },
+  { id: 1, category: "expiry", title: "Contract Expiring Soon", message: "Lot A-142 (Alejandro Reyes Sr.) lease expires on April 15, 2026.", time: "10 mins ago", read: false },
+  { id: 2, category: "payments", title: "Overdue Payment", message: "Carlos Tan - Lot D-012 installment payment overdue since March 1, 2026. Amount: ₱3,000.", time: "1 hour ago", read: false },
+  { id: 3, category: "wake", title: "New Wake Reservation", message: "Chapel A reserved by Ana Reyes for Alejandro Reyes Sr. (March 18-20, 2026).", time: "2 hours ago", read: true },
+  { id: 4, category: "system", title: "System Update", message: "The staff dashboard was successfully updated to version 2.0.", time: "1 day ago", read: true },
+  { id: 5, category: "expiry", title: "Contract Expired", message: "Lot C-128 (Jose Santos) lease has expired.", time: "2 days ago", read: true }
 ];
 
-const TABS = [
-  { key: "all",          label: "All" },
-  { key: "expiry",       label: "Expiry Alerts" },
-  { key: "payments",     label: "Payments" },
-  { key: "reservations", label: "Reservations" },
-  { key: "system",       label: "System" },
-];
-
-function NotifIcon({ category }) {
-  if (category === "expiry") return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
-      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-      <line x1="16" y1="2" x2="16" y2="6" />
-      <line x1="8" y1="2" x2="8" y2="6" />
-      <line x1="3" y1="10" x2="21" y2="10" />
-    </svg>
-  );
-  if (category === "payments") return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
-      <line x1="12" y1="1" x2="12" y2="23" />
-      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-    </svg>
-  );
-  if (category === "reservations") return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
-      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-      <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-    </svg>
-  );
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-      <polyline points="14 2 14 8 20 8" />
-      <line x1="16" y1="13" x2="8" y2="13" />
-      <line x1="16" y1="17" x2="8" y2="17" />
-    </svg>
-  );
-}
-
-function iconColor(category) {
-  if (category === "expiry")       return "snf-icon--orange";
-  if (category === "payments")     return "snf-icon--red";
-  if (category === "reservations") return "snf-icon--blue";
-  return "snf-icon--gray";
-}
-
-function SNotifications() {
+export default function Notifications() {
   const [notifications, setNotifications] = useState(INITIAL_NOTIFICATIONS);
-  const [activeTab, setActiveTab] = useState("all");
+  const [filter, setFilter] = useState("all");
 
-  const unreadCount = notifications.filter((n) => !n.read).length;
-
-  const filtered = notifications.filter((n) =>
-    activeTab === "all" ? true : n.category === activeTab
-  );
-
-  const markAllRead = () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+  const markAllAsRead = () => {
+    setNotifications(notifications.map(n => ({ ...n, read: true })));
   };
 
-  const markRead = (id) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, read: true } : n))
-    );
+  const markAsRead = (id) => {
+    setNotifications(notifications.map(n => n.id === id ? { ...n, read: true } : n));
   };
+
+  const getIconForCategory = (category) => {
+    switch (category) {
+      case 'expiry': return 'fa-clock';
+      case 'payments': return 'fa-coins';
+      case 'wake': return 'fa-calendar-check';
+      case 'system': return 'fa-cog';
+      default: return 'fa-bell';
+    }
+  };
+
+  const getColorForCategory = (category) => {
+    switch (category) {
+      case 'expiry': return '#f39c12';
+      case 'payments': return '#c0392b';
+      case 'wake': return '#3670AF';
+      case 'system': return '#7a9fbe';
+      default: return '#1a3d5c';
+    }
+  };
+
+  const filteredNotifications = notifications.filter(n => filter === 'all' || (filter === 'unread' && !n.read));
+  const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
-    <div className="snf-page">
-      <div className="snf-topbar">
-        <span>Cherubim of Heaven Memorial Park</span>
-      </div>
-
-      <div className="snf-header">
-        <div>
-          <h1>Notifications</h1>
-          <p>{unreadCount > 0 ? `${unreadCount} unread notifications` : "All caught up"}</p>
+    <div className="reports-page-wrapper">
+        <div className="topbar">
+            <div className="topbar-left">
+                <h1>Notifications <span>✦</span></h1>
+                <div className="greeting">Stay updated with the latest system alerts</div>
+            </div>
+            <div className="topbar-right">
+                <div className="date-badge"><i className="fas fa-calendar-alt"></i> August 2026</div>
+                <button className="notification-btn"><i className="fas fa-bell"></i>{unreadCount > 0 && <span className="dot"></span>}</button>
+            </div>
         </div>
-        {unreadCount > 0 && (
-          <button className="snf-mark-all" onClick={markAllRead}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="13" height="13">
-              <polyline points="20 6 9 17 4 12" />
-            </svg>
-            Mark all as read
-          </button>
-        )}
-      </div>
 
-      {/* Tabs */}
-      <div className="snf-tabs">
-        {TABS.map((tab) => (
-          <button
-            key={tab.key}
-            className={`snf-tab ${activeTab === tab.key ? "snf-tab--active" : ""}`}
-            onClick={() => setActiveTab(tab.key)}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {/* List */}
-      <div className="snf-list">
-        {filtered.map((n) => (
-          <div
-            key={n.id}
-            className={`snf-item ${!n.read ? "snf-item--unread" : ""}`}
-            onClick={() => markRead(n.id)}
-          >
-            <div className={`snf-icon-wrap ${iconColor(n.category)}`}>
-              <NotifIcon category={n.category} />
+        <div className="reports-container" style={{maxWidth: '800px', margin: '0 auto'}}>
+            <div className="reports-header" style={{borderBottom: '1px solid #e8edf4', paddingBottom: '1rem', marginBottom: '1.5rem'}}>
+                <div className="reports-header-left">
+                    <h2><i className="fas fa-bell" style={{color: '#d4af37', marginRight: '8px'}}></i> Alert Center</h2>
+                </div>
+                <div className="reports-header-right">
+                    <button className="btn-secondary" onClick={markAllAsRead}><i className="fas fa-check-double"></i> Mark All as Read</button>
+                </div>
             </div>
-            <div className="snf-body">
-              <div className="snf-row">
-                <span className="snf-item-title">{n.title}</span>
-                {!n.read && <span className="snf-dot" />}
-              </div>
-              <p className="snf-message">{n.message}</p>
-              <span className="snf-time">{n.time}</span>
-            </div>
-          </div>
-        ))}
 
-        {filtered.length === 0 && (
-          <div className="snf-empty">No notifications in this category.</div>
-        )}
-      </div>
+            <div className="report-tabs">
+                <button className={`tab-btn ${filter === 'all' ? 'active' : ''}`} onClick={() => setFilter('all')}>All Notifications</button>
+                <button className={`tab-btn ${filter === 'unread' ? 'active' : ''}`} onClick={() => setFilter('unread')}>Unread ({unreadCount})</button>
+            </div>
+
+            <div className="notifications-list" style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
+                {filteredNotifications.length === 0 ? (
+                    <div style={{padding: '3rem', textAlign: 'center', color: '#8aaccc'}}>
+                        <i className="fas fa-bell-slash" style={{fontSize: '3rem', marginBottom: '1rem', opacity: 0.5}}></i>
+                        <p>No notifications to display.</p>
+                    </div>
+                ) : (
+                    filteredNotifications.map(n => (
+                        <div key={n.id} onClick={() => markAsRead(n.id)} style={{
+                            background: n.read ? '#f8fafc' : '#fff',
+                            border: `1px solid ${n.read ? '#e8edf4' : 'rgba(212, 175, 55, 0.3)'}`,
+                            borderLeft: `4px solid ${getColorForCategory(n.category)}`,
+                            padding: '1.2rem',
+                            borderRadius: '10px',
+                            cursor: 'pointer',
+                            transition: '0.2s',
+                            boxShadow: n.read ? 'none' : '0 4px 12px rgba(0,0,0,0.03)',
+                            position: 'relative'
+                        }}>
+                            {!n.read && <span style={{position:'absolute', top:'1rem', right:'1rem', width:'8px', height:'8px', background:'#c0392b', borderRadius:'50%'}}></span>}
+                            <div style={{display: 'flex', gap: '1rem', alignItems: 'flex-start'}}>
+                                <div style={{
+                                    width: '40px', height: '40px', borderRadius: '50%', background: `${getColorForCategory(n.category)}15`, 
+                                    color: getColorForCategory(n.category), display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', flexShrink: 0
+                                }}>
+                                    <i className={`fas ${getIconForCategory(n.category)}`}></i>
+                                </div>
+                                <div style={{flex: 1}}>
+                                    <h4 style={{margin: '0 0 0.3rem 0', color: '#1a3d5c', fontSize: '1rem'}}>{n.title}</h4>
+                                    <p style={{margin: '0 0 0.5rem 0', color: '#6a8aaa', fontSize: '0.85rem', lineHeight: '1.4'}}>{n.message}</p>
+                                    <span style={{fontSize: '0.7rem', color: '#8aaccc', fontWeight: 600}}>{n.time}</span>
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                )}
+            </div>
+        </div>
     </div>
   );
 }
-
-export default SNotifications;

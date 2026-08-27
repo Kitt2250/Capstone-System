@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import './wake-scheduling.css';
+﻿import React, { useState } from 'react';
+import './staff-shared.css';
 
 export default function WakeScheduling() {
     const [activeTab, setActiveTab] = useState('table');
@@ -14,9 +14,9 @@ export default function WakeScheduling() {
 
             <div className="topbar-left">
 
-                <h1>Wake Scheduling <span>✦</span></h1>
+                <h1>Wake Scheduling <span>âœ¦</span></h1>
 
-                <div className="greeting">Manage wake space reservations — client-first booking</div>
+                <div className="greeting">Manage wake space reservations â€” client-first booking</div>
 
             </div>
 
@@ -258,13 +258,13 @@ export default function WakeScheduling() {
 
                         <option value="all">All Status</option>
 
-                        <option value="Confirmed">✅ Confirmed</option>
+                        <option value="Confirmed">âœ… Confirmed</option>
 
-                        <option value="Pending">⏳ Pending</option>
+                        <option value="Pending">â³ Pending</option>
 
-                        <option value="Completed">✔️ Completed</option>
+                        <option value="Completed">âœ”ï¸ Completed</option>
 
-                        <option value="Cancelled">❌ Cancelled</option>
+                        <option value="Cancelled">âŒ Cancelled</option>
 
                     </select>
 
@@ -322,7 +322,7 @@ export default function WakeScheduling() {
 
                     <button onClick={() => {}}>2</button>
 
-                    <span className="page-dots">⋯</span>
+                    <span className="page-dots">â‹¯</span>
 
                     <button onClick={() => {}}>3</button>
 
@@ -340,7 +340,7 @@ export default function WakeScheduling() {
 
             <i className="fas fa-dove" style={{color: '#d4af37', margin: '0 4px'}}></i>
 
-            Cherubim of Heaven Memorial Park · Staff Dashboard v2.0
+            Cherubim of Heaven Memorial Park Â· Staff Dashboard v2.0
 
             <i className="fas fa-dove" style={{color: '#d4af37', margin: '0 4px'}}></i>
 
