@@ -15,7 +15,7 @@ html, body, #root {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 12vh 16px 32px;
+  padding: 6vh 16px 32px;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
