@@ -1,0 +1,357 @@
+/* =====================================================
+   GLOBAL RESPONSIVE UTILITIES
+   Cherubim of Heaven — All Portals
+   Applied system-wide to ensure fluid, perfect layout
+   across every device: 320px → 2560px
+   ===================================================== */
+
+/* ── CSS Custom Properties (fluid scale) ─────────── */
+:root {
+  /* Fluid font sizes using clamp(min, preferred, max) */
+  --fs-xs:   clamp(0.65rem, 1.5vw, 0.75rem);
+  --fs-sm:   clamp(0.75rem, 2vw,   0.875rem);
+  --fs-base: clamp(0.875rem, 2.5vw, 1rem);
+  --fs-md:   clamp(1rem,    3vw,   1.2rem);
+  --fs-lg:   clamp(1.1rem,  3.5vw, 1.5rem);
+  --fs-xl:   clamp(1.3rem,  4vw,   1.8rem);
+  --fs-2xl:  clamp(1.5rem,  5vw,   2.2rem);
+
+  /* Fluid spacing */
+  --sp-xs:  clamp(0.25rem, 1vw,  0.5rem);
+  --sp-sm:  clamp(0.5rem,  2vw,  0.75rem);
+  --sp-md:  clamp(0.75rem, 2.5vw, 1.2rem);
+  --sp-lg:  clamp(1rem,    3vw,  1.8rem);
+  --sp-xl:  clamp(1.5rem,  4vw,  2.5rem);
+
+  /* Touch-friendly minimum tap target */
+  --tap-min: 44px;
+}
+
+/* ── Prevent horizontal overflow globally ─────────── */
+html, body, #root {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* ── Base box-sizing ──────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* ── All interactive elements: minimum tap target ─── */
+button, a, input[type="button"], input[type="submit"], select {
+  min-height: var(--tap-min);
+}
+
+/* ── Scrollable table containers ──────────────────── */
+.table-scroll-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 8px;
+}
+
+/* ── Fluid image / video ──────────────────────────── */
+img, video, iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ── Modal: always fits the screen ───────────────── */
+.modal-overlay {
+  padding: clamp(0.5rem, 3vw, 2rem);
+}
+
+/* =====================================================
+   TOPBAR RESPONSIVE FIX
+   All 3 portal topbars: da-topbar, ds-topbar, fam-topbar
+   On mobile (≤768px): push content right so it doesn't
+   sit behind the ☰ hamburger button (fixed at top-left)
+   ===================================================== */
+@media (max-width: 768px) {
+  .da-topbar,
+  .ds-topbar,
+  .fam-topbar {
+    padding-left: 52px;   /* clear the 44px hamburger + 8px gap */
+    padding-top: 8px;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  /* Shrink titles fluidly */
+  .da-title, .ds-title {
+    font-size: clamp(1.1rem, 4vw, 1.4rem) !important;
+  }
+  .da-greeting, .ds-greeting {
+    font-size: clamp(0.72rem, 2.5vw, 0.85rem) !important;
+  }
+
+  /* Date badge: hide on very small screens to save space */
+  .da-date-badge, .ds-date-badge {
+    display: none;
+  }
+
+  /* Notification dropdown: fit within viewport */
+  .da-notif-dropdown,
+  .ds-notif-dropdown,
+  .fam-notif-dropdown {
+    right: 0;
+    left: auto;
+    width: min(360px, 92vw);
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .da-topbar,
+  .ds-topbar,
+  .fam-topbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .da-topbar-right,
+  .ds-topbar-right,
+  .fam-topbar-right {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  /* Notification dropdown: full-width on phones */
+  .da-notif-dropdown,
+  .ds-notif-dropdown,
+  .fam-notif-dropdown {
+    width: calc(100vw - 24px);
+    right: -12px;
+  }
+}
+
+/* =====================================================
+   FAMILY TOPBAR: push left for hamburger on mobile
+   The fam-topbar sits at the top of fam-page-wrapper
+   ===================================================== */
+@media (max-width: 768px) {
+  .fam-topbar {
+    padding-left: 52px;
+    padding-top: 8px;
+  }
+  .fam-topbar h1 {
+    font-size: clamp(1rem, 4vw, 1.3rem) !important;
+  }
+  .fam-greeting {
+    font-size: clamp(0.7rem, 2.5vw, 0.85rem) !important;
+  }
+  .fam-date-badge { display: none; }
+}
+
+/* =====================================================
+   MAIN CONTENT AREA: fluid padding
+   ===================================================== */
+.admin-content,
+.sn-content {
+  padding: clamp(12px, 2vw, 24px);
+}
+
+@media (max-width: 768px) {
+  .admin-content,
+  .sn-content {
+    padding: 56px 12px 16px !important;
+  }
+}
+
+/* =====================================================
+   STAT/SUMMARY CARDS: truly fluid grid
+   Use auto-fit so they flow naturally at any width
+   ===================================================== */
+.da-stats-grid,
+.ds-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+}
+
+/* =====================================================
+   CARD CONTAINERS: fluid padding
+   ===================================================== */
+.da-card,
+.ds-card,
+.tracking-container,
+.inventory-container {
+  padding: clamp(1rem, 3vw, 2rem);
+  border-radius: clamp(12px, 2vw, 20px);
+}
+
+/* =====================================================
+   SEARCH & FILTER ROWS: always wrap gracefully
+   ===================================================== */
+.search-bar,
+.pos-search-bar,
+.um-search-filter-bar,
+.sbr-search-filter {
+  flex-wrap: wrap;
+  gap: clamp(0.5rem, 2vw, 1rem);
+}
+
+.search-bar input,
+.pos-search-bar input,
+.um-search-filter-bar input {
+  min-width: 0;
+  flex: 1 1 200px;
+}
+
+/* =====================================================
+   MODAL: fluid, never overflows
+   ===================================================== */
+.modal {
+  width: min(580px, 95vw) !important;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: clamp(1rem, 3vw, 2rem) !important;
+}
+
+/* Modal form rows collapse to 1 column on small screens */
+@media (max-width: 560px) {
+  .modal .form-row,
+  .um-form-row,
+  .sbr-form-row,
+  .modal .modal-form-row {
+    grid-template-columns: 1fr !important;
+  }
+  .modal .modal-actions {
+    flex-direction: column;
+  }
+  .modal .modal-actions button {
+    width: 100%;
+  }
+}
+
+/* =====================================================
+   PAGINATION: fluid
+   ===================================================== */
+.pagination,
+.um-pagination,
+.pos-pagination {
+  flex-wrap: wrap;
+  gap: clamp(0.5rem, 2vw, 1rem);
+}
+
+/* =====================================================
+   ACCOUNT CARDS (Installment, Burial): fluid
+   ===================================================== */
+.account-card {
+  flex-wrap: wrap;
+}
+.account-card .account-info {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+/* =====================================================
+   TABLE WRAPPER: always scrollable
+   ===================================================== */
+.sbr-table-wrapper,
+.pos-table-wrapper,
+.um-table-wrapper,
+.al-table-wrapper,
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* =====================================================
+   LOGIN / FORGOT PASSWORD: centered, fluid
+   ===================================================== */
+.login-wrapper,
+.fp-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 3vw, 2rem);
+}
+
+.login-card,
+.fp-card {
+  width: min(440px, 100%);
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+/* =====================================================
+   BUTTON GROUPS: wrap on small screens
+   ===================================================== */
+.um-card-header-right,
+.sbr-header-right,
+.inventory-header-right {
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* =====================================================
+   NOTIFICATION ITEMS: stack on mobile
+   ===================================================== */
+@media (max-width: 480px) {
+  .fam-notif-item,
+  .sn-notif-item {
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+}
+
+/* =====================================================
+   PROGRESS BARS: always full-width
+   ===================================================== */
+.progress-track {
+  width: 100%;
+  min-width: 0;
+}
+
+/* =====================================================
+   TYPOGRAPHY: fluid across all portals
+   ===================================================== */
+@media (max-width: 768px) {
+  .um-card h2,
+  .al-card h2,
+  .inventory-title,
+  .sbr-title,
+  .pos-title,
+  .tracking-title {
+    font-size: clamp(1rem, 4vw, 1.3rem);
+  }
+
+  .stat-value,
+  .da-stat-value,
+  .ds-stat-value {
+    font-size: clamp(1.4rem, 4vw, 1.8rem);
+  }
+}
+
+/* =====================================================
+   FAMILY PAGE WRAPPER: fluid
+   ===================================================== */
+.fam-page-wrapper {
+  padding: clamp(0.75rem, 3vw, 2rem);
+}
+
+/* =====================================================
+   ADMIN REPORTS (special layout): fluid
+   ===================================================== */
+@media (max-width: 768px) {
+  .rpt-grid,
+  .rpt-chart-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =====================================================
+   TOUCH: remove tap highlight on mobile
+   ===================================================== */
+@media (hover: none) {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  button:active {
+    opacity: 0.75;
+  }
+}
