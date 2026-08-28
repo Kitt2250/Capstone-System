@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './staff-shared.css';
+import StaffTopbar from './StaffTopbar';
 
 const graveTypes = [
     { name: 'Single Niche', total: 45, available: 12, occupied: 28, reserved: 5 },

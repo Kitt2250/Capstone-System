@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './staff-shared.css';
+import StaffTopbar from './StaffTopbar';
 
 const MOCK_WAKES = [
     { id: 'WS-001', venue: 'Chapel A', client: 'Ana Reyes', deceased: 'Alejandro Reyes Sr.', start: '2026-03-18', end: '2026-03-20', status: 'Confirmed' },
