@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./staff-shared.css";
+import StaffTopbar from "./StaffTopbar";
 
 export default function MyAccount() {
   const [form, setForm] = useState({
@@ -53,16 +54,7 @@ export default function MyAccount() {
 
   return (
     <div className="reports-page-wrapper">
-        <div className="topbar">
-            <div className="topbar-left">
-                <h1>My Account <span>{"\u2726"}</span></h1>
-                <div className="greeting">Manage your personal profile and security settings</div>
-            </div>
-            <div className="topbar-right">
-                <div className="date-badge"><i className="fas fa-calendar-alt"></i> August 2026</div>
-                <button className="notification-btn"><i className="fas fa-bell"></i><span className="dot"></span></button>
-            </div>
-        </div>
+        <StaffTopbar title="My Account" greeting="Manage your personal profile and security settings" />
 
         <div style={{display: 'flex', gap: '1.5rem', flexWrap: 'wrap', alignItems: 'flex-start'}}>
             {/* Left Column: Profile Avatar & Basic Info */}

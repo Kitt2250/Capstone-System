@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./staff-shared.css";
+import StaffTopbar from "./StaffTopbar";
 
 const INITIAL_NOTIFICATIONS = [
   { id: 1, category: "expiry", title: "Contract Expiring Soon", message: "Lot A-142 (Alejandro Reyes Sr.) lease expires on April 15, 2026.", time: "10 mins ago", read: false },
@@ -46,16 +47,7 @@ export default function Notifications() {
 
   return (
     <div className="reports-page-wrapper">
-        <div className="topbar">
-            <div className="topbar-left">
-                <h1>Notifications <span>{"\u2726"}</span></h1>
-                <div className="greeting">Stay updated with the latest system alerts</div>
-            </div>
-            <div className="topbar-right">
-                <div className="date-badge"><i className="fas fa-calendar-alt"></i> August 2026</div>
-                <button className="notification-btn"><i className="fas fa-bell"></i>{unreadCount > 0 && <span className="dot"></span>}</button>
-            </div>
-        </div>
+        <StaffTopbar title="Notifications" greeting="Stay updated with the latest system alerts" />
 
         <div className="reports-container">
             <div className="reports-header" style={{borderBottom: '1px solid #e8edf4', paddingBottom: '1rem', marginBottom: '1.5rem'}}>

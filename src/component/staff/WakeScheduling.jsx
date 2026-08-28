@@ -36,16 +36,7 @@ export default function WakeScheduling() {
 
     return (
         <div className="wk-page">
-            <div className="topbar">
-                <div className="topbar-left">
-                    <h1>Wake Scheduling <span>{"\u2726"}</span></h1>
-                    <div className="greeting">Manage wake space reservations — client-first booking</div>
-                </div>
-                <div className="topbar-right">
-                    <div className="date-badge"><i className="fas fa-calendar-alt"></i> August 2026</div>
-                    <button className="notification-btn"><i className="fas fa-bell"></i><span className="dot"></span></button>
-                </div>
-            </div>
+            <StaffTopbar title="Wake Scheduling" greeting="Manage wake space reservations — client-first booking" />
 
             <div className="stats-row" style={{display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', marginBottom: '1.5rem'}}>
                 <div className="stat-box" style={{background: '#f8fafc', padding: '1rem 1.2rem', borderRadius: '12px', border: '1px solid rgba(212,175,55,0.06)'}}>

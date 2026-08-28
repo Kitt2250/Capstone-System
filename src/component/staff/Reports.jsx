@@ -62,15 +62,7 @@ export default function Reports() {
 
     return (
         <div className="reports-page-wrapper">
-            <div className="topbar">
-                <div className="topbar-left">
-                    <h1>Reports <span>{"\u2726"}</span></h1>
-                    <div className="greeting">Analytics and insights for Cherubim of Heaven Memorial Park</div>
-                </div>
-                <div className="topbar-right">
-                    <div className="date-badge"><i className="fas fa-calendar-alt"></i> August 2026</div>
-                </div>
-            </div>
+            <StaffTopbar title="Reports" greeting="Analytics and insights for Cherubim of Heaven Memorial Park" />
 
             <div className="reports-container">
                 <div className="reports-header">
