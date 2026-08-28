@@ -182,7 +182,7 @@ function GraveInventory() {
   const types = ['Single Niche', 'Mausoleum', 'Columbarium', 'Apartment', 'Bonevault'];
 
   return (
-    <div className="main-content" style={{ padding: "0 1.5rem" }}>
+    <div className="main-content">
       <Toast toast={toast} onClose={() => setToast(null)} />
       
       <StaffTopbar title="Grave Inventory" greeting="Manage all grave lots and their availability" />

@@ -145,7 +145,7 @@ function SBurialRecords() {
   };
 
   return (
-    <div className="main-content" style={{ padding: "0 1.5rem" }}>
+    <div className="main-content">
       <Toast toast={toast} onClose={() => setToast(null)} />
       
       <StaffTopbar title="Burial Records" greeting="Manage all burial records, payments, and documents" />

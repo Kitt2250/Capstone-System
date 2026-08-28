@@ -702,7 +702,7 @@ function InstallmentPayments() {
   };
 
   return (
-    <div className="main-content" style={{ padding: "0 1.5rem" }}>
+    <div className="main-content">
       <Toast toast={toast} onClose={() => setToast(null)} />
       
       <StaffTopbar title="Installment Payment" greeting="Monitor outstanding balances and payment history" />
