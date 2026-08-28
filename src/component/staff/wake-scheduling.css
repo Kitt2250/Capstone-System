@@ -1,0 +1,165 @@
+/* ===== WAKE SCHEDULING SPECIFIC CSS ===== */
+
+/* ----- VIEW TOGGLES ----- */
+.view-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 2px solid #e8edf4; padding-bottom: 0.5rem; }
+.view-tabs .tab-btn { padding: 0.5rem 1.5rem; border: none; background: none; font-size: 0.85rem; font-weight: 600; color: #7a9fbe; cursor: pointer; border-radius: 8px; transition: 0.3s; display: flex; align-items: center; gap: 6px; }
+.view-tabs .tab-btn:hover { background: #f8fafc; color: #1a3d5c; }
+.view-tabs .tab-btn.active { background: #d4af37; color: #1a3d5c; }
+.view-tabs .tab-btn i { font-size: 0.8rem; }
+
+/* ===== CALENDAR VIEW ===== */
+.calendar-view { display: none; background: white; border-radius: 16px; padding: 1.5rem; border: 1px solid rgba(212, 175, 55, 0.08); margin-bottom: 1.5rem; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03); }
+.calendar-view.active { display: block; }
+.calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; flex-wrap: wrap; gap: 0.5rem; }
+.calendar-header .month-year { font-size: 1.2rem; font-weight: 700; color: #1a3d5c; }
+.calendar-header .month-year i { color: #d4af37; margin-right: 6px; }
+.calendar-nav { display: flex; gap: 0.5rem; align-items: center; }
+.calendar-nav button { width: 36px; height: 36px; border-radius: 50%; border: 1px solid #e8edf4; background: white; color: #1a3d5c; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
+.calendar-nav button:hover { background: #f8fafc; border-color: #d4af37; }
+.calendar-nav .today-btn { padding: 0 1rem; border-radius: 20px; width: auto; font-size: 0.8rem; font-weight: 500; background: #d4af37; color: #1a3d5c; border: none; }
+.calendar-nav .today-btn:hover { background: #c49a2e; }
+
+.calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.calendar-grid .day-header { text-align: center; font-weight: 600; font-size: 0.7rem; text-transform: uppercase; color: #7a9fbe; padding: 0.5rem 0; border-bottom: 2px solid #e8edf4; }
+.calendar-grid .day-cell { min-height: 80px; background: #f8fafc; border-radius: 8px; padding: 0.3rem; cursor: pointer; transition: 0.3s; border: 2px solid transparent; position: relative; }
+.calendar-grid .day-cell:hover { background: #f0f2f5; border-color: #d4af37; }
+.calendar-grid .day-cell.today { border-color: #d4af37; background: #faf3e0; }
+.calendar-grid .day-cell.other-month { opacity: 0.4; }
+.calendar-grid .day-cell .day-number { font-weight: 600; font-size: 0.8rem; color: #1a3d5c; }
+.calendar-grid .day-cell .day-events { margin-top: 0.2rem; }
+.calendar-grid .day-cell .event-dot { display: block; font-size: 0.55rem; padding: 0.05rem 0.3rem; border-radius: 4px; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-left: 3px solid transparent; }
+.calendar-grid .day-cell .event-dot.confirmed { background: #eafaf1; color: #1a3d5c; border-left-color: #27ae60; }
+.calendar-grid .day-cell .event-dot.pending { background: #fef9e7; color: #1a3d5c; border-left-color: #f39c12; }
+.calendar-grid .day-cell .event-more { font-size: 0.55rem; color: #8aaccc; margin-top: 1px; text-align: center; }
+.calendar-grid .day-cell.available-day { background: #f0faf0; }
+.calendar-grid .day-cell.available-day:hover { background: #d5f5e3; }
+
+.calendar-legend { margin-top: 0.8rem; display: flex; gap: 1.5rem; flex-wrap: wrap; font-size: 0.7rem; color: #7a9fbe; justify-content: center; }
+.calendar-legend span { display: flex; align-items: center; gap: 6px; }
+.calendar-legend .dot { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
+.calendar-legend .dot.confirmed { background: #eafaf1; border-left: 3px solid #27ae60; }
+.calendar-legend .dot.pending { background: #fef9e7; border-left: 3px solid #f39c12; }
+.calendar-legend .dot.available { background: #f0faf0; border: 1px solid #27ae60; }
+
+/* ===== INFO BANNER ===== */
+.info-banner { background: #f0f4f8; border-left: 4px solid #d4af37; border-radius: 8px; padding: 0.5rem 1rem; margin-bottom: 1.2rem; display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; font-size: 0.8rem; color: #1a3d5c; }
+.info-banner i { color: #d4af37; font-size: 1.1rem; }
+.info-banner strong { color: #3670AF; }
+
+/* ----- WAKE CONTAINER ----- */
+.wake-container { background: white; border-radius: 20px; padding: 1.8rem 2rem 2rem; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03); border: 1px solid rgba(212, 175, 55, 0.08); position: relative; display: block; }
+.wake-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+.wake-header-left { display: flex; align-items: center; gap: 1rem; }
+.wake-header-left h2 { font-size: 1.3rem; font-weight: 600; color: #1a3d5c; margin: 0; }
+.wake-header-left .wake-count { background: #e8edf4; padding: 0.2rem 0.9rem; border-radius: 20px; font-size: 0.8rem; color: #1a3d5c; font-weight: 500; }
+.wake-header-right { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+
+/* ----- TODAY OVERVIEW BANNER ----- */
+.today-overview { background: linear-gradient(135deg, #f8fafc, #e8edf4); border-radius: 12px; padding: 0.8rem 1.2rem; margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center; border: 1px solid rgba(212, 175, 55, 0.1); }
+.today-overview .today-label { font-weight: 600; color: #1a3d5c; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; }
+.today-overview .today-label i { color: #d4af37; }
+.today-overview .today-stats { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+.today-overview .today-stats .stat { display: flex; align-items: center; gap: 4px; font-size: 0.8rem; color: #1a3d5c; }
+.today-overview .today-stats .stat .num { font-weight: 700; font-size: 1rem; }
+.today-overview .today-stats .stat .num.green { color: #27ae60; }
+.today-overview .today-stats .stat .num.orange { color: #f39c12; }
+.today-overview .today-stats .stat .num.blue { color: #3670AF; }
+.today-overview .today-stats .stat .num.purple { color: #8e44ad; }
+
+/* ----- QUICK AVAILABILITY CHECKER ----- */
+.availability-checker { background: #f8fafc; border-radius: 12px; padding: 0.8rem 1.2rem; margin-bottom: 1.5rem; border: 1px solid #e8edf4; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+.availability-checker .check-label { font-weight: 600; color: #1a3d5c; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; }
+.availability-checker .check-label i { color: #d4af37; }
+.availability-checker .date-inputs { display: flex; gap: 0.5rem; flex-wrap: wrap; flex: 1; }
+.availability-checker .date-inputs input { padding: 0.4rem 0.8rem; border: 1px solid #dce3ec; border-radius: 8px; font-size: 0.85rem; background: white; color: #1a3d5c; outline: none; transition: 0.3s; min-width: 140px; }
+.availability-checker .date-inputs input:focus { border-color: #d4af37; box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1); }
+.availability-checker .check-result { padding: 0.3rem 1rem; border-radius: 8px; font-weight: 600; font-size: 0.85rem; min-width: 120px; text-align: center; }
+.availability-checker .check-result.available { background: #eafaf1; color: #27ae60; }
+.availability-checker .check-result.unavailable { background: #fdedec; color: #c0392b; }
+.availability-checker .check-result.idle { background: #f0f2f5; color: #7a9fbe; }
+
+/* ----- CLIENT SEARCH ----- */
+.client-search-wrap { position: relative; }
+.client-search-wrap input { padding-right: 3.5rem; }
+.client-search-wrap .client-add-btn { position: absolute; right: 4px; top: 50%; transform: translateY(-50%); background: #d4af37; border: none; padding: 0.25rem 0.8rem; border-radius: 8px; color: #1a3d5c; font-weight: 600; font-size: 0.75rem; cursor: pointer; transition: 0.3s; white-space: nowrap; display: flex; align-items: center; gap: 4px; }
+.client-search-wrap .client-add-btn:hover { background: #c49a2e; }
+.client-results { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #dce3ec; border-radius: 10px; max-height: 180px; overflow-y: auto; z-index: 100; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); margin-top: 2px; }
+.client-results .result-item { padding: 0.5rem 0.8rem; cursor: pointer; font-size: 0.85rem; color: #1a3d5c; border-bottom: 1px solid #f0f2f5; transition: 0.2s; display: flex; justify-content: space-between; align-items: center; }
+.client-results .result-item:hover { background: #f8fafc; }
+.client-results .result-item:last-child { border-bottom: none; }
+.client-results .result-item .sub { font-size: 0.7rem; color: #8aaccc; }
+.client-results .result-item .select-badge { font-size: 0.6rem; background: #d4af37; color: #1a3d5c; padding: 0.05rem 0.5rem; border-radius: 12px; font-weight: 600; }
+.client-results .no-result { padding: 0.8rem; text-align: center; color: #8aaccc; font-size: 0.8rem; }
+
+/* ----- SELECTED CLIENT ----- */
+.selected-client-display { background: #f8fafc; border-radius: 10px; padding: 0.5rem 0.8rem; border: 1px solid #e8edf4; display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 0.5rem; min-height: 42px; }
+.selected-client-display .client-info { flex: 1; font-size: 0.85rem; color: #1a3d5c; }
+.selected-client-display .client-info strong { font-weight: 600; }
+.selected-client-display .client-info .contact-info { font-size: 0.7rem; color: #7a9fbe; }
+.selected-client-display .btn-change-client { background: none; border: 1px solid #dce3ec; padding: 0.15rem 0.6rem; border-radius: 6px; font-size: 0.7rem; color: #7a9fbe; cursor: pointer; transition: 0.2s; }
+.selected-client-display .btn-change-client:hover { background: #f0f2f5; border-color: #8aaccc; }
+
+/* ----- WARNING / NOTE ----- */
+.conflict-warning { background: #fdedec; border-left: 4px solid #c0392b; padding: 0.5rem 0.8rem; border-radius: 8px; font-size: 0.8rem; color: #c0392b; margin-bottom: 0.5rem; display: none; }
+.conflict-warning.show { display: block; }
+.service-note { background: #fef9e7; border-radius: 8px; padding: 0.4rem 0.8rem; font-size: 0.75rem; color: #7a7a4a; border: 1px solid #f0e8c8; margin-bottom: 0.8rem; display: flex; align-items: flex-start; gap: 6px; }
+
+/* ----- CLIENT HISTORY MINI ----- */
+.client-history-mini { font-size: 0.7rem; color: #7a9fbe; margin-top: 0.2rem; padding: 0.2rem 0.4rem; background: #f8fafc; border-radius: 6px; display: none; }
+.client-history-mini.show { display: block; }
+.client-history-mini .history-item { display: inline-block; background: #e8edf4; padding: 0.05rem 0.5rem; border-radius: 10px; margin: 0.1rem 0.2rem; font-size: 0.6rem; color: #1a3d5c; }
+.client-history-mini .history-item .status-tag.confirmed { color: #27ae60; }
+.client-history-mini .history-item .status-tag.pending { color: #f39c12; }
+.client-history-mini .history-item .status-tag.completed { color: #7f8c8d; }
+
+/* ----- CONTACT ACTIONS ----- */
+.contact-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.2rem; }
+.contact-actions .btn-contact { padding: 0.2rem 0.8rem; border-radius: 8px; border: none; font-weight: 500; cursor: pointer; transition: 0.3s; font-size: 0.75rem; display: flex; align-items: center; gap: 4px; }
+.contact-actions .btn-contact.call { background: #d5f5e3; color: #1abc9c; }
+.contact-actions .btn-contact.call:hover { background: #1abc9c; color: white; }
+.contact-actions .btn-contact.sms { background: #fef9e7; color: #f39c12; }
+.contact-actions .btn-contact.sms:hover { background: #f39c12; color: white; }
+.contact-actions .btn-contact.email { background: #e3effa; color: #3670AF; }
+.contact-actions .btn-contact.email:hover { background: #3670AF; color: white; }
+
+/* ----- VIEW MODAL ----- */
+.view-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 1.5rem; margin-bottom: 0.5rem; }
+.view-detail-grid .detail-item .label { font-size: 0.7rem; color: #8aaccc; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+.view-detail-grid .detail-item .value { font-size: 0.9rem; color: #1a3d5c; font-weight: 500; margin-top: 1px; }
+.view-detail-grid .detail-item.span2 { grid-column: span 2; }
+
+/* ----- PRINT CONFIRMATION SLIP ----- */
+.confirmation-slip { display: none; background: white; padding: 2rem; border-radius: 12px; max-width: 400px; margin: 0 auto; font-family: 'Courier New', monospace; }
+.confirmation-slip .slip-header { text-align: center; border-bottom: 2px dashed #d4af37; padding-bottom: 0.8rem; margin-bottom: 1rem; }
+.confirmation-slip .slip-header h2 { font-size: 1.2rem; color: #1a3d5c; font-family: 'Segoe UI', sans-serif; }
+.confirmation-slip .slip-header p { font-size: 0.7rem; color: #7a9fbe; font-family: 'Segoe UI', sans-serif; }
+.confirmation-slip .slip-body .row { display: flex; justify-content: space-between; padding: 0.2rem 0; font-size: 0.8rem; border-bottom: 1px dotted #f0f2f5; }
+.confirmation-slip .slip-body .row .label { color: #7a9fbe; }
+.confirmation-slip .slip-footer { margin-top: 1rem; text-align: center; font-size: 0.6rem; color: #8aaccc; border-top: 2px dashed #d4af37; padding-top: 0.8rem; }
+.confirmation-slip .slip-footer .space-only { background: #fef9e7; padding: 0.3rem; border-radius: 4px; font-size: 0.55rem; color: #7a7a4a; margin-top: 0.3rem; }
+
+@media print {
+    .sidebar, .topbar, .wake-header-right, .search-filter-bar, .action-buttons, .view-tabs, .calendar-nav, .info-banner, .availability-checker, .stats-row, .ds-topbar, .today-overview, .wake-header { display: none !important; }
+    .wk-page, .main-content { margin-left: 0 !important; padding: 20px !important; }
+    .wake-container { box-shadow: none !important; border: 1px solid #ddd !important; display: none !important; }
+    .calendar-view { display: none !important; }
+    .confirmation-slip { display: block !important; }
+    body { background: white; }
+}
+
+@media (max-width: 768px) {
+    .calendar-grid .day-cell { min-height: 60px; padding: 0.2rem; }
+    .calendar-grid .day-cell .event-dot { font-size: 0.45rem; padding: 0.02rem 0.15rem; }
+    .today-overview { flex-direction: column; align-items: stretch; gap: 0.5rem; }
+    .availability-checker { flex-direction: column; align-items: stretch; }
+    .availability-checker .date-inputs { flex-direction: column; }
+    .availability-checker .date-inputs input { width: 100%; }
+    .view-detail-grid { grid-template-columns: 1fr; }
+    .view-detail-grid .detail-item.span2 { grid-column: span 1; }
+    .wake-header { flex-direction: column; align-items: stretch; }
+}
+@media (max-width: 480px) {
+    .calendar-grid .day-cell { min-height: 40px; }
+    .calendar-grid .day-cell .day-number { font-size: 0.5rem; }
+    .calendar-grid .day-cell .event-dot { display: none; }
+}

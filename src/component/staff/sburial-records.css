@@ -1,6 +1,5 @@
 /* ----- BURIAL RECORDS CONTAINER ----- */
 .records-container { background: white; border-radius: 20px; padding: 1.8rem 2rem 2rem; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03); border: 1px solid rgba(212, 175, 55, 0.08); position: relative; }
-.records-container::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #3670AF, #d4af37); border-radius: 20px 20px 0 0; }
 
 /* ----- RECORDS HEADER ----- */
 .records-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
