@@ -61,7 +61,7 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  flex-wrap: wrap;
+  flex-wrap: nowrap; align-items: center;
   gap: 1rem;
   margin-bottom: 1.8rem;
 }
@@ -88,11 +88,10 @@
   margin: 3px 0 0;
 }
 
-.ds-topbar-right {
-  display: flex;
-  align-items: center;
-  gap: 1.2rem;
-}
+
+.ds-topbar-left { flex: 1; min-width: 0; }
+.ds-topbar-right { flex-shrink: 0; display: flex; align-items: center; gap: 1.2rem; }
+
 
 .ds-date-badge {
   background: white;
@@ -1213,7 +1212,10 @@
     align-items: center; 
   }
   .ds-topbar-left { flex: 1; min-width: 0; }
-  .ds-topbar-right { flex-shrink: 0; }
+  
+.ds-topbar-left { flex: 1; min-width: 0; }
+.ds-topbar-right { flex-shrink: 0; display: flex; align-items: center; gap: 1.2rem; }
+
   .ds-title { font-size: 1.3rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .ds-greeting { font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .ds-notif-dropdown { right: -16px; width: 320px; max-width: 90vw; }
