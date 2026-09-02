@@ -353,7 +353,7 @@
   position: absolute;
   top: 12px;
   left: 12px;
-  z-index: 1100;
+  z-index: 1000;
   background: white;
   border: 1px solid #e2e8f0;
   border-radius: 10px;
