@@ -231,6 +231,7 @@ export default function WakeScheduling() {
     };
 
     const getStatusClass = (st) => st === 'Confirmed' ? 'confirmed' : st === 'Pending' ? 'pending' : st === 'Completed' ? 'completed' : 'cancelled';
+    const getStatusIcon = (st) => st === 'Confirmed' ? 'fa-check-circle' : st === 'Pending' ? 'fa-clock' : st === 'Completed' ? 'fa-check-double' : 'fa-times-circle';
     const exportWakes = () => {
         showToast(`⏳ Generating CSV for ${filteredWakes.length} wakes...`, 'info');
         setTimeout(() => {
