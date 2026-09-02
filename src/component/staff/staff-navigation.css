@@ -2,7 +2,7 @@
 
 /* =====================================================
    ADMIN NAVIGATION  —  sn-navigation.css
-   Collapsible sidebar (220px ↔ 64px)
+   Collapsible sidebar (220px ↔ 72px)
    ===================================================== */
 
 /* ── Layout ──────────────────────────────────────── */
@@ -29,8 +29,8 @@
 }
 
 .sn-sidebar.collapsed {
-  width: 64px;
-  min-width: 64px;
+  width: 72px;
+  min-width: 72px;
 }
 
 /* ── Brand row ───────────────────────────────────── */
@@ -47,13 +47,13 @@
   transition: padding 280ms ease, min-height 280ms ease;
 }
 
-/* When collapsed: stack icon above toggle button, both centered */
+/* When collapsed: keep logo and toggle button side-by-side */
 .sn-sidebar.collapsed .sn-brand {
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 2px;
-  padding: 8px 0;
+  gap: 4px;
+  padding: 8px 4px;
   min-height: 0;
 }
 
@@ -111,7 +111,7 @@
   width: 26px;
   height: 26px;
   min-width: 26px;
-  border-radius: 50%;
+  border-radius: 8px;
   border: none;
   background: rgba(255, 255, 255, 0.12);
   color: rgba(255, 255, 255, 0.85);
@@ -254,7 +254,7 @@
   width: 36px;
   height: 36px;
   min-width: 36px;
-  border-radius: 50%;
+  border-radius: 8px;
   background: #f5c842;
   color: #1a3b5d;
   font-size: 11px;
@@ -409,7 +409,7 @@
     transform: translateX(0);
   }
   .sn-sidebar.mobile-open.collapsed {
-    width: 64px;
+    width: 72px;
   }
   .sn-sidebar.mobile-open .sn-brand-text,
   .sn-sidebar.mobile-open .sn-nav-section-label,
