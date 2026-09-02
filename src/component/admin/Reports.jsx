@@ -1,507 +1,652 @@
-import { useState } from "react";
-import "./reports.css";
+import React, { useState, useEffect } from 'react';
+import './reports.css';
+import AdminTopbar from './AdminTopbar';
+import { downloadCSV } from '../../utils/exportToCSV';
 
-const WEEKLY_DATA = {
-  totalRevenue: 860000,
-  wakeSpaceRevenue: 111000,
-  totalExpenses: 172000,
-  netIncome: 688000,
-  chart: [
-    { label: "Mon", lotSales: 90000,  wakeSpace: 20000, expenses: 15000 },
-    { label: "Tue", lotSales: 70000,  wakeSpace: 15000, expenses: 12000 },
-    { label: "Wed", lotSales: 140000, wakeSpace: 25000, expenses: 20000 },
-    { label: "Thu", lotSales: 100000, wakeSpace: 18000, expenses: 14000 },
-    { label: "Fri", lotSales: 170000, wakeSpace: 22000, expenses: 25000 },
-    { label: "Sat", lotSales: 80000,  wakeSpace: 8000,  expenses: 10000 },
-    { label: "Sun", lotSales: 60000,  wakeSpace: 3000,  expenses: 8000 },
-  ],
-};
-
-const MONTHLY_DATA = {
-  totalRevenue: 2542500,
-  wakeSpaceRevenue: 602000,
-  totalExpenses: 765000,
-  netIncome: 1777500,
-  chart: [
-    { label: "Jan", lotSales: 300000, wakeSpace: 90000,  expenses: 110000 },
-    { label: "Feb", lotSales: 280000, wakeSpace: 85000,  expenses: 100000 },
-    { label: "Mar", lotSales: 380000, wakeSpace: 100000, expenses: 130000 },
-    { label: "Apr", lotSales: 350000, wakeSpace: 95000,  expenses: 120000 },
-    { label: "May", lotSales: 390000, wakeSpace: 110000, expenses: 135000 },
-    { label: "Jun", lotSales: 400000, wakeSpace: 120000, expenses: 140000 },
-  ],
-};
-
-const BURIAL_CHART = [
-  { label: "Jan", ground: 24, apartment: 8, mausoleum: 3, boneVault: 2 },
-  { label: "Feb", ground: 22, apartment: 9, mausoleum: 2, boneVault: 3 },
-  { label: "Mar", ground: 28, apartment: 10, mausoleum: 4, boneVault: 2 },
-  { label: "Apr", ground: 25, apartment: 9, mausoleum: 3, boneVault: 3 },
-  { label: "May", ground: 27, apartment: 11, mausoleum: 3, boneVault: 2 },
-  { label: "Jun", ground: 26, apartment: 10, mausoleum: 4, boneVault: 3 },
+// Mock Data
+const financialData = [
+    { label: 'Mon', revenue: 185, expenses: 90 }, { label: 'Tue', revenue: 95, expenses: 65 },
+    { label: 'Wed', revenue: 210, expenses: 110 }, { label: 'Thu', revenue: 155, expenses: 80 },
+    { label: 'Fri', revenue: 75, expenses: 55 }, { label: 'Sat', revenue: 90, expenses: 60 }, { label: 'Sun', revenue: 50, expenses: 45 }
+];
+const financialTransactions = [
+    { date: '2026-03-15', transaction: 'Lot A-142 - Burial', category: 'Lot Sales', amount: 12500, type: 'positive' },
+    { date: '2026-03-15', transaction: 'Wake Space - Chapel A', category: 'Wake Space', amount: 8000, type: 'positive' },
+    { date: '2026-03-14', transaction: 'Maintenance - Grounds', category: 'Expenses', amount: -5500, type: 'negative' },
+    { date: '2026-03-14', transaction: 'Lot C-211 - Renewal', category: 'Lot Sales', amount: 25000, type: 'positive' },
+    { date: '2026-03-13', transaction: 'Bone Vault - Lot D-401', category: 'Lot Sales', amount: 18000, type: 'positive' }
 ];
 
-const RESERVATION_DATA = [
-  { type: "Ground Burial Lots", total: 2100, reserved: 45, available: 155, occupancy: 90 },
-  { type: "Apartment Niches",   total: 980,  reserved: 22, available: 58,  occupancy: 92 },
-  { type: "Mausoleum",          total: 520,  reserved: 8,  available: 12,  occupancy: 96 },
-  { type: "Bone Vault",         total: 247,  reserved: 5,  available: 15,  occupancy: 92 },
+const burialData = [
+    { label: 'Single', value: 12, color: '#d4af37' }, { label: 'Mausoleum', value: 8, color: '#3670AF' },
+    { label: 'Columbarium', value: 15, color: '#27ae60' }, { label: 'Apartment', value: 7, color: '#8e44ad' }, { label: 'Bone Vault', value: 5, color: '#7f8c8d' }
 ];
 
-const peso = (n) => "₱" + n.toLocaleString("en-PH");
+const occupancyData = [
+    { label: 'Niche', avail: 12, occ: 28, res: 5 }, { label: 'Mausoleum', avail: 3, occ: 8, res: 1 },
+    { label: 'Columbarium', avail: 15, occ: 20, res: 3 }, { label: 'Apartment', avail: 18, occ: 34, res: 4 }, { label: 'Bone Vault', avail: 23, occ: 45, res: 4 }
+];
 
-function CloseIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
-      <line x1="18" y1="6" x2="6" y2="18" />
-      <line x1="6" y1="6" x2="18" y2="18" />
-    </svg>
-  );
-}
+const occupancyTable = [
+    { section: 'Section A', total: 60, avail: 12, occ: 42, res: 6, rate: '70%' },
+    { section: 'Section B', total: 45, avail: 8, occ: 32, res: 5, rate: '71%' },
+    { section: 'Section C', total: 30, avail: 10, occ: 18, res: 2, rate: '60%' },
+    { section: 'Section D', total: 40, avail: 15, occ: 22, res: 3, rate: '55%' },
+    { section: 'Section E', total: 48, avail: 26, occ: 28, res: 4, rate: '58%' }
+];
 
-function DownloadIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14">
-      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-      <polyline points="7 10 12 15 17 10" />
-      <line x1="12" y1="15" x2="12" y2="3" />
-    </svg>
-  );
-}
+const overdueData = [
+    { label: '1-7d', value: 4, color: '#f39c12' }, { label: '8-14d', value: 3, color: '#e67e22' },
+    { label: '15-30d', value: 3, color: '#c0392b' }, { label: '30+d', value: 2, color: '#922b21' }
+];
+const overdueTable = [
+    { client: 'Carlos Tan', lot: 'D-012', amount: 3000, overdueSince: '2026-03-01', days: 14, status: 'Overdue', statusClass: 'overdue' },
+    { client: 'Pedro Garcia', lot: 'A-150', amount: 5000, overdueSince: '2026-03-15', days: 0, status: 'Due Today', statusClass: 'installment' },
+    { client: 'Roberto Lim', lot: 'D-014', amount: 25000, overdueSince: '2026-02-15', days: 28, status: 'Critical', statusClass: 'overdue' },
+    { client: 'Elena Santos', lot: 'C-130', amount: 15000, overdueSince: '2026-03-10', days: 5, status: 'Overdue', statusClass: 'overdue' }
+];
 
-function CsvIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="20" height="20">
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-      <polyline points="14 2 14 8 20 8" />
-      <line x1="9" y1="15" x2="9" y2="17" />
-      <line x1="12" y1="13" x2="12" y2="17" />
-      <line x1="15" y1="15" x2="15" y2="17" />
-    </svg>
-  );
-}
+const renewalData = [
+    { label: 'Apr', value: 5 }, { label: 'May', value: 8 }, { label: 'Jun', value: 6 },
+    { label: 'Jul', value: 4 }, { label: 'Aug', value: 3 }, { label: 'Sep', value: 2 }
+];
+const renewalTable = [
+    { lot: 'A-142', client: 'Reyes Family', expiry: '2026-04-15', days: 30, color: '#c0392b', status: 'Urgent', statusClass: 'overdue' },
+    { lot: 'B-045', client: 'Dela Cruz Family', expiry: '2026-05-21', days: 66, color: '#f39c12', status: 'Warning', statusClass: 'installment' },
+    { lot: 'C-128', client: 'Santos Family', expiry: '2026-06-13', days: 89, color: '#27ae60', status: 'Ok', statusClass: 'fully-paid' },
+    { lot: 'A-200', client: 'Garcia Family', expiry: '2026-07-05', days: 111, color: '#27ae60', status: 'Ok', statusClass: 'fully-paid' },
+    { lot: 'D-012', client: 'Tan Family', expiry: '2026-09-08', days: 176, color: '#27ae60', status: 'Ok', statusClass: 'fully-paid' }
+];
 
-function PdfIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="20" height="20">
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-      <polyline points="14 2 14 8 20 8" />
-      <line x1="16" y1="13" x2="8" y2="13" />
-      <line x1="16" y1="17" x2="8" y2="17" />
-      <line x1="10" y1="9" x2="8" y2="9" />
-    </svg>
-  );
-}
+const wakeData = [
+    { label: 'Oct', value: 4 }, { label: 'Nov', value: 6 }, { label: 'Dec', value: 3 },
+    { label: 'Jan', value: 5 }, { label: 'Feb', value: 7 }, { label: 'Mar', value: 8 }
+];
+const wakeTable = [
+    { id: 'WK-001', client: 'Ana Reyes', deceased: 'Alejandro Reyes Sr.', start: '2026-03-18', end: '2026-03-20', status: 'Confirmed', statusClass: 'occupied' },
+    { id: 'WK-002', client: 'Roberto Dela Cruz', deceased: 'Carmen Dela Cruz', start: '2026-03-19', end: '2026-03-21', status: 'Pending', statusClass: 'installment' },
+    { id: 'WK-003', client: 'Maria Santos Jr.', deceased: 'Jose Santos', start: '2026-03-16', end: '2026-03-18', status: 'Confirmed', statusClass: 'occupied' },
+    { id: 'WK-005', client: 'Carlos Tan', deceased: 'Miguel Tan', start: '2026-03-22', end: '2026-03-24', status: 'Confirmed', statusClass: 'occupied' },
+    { id: 'WK-006', client: 'Lourdes Garcia', deceased: 'Ramon Garcia', start: '2026-03-25', end: '2026-03-27', status: 'Pending', statusClass: 'installment' }
+];
+const wakeWeekly = [
+    { label: 'Mon', booked: 1, total: 1 }, { label: 'Tue', booked: 0, total: 1 }, { label: 'Wed', booked: 1, total: 1 },
+    { label: 'Thu', booked: 1, total: 1 }, { label: 'Fri', booked: 0, total: 1 }, { label: 'Sat', booked: 1, total: 1 }, { label: 'Sun', booked: 0, total: 1 }
+];
 
-// ── Simple Bar Chart (Financial) ──
-function BarChart({ data }) {
-  const maxVal = Math.max(...data.flatMap((d) => [d.lotSales, d.wakeSpace, d.expenses]));
-  const niceMax = Math.ceil(maxVal / 55000) * 55000 || 220000;
-  const yTicks = [0, 0.25, 0.5, 0.75, 1].map((f) => Math.round(niceMax * f));
+const inventoryData = [
+    { label: 'Niche', total: 45, avail: 12 }, { label: 'Maus', total: 12, avail: 3 }, { label: 'Colum', total: 38, avail: 15 },
+    { label: 'Apt', total: 56, avail: 18 }, { label: 'Bone', total: 72, avail: 23 }
+];
+const inventoryTable = [
+    { type: 'Single Niche', total: 45, avail: 12, occ: 28, res: 5, rate: '62%' },
+    { type: 'Mausoleum', total: 12, avail: 3, occ: 8, res: 1, rate: '67%' },
+    { type: 'Columbarium', total: 38, avail: 15, occ: 20, res: 3, rate: '53%' },
+    { type: 'Apartment', total: 56, avail: 18, occ: 34, res: 4, rate: '61%' },
+    { type: 'Bone Vault', total: 72, avail: 23, occ: 45, res: 4, rate: '63%' }
+];
 
-  return (
-    <div className="rp-barchart">
-      <div className="rp-barchart-yaxis">
-        {yTicks.slice().reverse().map((tick, i) => (
-          <span key={i}>₱{tick >= 1000 ? `${Math.round(tick / 1000)}k` : tick}</span>
-        ))}
-      </div>
-      <div className="rp-barchart-body">
-        {data.map((d) => (
-          <div className="rp-bar-group" key={d.label}>
-            <div className="rp-bar-track">
-              <div
-                className="rp-bar rp-bar--sales"
-                style={{ height: `${(d.lotSales / niceMax) * 100}%` }}
-                title={`Lot Sales: ${peso(d.lotSales)}`}
-              />
-              <div
-                className="rp-bar rp-bar--wake"
-                style={{ height: `${(d.wakeSpace / niceMax) * 100}%` }}
-                title={`Wake Space: ${peso(d.wakeSpace)}`}
-              />
-              <div
-                className="rp-bar rp-bar--exp"
-                style={{ height: `${(d.expenses / niceMax) * 100}%` }}
-                title={`Expenses: ${peso(d.expenses)}`}
-              />
-            </div>
-            <span className="rp-bar-label">{d.label}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
+export default function Reports() {
+    const [currentTab, setCurrentTab] = useState('financial');
+    const [toast, setToast] = useState({ show: false, msg: '', type: 'success' });
 
-// ── Simple Line Chart (Burial) ──
-function LineChart({ data }) {
-  const width = 700;
-  const height = 220;
-  const padding = 30;
-  const maxVal = 32;
-  const step = (width - padding * 2) / (data.length - 1);
-
-  const toPoints = (key) =>
-    data
-      .map((d, i) => {
-        const x = padding + i * step;
-        const y = height - padding - (d[key] / maxVal) * (height - padding * 1.5);
-        return `${x},${y}`;
-      })
-      .join(" ");
-
-  const series = [
-    { key: "ground",    color: "#111827", label: "Ground" },
-    { key: "apartment", color: "#6b7280", label: "Apartment" },
-    { key: "mausoleum", color: "#9ca3af", label: "Mausoleum" },
-    { key: "boneVault", color: "#d1d5db", label: "Bone Vault" },
-  ];
-
-  const yTicks = [0, 8, 16, 24, 32];
-
-  return (
-    <div className="rp-linechart-wrap">
-      <svg viewBox={`0 0 ${width} ${height + 10}`} className="rp-linechart-svg">
-        {yTicks.map((tick) => {
-          const y = height - padding - (tick / maxVal) * (height - padding * 1.5);
-          return (
-            <g key={tick}>
-              <line x1={padding} y1={y} x2={width - 10} y2={y} stroke="#f3f4f6" strokeWidth="1" />
-              <text x={0} y={y + 4} fontSize="10" fill="#9ca3af">{tick}</text>
-            </g>
-          );
-        })}
-        {series.map((s) => (
-          <polyline
-            key={s.key}
-            points={toPoints(s.key)}
-            fill="none"
-            stroke={s.color}
-            strokeWidth="2"
-          />
-        ))}
-        {series.map((s) =>
-          data.map((d, i) => {
-            const x = padding + i * step;
-            const y = height - padding - (d[s.key] / maxVal) * (height - padding * 1.5);
-            return <circle key={`${s.key}-${i}`} cx={x} cy={y} r="3" fill={s.color} />;
-          })
-        )}
-        {data.map((d, i) => (
-          <text
-            key={d.label}
-            x={padding + i * step}
-            y={height + 6}
-            fontSize="11"
-            fill="#9ca3af"
-            textAnchor="middle"
-          >
-            {d.label}
-          </text>
-        ))}
-      </svg>
-      <div className="rp-linechart-legend">
-        {series.map((s) => (
-          <div className="rp-legend-item" key={s.key}>
-            <span className="rp-legend-dot" style={{ background: s.color }} />
-            {s.label}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function ExportModal({ tab, period, onClose }) {
-  const [format, setFormat] = useState("pdf");
-
-  const summaryMap = {
-    financial: { records: "7 entries", type: "Financial", period: "Mar 9 – Mar 15, 2026" },
-    burial:    { records: "6 entries", type: "Burial",    period: "Jan – Jun 2026" },
-    reservation: { records: "4 entries", type: "Reservation", period: "Jan – Jun 2026" },
-  };
-
-  const summary = summaryMap[tab];
-  const titleMap = {
-    financial: "Export Financial Report",
-    burial: "Export Burial Report",
-    reservation: "Export Reservation Report",
-  };
-
-  const handleExport = () => {
-    onClose();
-    if (format === "pdf") {
-      setTimeout(() => window.print(), 500);
-      return;
-    }
+    // Modals
+    const [dateRangeModal, setDateRangeModal] = useState(false);
+    const [exportModal, setExportModal] = useState(false);
     
-    if (format === "csv") {
-      let csvContent = "data:text/csv;charset=utf-8,";
-      if (tab === "financial") {
-        const data = period === "weekly" ? WEEKLY_DATA : MONTHLY_DATA;
-        const headers = ["Label", "Lot Sales", "Wake Space", "Expenses"];
-        const rows = data.chart.map(d => [d.label, d.lotSales, d.wakeSpace, d.expenses]);
-        csvContent += [headers.join(","), ...rows.map(e => e.join(","))].join("\\n");
-      } else if (tab === "burial") {
-        const headers = ["Month", "Ground", "Apartment", "Mausoleum", "Bone Vault"];
-        const rows = BURIAL_CHART.map(d => [d.label, d.ground, d.apartment, d.mausoleum, d.boneVault]);
-        csvContent += [headers.join(","), ...rows.map(e => e.join(","))].join("\\n");
-      } else if (tab === "reservation") {
-        const headers = ["Type", "Total Lots", "Reserved", "Available", "Occupancy %"];
-        const rows = RESERVATION_DATA.map(d => [d.type, d.total, d.reserved, d.available, d.occupancy]);
-        csvContent += [headers.join(","), ...rows.map(e => e.join(","))].join("\\n");
-      }
-      
-      const encodedUri = encodeURI(csvContent);
-      const link = document.createElement("a");
-      link.setAttribute("href", encodedUri);
-      link.setAttribute("download", `report_${tab}_${new Date().toISOString().slice(0, 10)}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-  };
+    // Forms
+    const [dateFrom, setDateFrom] = useState('2026-03-01');
+    const [dateTo, setDateTo] = useState('2026-03-15');
+    const [exportType, setExportType] = useState('financial');
+    const [exportFormat, setExportFormat] = useState('csv');
 
-  return (
-    <div className="rp-overlay" onClick={onClose}>
-      <div className="rp-modal" onClick={(e) => e.stopPropagation()}>
-        <div className="rp-modal-header">
-          <h2>{titleMap[tab]}</h2>
-          <button className="rp-modal-close" onClick={onClose}>
-            <CloseIcon />
-          </button>
-        </div>
+    const showToast = (msg, type = 'success') => {
+        setToast({ show: true, msg, type });
+        setTimeout(() => setToast({ show: false, msg: '', type: 'success' }), 3500);
+    };
 
-        <div className="rp-export-label">Export Summary</div>
-        <div className="rp-summary-box">
-          <div className="rp-summary-row">
-            <span>Total Records</span>
-            <span className="rp-summary-value">{summary.records}</span>
-          </div>
-          <div className="rp-summary-row">
-            <span>Report Type</span>
-            <span className="rp-summary-value">
-              {summary.type}{tab === "financial" ? ` (${period === "weekly" ? "Weekly" : "Monthly"})` : ""}
-            </span>
-          </div>
-          <div className="rp-summary-row">
-            <span>Period</span>
-            <span className="rp-summary-value">{summary.period}</span>
-          </div>
-          <div className="rp-summary-row">
-            <span>Generated By</span>
-            <span className="rp-summary-value">Administrator</span>
-          </div>
-        </div>
+    const handleTabChange = (tab) => {
+        setCurrentTab(tab);
+        const labels = {
+            'financial': 'Financial', 'burial': 'Burial', 'occupancy': 'Occupancy',
+            'collections': 'Collections', 'renewals': 'Renewals', 'wakespace': 'Wake Space', 'inventory': 'Inventory'
+        };
+        showToast(`📊 Switched to ${labels[tab]} report`, 'info');
+    };
 
-        <div className="rp-format-label">Choose Format</div>
-        <div className="rp-format-options">
-          <button
-            className={`rp-format-card ${format === "csv" ? "rp-format-active" : ""}`}
-            onClick={() => setFormat("csv")}
-          >
-            <CsvIcon />
-            <div className="rp-format-title">CSV File</div>
-            <div className="rp-format-sub">Spreadsheet compatible</div>
-          </button>
-          <button
-            className={`rp-format-card ${format === "pdf" ? "rp-format-active" : ""}`}
-            onClick={() => setFormat("pdf")}
-          >
-            <PdfIcon />
-            <div className="rp-format-title">PDF File</div>
-            <div className="rp-format-sub">Print-ready document</div>
-          </button>
-        </div>
+    const confirmExport = () => {
+        setExportModal(false);
+        showToast(`⏳ Exporting ${exportType} as ${exportFormat}...`, 'info');
+        
+        setTimeout(() => {
+            if (exportFormat === 'csv') {
+                let data = [];
+                if (exportType === 'financial') data = financialTransactions;
+                if (exportType === 'burial') data = burialData;
+                if (exportType === 'occupancy') data = occupancyTable;
+                if (exportType === 'collections') data = overdueTable;
+                if (exportType === 'renewals') data = renewalTable;
+                if (exportType === 'wakespace') data = wakeTable;
+                if (exportType === 'inventory') data = inventoryTable;
+                
+                downloadCSV(data, `${exportType}_report_${new Date().toISOString().slice(0,10)}.csv`);
+                showToast(`✅ ${exportType} exported successfully as CSV!`, 'success');
+            } else if (exportFormat === 'pdf') {
+                window.print();
+                showToast(`✅ PDF dialog opened`, 'success');
+            } else {
+                showToast(`✅ ${exportType} exported successfully as ${exportFormat}!`, 'success');
+            }
+        }, 1500);
+    };
 
-        <div className="rp-modal-actions">
-          <button className="rp-btn-secondary" onClick={onClose}>Cancel</button>
-          <button className="rp-btn-primary" onClick={handleExport}>
-            <DownloadIcon /> Export
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
+    const formatDateShort = (dateStr) => {
+        if (!dateStr) return '—';
+        return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    };
 
-function Reports() {
-  const [activeTab, setActiveTab] = useState("financial");
-  const [period, setPeriod] = useState("weekly");
-  const [showExport, setShowExport] = useState(false);
+    // Render Helpers for Charts
+    const renderBar = (item, max, colorOrGradient, isPercent = false) => {
+        const height = max === 0 ? 0 : (item / max) * 100;
+        const bg = colorOrGradient.includes('linear') ? colorOrGradient : colorOrGradient;
+        return <div className="bar" style={{height: `${height}%`, background: bg}}></div>;
+    };
 
-  const financialData = period === "weekly" ? WEEKLY_DATA : MONTHLY_DATA;
-
-  return (
-    <div className="rp-page">
-      <div className="rp-topbar">
-        <span>Cherubim of Heaven Memorial Park</span>
-      </div>
-      <div className="rp-header">
-        <div>
-          <h1>Reports</h1>
-          <p>Financial, burial, and reservation reports</p>
-        </div>
-        <button className="rp-export-btn" onClick={() => setShowExport(true)}>
-          <DownloadIcon /> Export Report
-        </button>
-      </div>
-
-      {/* Tabs */}
-      <div className="rp-tabs">
-        <button
-          className={`rp-tab ${activeTab === "financial" ? "rp-tab-active" : ""}`}
-          onClick={() => setActiveTab("financial")}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14">
-            <line x1="12" y1="1" x2="12" y2="23" />
-            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-          </svg>
-          Financial
-        </button>
-        <button
-          className={`rp-tab ${activeTab === "burial" ? "rp-tab-active" : ""}`}
-          onClick={() => setActiveTab("burial")}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14">
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-            <circle cx="12" cy="10" r="3" />
-          </svg>
-          Burial
-        </button>
-        <button
-          className={`rp-tab ${activeTab === "reservation" ? "rp-tab-active" : ""}`}
-          onClick={() => setActiveTab("reservation")}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14">
-            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-            <line x1="16" y1="2" x2="16" y2="6" />
-            <line x1="8" y1="2" x2="8" y2="6" />
-            <line x1="3" y1="10" x2="21" y2="10" />
-          </svg>
-          Reservation
-        </button>
-      </div>
-
-      {/* FINANCIAL TAB */}
-      {activeTab === "financial" && (
-        <>
-          <div className="rp-period-toggle">
-            <button
-              className={`rp-period-btn ${period === "weekly" ? "rp-period-active" : ""}`}
-              onClick={() => setPeriod("weekly")}
-            >
-              Weekly
-            </button>
-            <button
-              className={`rp-period-btn ${period === "monthly" ? "rp-period-active" : ""}`}
-              onClick={() => setPeriod("monthly")}
-            >
-              Monthly
-            </button>
-          </div>
-
-          <div className="rp-stats">
-            <div className="rp-stat-card">
-              <p className="rp-stat-label">Total Revenue</p>
-              <p className="rp-stat-value">{peso(financialData.totalRevenue)}</p>
+    return (
+        <div className="reports-page">
+            <div className={`toast ${toast.type} ${toast.show ? 'show' : ''}`} style={{top: '80px', position: 'fixed', zIndex: 99999}}>
+                <span>{toast.msg}</span>
+                <button className="toast-close" onClick={() => setToast(prev => ({...prev, show: false}))}>×</button>
             </div>
-            <div className="rp-stat-card">
-              <p className="rp-stat-label">Wake Space Revenue</p>
-              <p className="rp-stat-value">{peso(financialData.wakeSpaceRevenue)}</p>
-            </div>
-            <div className="rp-stat-card">
-              <p className="rp-stat-label">Total Expenses</p>
-              <p className="rp-stat-value">{peso(financialData.totalExpenses)}</p>
-            </div>
-            <div className="rp-stat-card">
-              <p className="rp-stat-label">Net Income</p>
-              <p className="rp-stat-value">{peso(financialData.netIncome)}</p>
-            </div>
-          </div>
 
-          <div className="rp-chart-card">
-            <h2 className="rp-chart-title">
-              Revenue vs Expenses ({period === "weekly" ? "This Week" : "Jan – Jun 2026"})
-            </h2>
-            <BarChart data={financialData.chart} />
-            <div className="rp-bar-legend">
-              <div className="rp-legend-item">
-                <span className="rp-legend-dot" style={{ background: "#111827" }} />
-                Lot Sales
-              </div>
-              <div className="rp-legend-item">
-                <span className="rp-legend-dot" style={{ background: "#9ca3af" }} />
-                Wake Space
-              </div>
-              <div className="rp-legend-item">
-                <span className="rp-legend-dot" style={{ background: "#e5e7eb" }} />
-                Expenses
-              </div>
-            </div>
-          </div>
-        </>
-      )}
+            <AdminTopbar title="Reports ✦" greeting="Financial, burial, and operational reports" />
 
-      {/* BURIAL TAB */}
-      {activeTab === "burial" && (
-        <div className="rp-chart-card">
-          <h2 className="rp-chart-title">Burials by Type (Monthly)</h2>
-          <LineChart data={BURIAL_CHART} />
-        </div>
-      )}
-
-      {/* RESERVATION TAB */}
-      {activeTab === "reservation" && (
-        <div className="rp-table-card">
-          <table className="rp-table">
-            <thead>
-              <tr>
-                <th>Type</th>
-                <th>Total Lots</th>
-                <th>Reserved</th>
-                <th>Available</th>
-                <th>Occupancy</th>
-              </tr>
-            </thead>
-            <tbody>
-              {RESERVATION_DATA.map((row) => (
-                <tr key={row.type}>
-                  <td className="rp-td-type">{row.type}</td>
-                  <td>{row.total.toLocaleString()}</td>
-                  <td>{row.reserved}</td>
-                  <td>{row.available}</td>
-                  <td>
-                    <div className="rp-occupancy-cell">
-                      <div className="rp-occupancy-track">
-                        <div
-                          className="rp-occupancy-fill"
-                          style={{ width: `${row.occupancy}%` }}
-                        />
-                      </div>
-                      <span className="rp-occupancy-pct">{row.occupancy}%</span>
+            <div className="reports-container" style={{ margin: '0 20px' }}>
+                <div className="report-header">
+                    <div className="report-header-left">
+                        <h2><i className="fas fa-chart-pie" style={{color:'#d4af37', marginRight:'8px'}}></i>Analytics Dashboard</h2>
                     </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                    <div className="report-header-right">
+                        <button className="btn-secondary" onClick={() => setExportModal(true)}>
+                            <i className="fas fa-file-export"></i> Export
+                        </button>
+                        <button className="btn-primary" onClick={() => setDateRangeModal(true)}>
+                            <i className="fas fa-calendar-alt"></i> Custom Range
+                        </button>
+                    </div>
+                </div>
+
+                <div className="report-tabs-wrapper">
+                    <div className="report-tabs">
+                        <button className={`report-tab ${currentTab==='financial'?'active':''}`} onClick={()=>handleTabChange('financial')}><i className="fas fa-coins"></i> Financial</button>
+                        <button className={`report-tab ${currentTab==='burial'?'active':''}`} onClick={()=>handleTabChange('burial')}><i className="fas fa-cross"></i> Burial</button>
+                        <button className={`report-tab ${currentTab==='occupancy'?'active':''}`} onClick={()=>handleTabChange('occupancy')}><i className="fas fa-tshirt"></i> Occupancy</button>
+                        <button className={`report-tab ${currentTab==='collections'?'active':''}`} onClick={()=>handleTabChange('collections')}><i className="fas fa-coins"></i> Collections <span className="tab-badge">12</span></button>
+                        <button className={`report-tab ${currentTab==='renewals'?'active':''}`} onClick={()=>handleTabChange('renewals')}><i className="fas fa-sync-alt"></i> Renewals</button>
+                        <button className={`report-tab ${currentTab==='wakespace'?'active':''}`} onClick={()=>handleTabChange('wakespace')}><i className="fas fa-bed"></i> Wake Space</button>
+                        <button className={`report-tab ${currentTab==='inventory'?'active':''}`} onClick={()=>handleTabChange('inventory')}><i className="fas fa-boxes"></i> Inventory</button>
+                    </div>
+                </div>
+
+                {/* ===== TAB: FINANCIAL ===== */}
+                {currentTab === 'financial' && (
+                    <div className="tab-content active">
+                        <div className="summary-grid">
+                            <div className="summary-card"><div className="icon gold"><i className="fas fa-coins"></i></div><div className="label">Total Revenue</div><div className="value">₱860,000</div><div className="change up"><i className="fas fa-arrow-up"></i> +12.5% vs last month</div></div>
+                            <div className="summary-card"><div className="icon blue"><i class="fas fa-bed"></i></div><div class="label">Wake Space Revenue</div><div class="value">₱111,000</div><div class="change up"><i class="fas fa-arrow-up"></i> +8.3% vs last month</div></div>
+                            <div className="summary-card"><div className="icon red"><i className="fas fa-arrow-down"></i></div><div className="label">Total Expenses</div><div className="value">₱172,000</div><div className="change down"><i className="fas fa-arrow-down"></i> -3.2% vs last month</div></div>
+                            <div className="summary-card"><div className="icon green"><i className="fas fa-chart-line"></i></div><div className="label">Net Income</div><div className="value">₱688,000</div><div className="change up"><i className="fas fa-arrow-up"></i> +15.8% vs last month</div></div>
+                        </div>
+
+                        <div className="chart-section">
+                            <div className="chart-box">
+                                <div className="chart-title"><i className="fas fa-chart-bar"></i> Revenue vs Expenses <span className="sub">This Week</span></div>
+                                <div className="bar-chart">
+                                    {financialData.map((d, i) => {
+                                        const max = Math.max(...financialData.map(v => Math.max(v.revenue, v.expenses)));
+                                        return (
+                                            <div className="bar-item" key={i}>
+                                                <div className="bar-value">₱{d.revenue}K</div>
+                                                {renderBar(d.revenue, max, 'linear-gradient(180deg,#d4af37,#b8942e)')}
+                                                <div className="bar-label">{d.label}</div>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                            <div className="chart-box">
+                                <div className="chart-title"><i className="fas fa-chart-pie"></i> Revenue Breakdown</div>
+                                <div className="legend">
+                                    <div className="legend-item"><span className="color-dot" style={{background:'#d4af37'}}></span><span className="label">Lot Sales</span><span className="value">₱615,000</span></div>
+                                    <div className="legend-item"><span className="color-dot" style={{background:'#3670AF'}}></span><span className="label">Wake Space</span><span className="value">₱111,000</span></div>
+                                    <div className="legend-item"><span className="color-dot" style={{background:'#c0392b'}}></span><span className="label">Expenses</span><span className="value">₱172,000</span></div>
+                                    <div className="legend-item" style={{borderTop:'1px solid #e8edf4', paddingTop:'0.6rem', marginTop:'0.2rem'}}>
+                                        <span className="color-dot" style={{background:'#27ae60'}}></span><span className="label" style={{fontWeight:600}}>Net Income</span><span className="value" style={{color:'#27ae60'}}>₱688,000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="report-table-wrapper">
+                            <table>
+                                <thead><tr><th>Date</th><th>Transaction</th><th>Category</th><th style={{textAlign:'right'}}>Amount</th></tr></thead>
+                                <tbody>
+                                    {financialTransactions.map((t, i) => (
+                                        <tr key={i}>
+                                            <td>{t.date}</td><td>{t.transaction}</td><td>{t.category}</td>
+                                            <td style={{textAlign:'right'}} className={`amount ${t.type}`}>{t.amount > 0 ? `₱${t.amount.toLocaleString()}` : `-₱${Math.abs(t.amount).toLocaleString()}`}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                )}
+
+                {/* ===== TAB: BURIAL ===== */}
+                {currentTab === 'burial' && (
+                    <div className="tab-content active">
+                        <div className="summary-grid">
+                            <div className="summary-card"><div className="icon gold"><i className="fas fa-cross"></i></div><div className="label">Total Burials</div><div className="value">47</div><div className="change up"><i className="fas fa-arrow-up"></i> +12 vs last month</div></div>
+                            <div className="summary-card"><div className="icon blue"><i className="fas fa-tshirt"></i></div><div className="label">Active Graves</div><div className="value">3,847</div><div className="change up"><i className="fas fa-arrow-up"></i> +8.2% vs last month</div></div>
+                            <div className="summary-card"><div className="icon red"><i className="fas fa-clock"></i></div><div className="label">Pending Burials</div><div className="value">8</div><div className="change down"><i className="fas fa-arrow-down"></i> -2 vs last month</div></div>
+                            <div className="summary-card"><div className="icon green"><i className="fas fa-coins"></i></div><div className="label">Revenue from Burials</div><div className="value">₱512,000</div><div className="change up"><i className="fas fa-arrow-up"></i> +14.3% vs last month</div></div>
+                        </div>
+                        <div className="chart-section">
+                            <div className="chart-box">
+                                <div className="chart-title"><i className="fas fa-chart-bar"></i> Burials by Type <span className="sub">This Month</span></div>
+                                <div className="bar-chart">
+                                    {burialData.map((d, i) => {
+                                        const max = Math.max(...burialData.map(v => v.value));
+                                        return (
+                                            <div className="bar-item" key={i}>
+                                                <div className="bar-value">{d.value}</div>
+                                                {renderBar(d.value, max, d.color)}
+                                                <div className="bar-label">{d.label}</div>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                            <div className="chart-box">
+                                <div className="chart-title"><i className="fas fa-chart-pie"></i> Burial Distribution</div>
+                                <div className="legend">
+                                    {burialData.map((d, i) => (
+                                        <div className="legend-item" key={i}><span className="color-dot" style={{background: d.color}}></span><span className="label">{d.label}</span><span className="value">{d.value}</span></div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* ===== TAB: OCCUPANCY ===== */}
+                {currentTab === 'occupancy' && (
+                    <div className="tab-content active">
+                        <div className="summary-grid">
+                            <div className="summary-card"><div className="icon blue"><i className="fas fa-tshirt"></i></div><div className="label">Total Lots</div><div className="value">223</div><div className="change neutral"><i className="fas fa-minus"></i> No change</div></div>
+                            <div className="summary-card"><div className="icon green"><i className="fas fa-check-circle"></i></div><div className="label">Available</div><div className="value">71</div><div className="change up"><i className="fas fa-arrow-up"></i> +3 vs last month</div></div>
+                            <div className="summary-card"><div className="icon red"><i className="fas fa-circle"></i></div><div className="label">Occupied</div><div className="value">142</div><div className="change down"><i className="fas fa-arrow-up"></i> +2 vs last month</div></div>
+                            <div className="summary-card"><div className="icon orange"><i className="fas fa-clock"></i></div><div className="label">Reserved</div><div className="value">10</div><div className="change neutral"><i className="fas fa-minus"></i> 0 vs last month</div></div>
+                        </div>
+                        <div className="chart-section">
+                            <div className="chart-box">
+                                <div className="chart-title"><i className="fas fa-chart-bar"></i> Occupancy by Grave Type <span className="sub">Available vs Occupied</span></div>
+                                <div className="bar-chart">
+                                    {occupancyData.map((d, i) => {
+                                        const max = Math.max(...occupancyData.map(v => Math.max(v.avail, v.occ, v.res)));
+                                        return (
+                                            <div className="bar-item" key={i}>
+                                                <div className="bar-value">{d.occ}</div>
+                                                {renderBar(d.occ, max, '#c0392b')}
+                                                <div className="bar-label">{d.label}</div>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                            <div className="chart-box">
+                                <div className="chart-title"><i className="fas fa-chart-pie"></i> Overall Occupancy</div>
+                                <div className="legend">
+                                    <div className="legend-item"><span className="color-dot" style={{background:'#27ae60'}}></span><span className="label">Available</span><span className="value">71 (32%)</span></div>
+                                    <div className="legend-item"><span className="color-dot" style={{background:'#c0392b'}}></span><span className="label">Occupied</span><span className="value">142 (64%)</span></div>
+                                    <div className="legend-item"><span className="color-dot" style={{background:'#f39c12'}}></span><span className="label">Reserved</span><span className="value">10 (4%)</span></div>
+                                    <div className="legend-item" style={{borderTop:'1px solid #e8edf4', paddingTop:'0.6rem', marginTop:'0.2rem'}}>
+                                        <span className="color-dot" style={{background:'#d4af37'}}></span><span className="label" style={{fontWeight:600}}>Occupancy Rate</span><span className="value" style={{color:'#d4af37'}}>68%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="report-table-wrapper">
+                            <table>
+                                <thead><tr><th>Section</th><th>Total</th><th>Available</th><th>Occupied</th><th>Reserved</th><th style={{textAlign:'right'}}>Rate</th></tr></thead>
+                                <tbody>
+                                    {occupancyTable.map((t, i) => (
+                                        <tr key={i}>
+                                            <td>{t.section}</td><td>{t.total}</td><td>{t.avail}</td><td>{t.occ}</td><td>{t.res}</td><td style={{textAlign:'right', fontWeight:600}}>{t.rate}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                )}
+
+                {/* ===== TAB: COLLECTIONS ===== */}
+                {currentTab === 'collections' && (
+                    <div className="tab-content active">
+                        <div className="summary-grid">
+                            <div className="summary-card"><div className="icon green"><i className="fas fa-check-circle"></i></div><div className="label">Fully Paid</div><div className="value">156</div><div className="change up"><i className="fas fa-arrow-up"></i> +8 vs last month</div></div>
+                            <div className="summary-card"><div className="icon orange"><i className="fas fa-clock"></i></div><div className="label">On Installment</div><div className="value">42</div><div className="change down"><i className="fas fa-arrow-down"></i> -3 vs last month</div></div>
+                            <div className="summary-card"><div className="icon red"><i className="fas fa-exclamation-triangle"></i></div><div className="label">Overdue</div><div className="value">12</div><div className="change down"><i className="fas fa-arrow-up"></i> +4 vs last month</div></div>
+                            <div className="summary-card"><div className="icon purple"><i className="fas fa-coins"></i></div><div className="label">Total Outstanding</div><div className="value">₱850,000</div><div className="change down"><i className="fas fa-arrow-down"></i> -5% vs last month</div></div>
+                        </div>
+                        <div className="chart-section">
+                            <div className="chart-box">
+                                <div className="chart-title"><i className="fas fa-chart-pie"></i> Payment Status Distribution</div>
+                                <div className="legend">
+                                    <div className="legend-item"><span className="color-dot" style={{background:'#27ae60'}}></span><span className="label">Fully Paid</span><span className="value">156 (74%)</span></div>
+                                    <div className="legend-item"><span className="color-dot" style={{background:'#f39c12'}}></span><span className="label">Installment</span><span className="value">42 (20%)</span></div>
+                                    <div className="legend-item"><span className="color-dot" style={{background:'#c0392b'}}></span><span className="label">Overdue</span><span className="value">12 (6%)</span></div>
+                                </div>
+                            </div>
+                            <div className="chart-box">
+                                <div className="chart-title"><i className="fas fa-chart-bar"></i> Overdue by Days</div>
+                                <div className="bar-chart">
+                                    {overdueData.map((d, i) => {
+                                        const max = Math.max(...overdueData.map(v => v.value));
+                                        return (
+                                            <div className="bar-item" key={i}>
+                                                <div className="bar-value">{d.value}</div>
+                                                {renderBar(d.value, max, d.color)}
+                                                <div className="bar-label">{d.label}</div>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                        </div>
+                        <div className="report-table-wrapper">
+                            <table>
+                                <thead><tr><th>Client</th><th>Lot</th><th>Amount Due</th><th>Overdue Since</th><th>Days</th><th>Status</th></tr></thead>
+                                <tbody>
+                                    {overdueTable.map((t, i) => (
+                                        <tr key={i}>
+                                            <td>{t.client}</td><td>{t.lot}</td><td className="amount negative">₱{t.amount.toLocaleString()}</td><td>{t.overdueSince}</td><td>{t.days}</td>
+                                            <td><span className={`status-badge ${t.statusClass}`}>{t.status}</span></td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                )}
+
+                {/* ===== TAB: RENEWALS ===== */}
+                {currentTab === 'renewals' && (
+                    <div className="tab-content active">
+                        <div className="summary-grid">
+                            <div className="summary-card"><div className="icon red"><i className="fas fa-exclamation-triangle"></i></div><div className="label">Expiring This Week</div><div className="value">5</div><div className="change down">⚠️ Urgent</div></div>
+                            <div className="summary-card"><div className="icon orange"><i className="fas fa-clock"></i></div><div className="label">Expiring This Month</div><div className="value">18</div><div className="change up"><i className="fas fa-arrow-up"></i> +6 vs last month</div></div>
+                            <div className="summary-card"><div className="icon green"><i className="fas fa-check-circle"></i></div><div className="label">Renewed This Month</div><div className="value">9</div><div className="change up"><i className="fas fa-arrow-up"></i> +3 vs last month</div></div>
+                            <div className="summary-card"><div className="icon gold"><i className="fas fa-coins"></i></div><div className="label">Renewal Revenue</div><div className="value">₱142,500</div><div className="change up"><i className="fas fa-arrow-up"></i> +18% vs last month</div></div>
+                        </div>
+                        <div className="chart-section">
+                            <div className="chart-box">
+                                <div className="chart-title"><i className="fas fa-chart-bar"></i> Renewal Forecast <span className="sub">Next 6 Months</span></div>
+                                <div className="bar-chart">
+                                    {renewalData.map((d, i) => {
+                                        const max = Math.max(...renewalData.map(v => v.value));
+                                        return (
+                                            <div className="bar-item" key={i}>
+                                                <div className="bar-value">{d.value}</div>
+                                                {renderBar(d.value, max, 'linear-gradient(180deg,#d4af37,#b8942e)')}
+                                                <div className="bar-label">{d.label}</div>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                            <div className="chart-box">
+                                <div className="chart-title"><i className="fas fa-chart-pie"></i> Renewal by Grave Type</div>
+                                <div className="legend">
+                                    <div className="legend-item"><span className="color-dot" style={{background:'#27ae60'}}></span><span className="label">Apartment</span><span className="value">12</span></div>
+                                    <div className="legend-item"><span className="color-dot" style={{background:'#3670AF'}}></span><span className="label">Columbarium</span><span className="value">8</span></div>
+                                    <div className="legend-item"><span className="color-dot" style={{background:'#7f8c8d'}}></span><span className="label">Bone Vault</span><span className="value">5</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="report-table-wrapper">
+                            <table>
+                                <thead><tr><th>Lot</th><th>Client</th><th>Expiry Date</th><th>Days Left</th><th>Status</th></tr></thead>
+                                <tbody>
+                                    {renewalTable.map((t, i) => (
+                                        <tr key={i}>
+                                            <td>{t.lot}</td><td>{t.client}</td><td>{t.expiry}</td><td style={{color: t.color}}>{t.days}</td>
+                                            <td><span className={`status-badge ${t.statusClass}`}>{t.status}</span></td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                )}
+
+                {/* ===== TAB: WAKE SPACE ===== */}
+                {currentTab === 'wakespace' && (
+                    <div className="tab-content active">
+                        <div className="summary-grid">
+                            <div className="summary-card"><div className="icon gold"><i className="fas fa-calendar-check"></i></div><div className="label">Total Bookings</div><div className="value">23</div><div className="change up"><i className="fas fa-arrow-up"></i> +5 vs last month</div></div>
+                            <div className="summary-card"><div className="icon blue"><i className="fas fa-bed"></i></div><div className="label">Utilization Rate</div><div className="value">68%</div><div className="change up"><i className="fas fa-arrow-up"></i> +3% vs last month</div></div>
+                            <div className="summary-card"><div className="icon red"><i className="fas fa-clock"></i></div><div className="label">Pending Bookings</div><div className="value">3</div><div className="change down"><i className="fas fa-arrow-down"></i> -2 vs last month</div></div>
+                            <div className="summary-card"><div className="icon green"><i className="fas fa-coins"></i></div><div className="label">Revenue from Wake</div><div className="value">₱111,000</div><div className="change up"><i className="fas fa-arrow-up"></i> +8.3% vs last month</div></div>
+                        </div>
+
+                        <div className="chart-section">
+                            <div className="chart-box">
+                                <div className="chart-title"><i className="fas fa-chart-bar"></i> Monthly Bookings <span className="sub">Last 6 Months</span></div>
+                                <div className="bar-chart">
+                                    {wakeData.map((d, i) => {
+                                        const max = Math.max(...wakeData.map(v => v.value));
+                                        return (
+                                            <div className="bar-item" key={i}>
+                                                <div className="bar-value">{d.value}</div>
+                                                {renderBar(d.value, max, 'linear-gradient(180deg,#3670AF,#2c5f82)')}
+                                                <div className="bar-label">{d.label}</div>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                            <div className="chart-box">
+                                <div className="chart-title"><i className="fas fa-chart-pie"></i> Booking Status Distribution</div>
+                                <div className="legend">
+                                    <div className="legend-item"><span className="color-dot" style={{background:'#27ae60'}}></span><span className="label">Confirmed</span><span className="value">12 (52%)</span></div>
+                                    <div className="legend-item"><span className="color-dot" style={{background:'#f39c12'}}></span><span className="label">Pending</span><span className="value">5 (22%)</span></div>
+                                    <div className="legend-item"><span className="color-dot" style={{background:'#7f8c8d'}}></span><span className="label">Completed</span><span className="value">4 (17%)</span></div>
+                                    <div className="legend-item"><span className="color-dot" style={{background:'#c0392b'}}></span><span className="label">Cancelled</span><span className="value">2 (9%)</span></div>
+                                    <div className="legend-item" style={{borderTop:'1px solid #e8edf4', paddingTop:'0.6rem', marginTop:'0.2rem'}}>
+                                        <span className="color-dot" style={{background:'#d4af37'}}></span><span className="label" style={{fontWeight:600}}>Booking Rate</span><span className="value" style={{color:'#d4af37'}}>68%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="report-table-wrapper">
+                            <table>
+                                <thead><tr><th>Booking ID</th><th>Client</th><th>Deceased</th><th>Dates</th><th>Duration</th><th>Status</th></tr></thead>
+                                <tbody>
+                                    {wakeTable.map((t, i) => {
+                                        const diff = Math.ceil(Math.abs(new Date(t.end) - new Date(t.start)) / (1000 * 60 * 60 * 24));
+                                        return (
+                                            <tr key={i}>
+                                                <td><strong>{t.id}</strong></td><td>{t.client}</td><td>{t.deceased}</td>
+                                                <td>{formatDateShort(t.start)} - {formatDateShort(t.end)}</td><td>{diff} day{diff > 1 ? 's' : ''}</td>
+                                                <td><span className={`status-badge ${t.statusClass}`}>{t.status}</span></td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1.5rem', marginTop:'1.5rem'}}>
+                            <div className="chart-box">
+                                <div className="chart-title"><i className="fas fa-calendar-week"></i> This Week's Utilization</div>
+                                <div className="bar-chart">
+                                    {wakeWeekly.map((d, i) => (
+                                        <div className="bar-item" key={i}>
+                                            <div className="bar-value">{d.booked}/{d.total}</div>
+                                            <div className="bar" style={{height:`${(d.booked/1)*100}%`, background: d.booked > 0 ? '#27ae60' : '#e8edf4', border: d.booked === 0 ? '1px solid #dce3ec' : 'none'}}></div>
+                                            <div className="bar-label">{d.label}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="chart-box">
+                                <div className="chart-title"><i className="fas fa-info-circle"></i> Space Status</div>
+                                <div style={{display:'flex', flexDirection:'column', gap:'0.5rem', padding:'0.5rem 0'}}>
+                                    <div style={{display:'flex', justifyContent:'space-between', padding:'0.3rem 0', borderBottom:'1px solid #f0f2f5'}}>
+                                        <span style={{color:'#7a9fbe'}}>Status</span><span style={{fontWeight:600, color:'#27ae60'}}>✅ Available</span>
+                                    </div>
+                                    <div style={{display:'flex', justifyContent:'space-between', padding:'0.3rem 0', borderBottom:'1px solid #f0f2f5'}}>
+                                        <span style={{color:'#7a9fbe'}}>Today's Bookings</span><span style={{fontWeight:600}}>2</span>
+                                    </div>
+                                    <div style={{display:'flex', justifyContent:'space-between', padding:'0.3rem 0', borderBottom:'1px solid #f0f2f5'}}>
+                                        <span style={{color:'#7a9fbe'}}>Next Available Date</span><span style={{fontWeight:600, color:'#27ae60'}}>Mar 21, 2026</span>
+                                    </div>
+                                    <div style={{display:'flex', justifyContent:'space-between', padding:'0.3rem 0', borderBottom:'1px solid #f0f2f5'}}>
+                                        <span style={{color:'#7a9fbe'}}>Average Duration</span><span style={{fontWeight:600}}>3.2 days</span>
+                                    </div>
+                                    <div style={{display:'flex', justifyContent:'space-between', padding:'0.3rem 0'}}>
+                                        <span style={{color:'#7a9fbe'}}>Total Booked Days (This Month)</span><span style={{fontWeight:600, color:'#d4af37'}}>18 days</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* ===== TAB: INVENTORY ===== */}
+                {currentTab === 'inventory' && (
+                    <div className="tab-content active">
+                        <div className="summary-grid">
+                            <div className="summary-card"><div className="icon blue"><i className="fas fa-tshirt"></i></div><div className="label">Total Lots</div><div className="value">223</div><div className="change neutral"><i className="fas fa-minus"></i> No change</div></div>
+                            <div className="summary-card"><div className="icon gold"><i className="fas fa-crown"></i></div><div className="label">Most Available</div><div className="value">Bone Vault</div><div className="change neutral">72 slots</div></div>
+                            <div className="summary-card"><div className="icon red"><i className="fas fa-circle"></i></div><div className="label">Most Occupied</div><div className="value">Single Niche</div><div className="change neutral">45 occupied</div></div>
+                            <div className="summary-card"><div className="icon orange"><i className="fas fa-clock"></i></div><div className="label">Sold Out Types</div><div className="value">2</div><div className="change down">Garden, Heroes</div></div>
+                        </div>
+                        <div className="chart-section">
+                            <div className="chart-box">
+                                <div className="chart-title"><i className="fas fa-chart-bar"></i> Inventory by Grave Type</div>
+                                <div className="bar-chart">
+                                    {inventoryData.map((d, i) => {
+                                        const max = Math.max(...inventoryData.map(v => Math.max(v.total, v.avail)));
+                                        return (
+                                            <div className="bar-item" key={i}>
+                                                <div className="bar-value">{d.total}</div>
+                                                {renderBar(d.total, max, 'linear-gradient(180deg,#5d6d7e,#aab7b8)')}
+                                                <div className="bar-label">{d.label}</div>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                            <div className="chart-box">
+                                <div className="chart-title"><i className="fas fa-chart-pie"></i> Distribution</div>
+                                <div className="legend">
+                                    <div className="legend-item"><span className="color-dot" style={{background:'#d4af37'}}></span><span className="label">Single Niche</span><span className="value">45</span></div>
+                                    <div className="legend-item"><span className="color-dot" style={{background:'#3670AF'}}></span><span className="label">Mausoleum</span><span className="value">12</span></div>
+                                    <div className="legend-item"><span className="color-dot" style={{background:'#27ae60'}}></span><span className="label">Columbarium</span><span className="value">38</span></div>
+                                    <div className="legend-item"><span className="color-dot" style={{background:'#8e44ad'}}></span><span className="label">Apartment</span><span className="value">56</span></div>
+                                    <div className="legend-item"><span className="color-dot" style={{background:'#7f8c8d'}}></span><span className="label">Bone Vault</span><span className="value">72</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="report-table-wrapper">
+                            <table>
+                                <thead><tr><th>Grave Type</th><th>Total</th><th>Available</th><th>Occupied</th><th>Reserved</th><th style={{textAlign:'right'}}>Rate</th></tr></thead>
+                                <tbody>
+                                    {inventoryTable.map((t, i) => (
+                                        <tr key={i}>
+                                            <td>{t.type}</td><td>{t.total}</td><td>{t.avail}</td><td>{t.occ}</td><td>{t.res}</td><td style={{textAlign:'right', fontWeight:600}}>{t.rate}</td>
+                                        </tr>
+                                    ))}
+                                    <tr>
+                                        <td style={{fontWeight:600}}>Total</td><td style={{fontWeight:600}}>223</td>
+                                        <td style={{fontWeight:600, color:'#27ae60'}}>71</td>
+                                        <td style={{fontWeight:600, color:'#c0392b'}}>142</td>
+                                        <td style={{fontWeight:600, color:'#f39c12'}}>10</td>
+                                        <td style={{textAlign:'right', fontWeight:600}}>64%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                )}
+
+                {/* Quick Actions */}
+                <div className="quick-actions">
+                    <button className="quick-action-btn" onClick={() => showToast('📊 Generating full report...', 'info')}><i className="fas fa-file-invoice"></i> Generate Full Report</button>
+                    <button className="quick-action-btn" onClick={() => setExportModal(true)}><i className="fas fa-file-export"></i> Export Data</button>
+                    <button className="quick-action-btn" onClick={() => window.print()}><i className="fas fa-print"></i> Print Report</button>
+                    <button className="quick-action-btn" onClick={() => showToast('🔄 Refreshing data...', 'info')}><i className="fas fa-sync-alt"></i> Refresh Data</button>
+                </div>
+            </div>
+
+            {/* ===== DATE RANGE MODAL ===== */}
+            {dateRangeModal && (
+                <div className="modal-overlay active" onClick={() => setDateRangeModal(false)}>
+                    <div className="modal" onClick={e => e.stopPropagation()}>
+                        <div className="modal-icon" style={{color:'#3670AF'}}><i className="fas fa-calendar-alt"></i></div>
+                        <h3>Select Date Range</h3>
+                        <p className="modal-subtitle">Choose the period for your report</p>
+                        <div className="form-row">
+                            <div className="form-group"><label>From</label><input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)} /></div>
+                            <div className="form-group"><label>To</label><input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)} /></div>
+                        </div>
+                        <div className="modal-actions">
+                            <button className="btn-cancel" onClick={() => setDateRangeModal(false)}>Cancel</button>
+                            <button className="btn-confirm" onClick={() => { setDateRangeModal(false); showToast(`📅 Report range set: ${dateFrom} to ${dateTo}`, 'success'); }}><i className="fas fa-check"></i> Apply Range</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* ===== EXPORT REPORT MODAL ===== */}
+            {exportModal && (
+                <div className="modal-overlay active" onClick={() => setExportModal(false)}>
+                    <div className="modal" onClick={e => e.stopPropagation()}>
+                        <div className="modal-icon" style={{color:'#27ae60'}}><i className="fas fa-file-export"></i></div>
+                        <h3>Export Report</h3>
+                        <p className="modal-subtitle">Choose your export format</p>
+                        <div className="form-group">
+                            <label>Report Type</label>
+                            <select value={exportType} onChange={e => setExportType(e.target.value)}>
+                                <option value="financial">Financial Report</option>
+                                <option value="burial">Burial Report</option>
+                                <option value="occupancy">Occupancy Report</option>
+                                <option value="collections">Collections Report</option>
+                                <option value="renewals">Renewals Report</option>
+                                <option value="wakespace">Wake Space Report</option>
+                                <option value="inventory">Inventory Report</option>
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label>Export Format</label>
+                            <select value={exportFormat} onChange={e => setExportFormat(e.target.value)}>
+                                <option value="pdf">PDF Document</option>
+                                <option value="csv">CSV / Excel</option>
+                                <option value="json">JSON Data</option>
+                            </select>
+                        </div>
+                        <div className="modal-actions">
+                            <button className="btn-cancel" onClick={() => setExportModal(false)}>Cancel</button>
+                            <button className="btn-confirm" onClick={confirmExport}><i className="fas fa-download"></i> Export</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
-      )}
-
-      {showExport && (
-        <ExportModal tab={activeTab} period={period} onClose={() => setShowExport(false)} />
-      )}
-    </div>
-  );
+    );
 }
-
-export default Reports;
