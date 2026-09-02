@@ -47,20 +47,18 @@
   transition: padding 280ms ease, min-height 280ms ease;
 }
 
-/* When collapsed: stack icon above toggle button, tight spacing */
-.admin-sidebar.collapsed .admin-brand {
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 2px;
-  padding: 12px 4px 2px 4px;
-  border-bottom-color: transparent;
-  min-height: 0;
-}
-
-.admin-sidebar.collapsed .admin-nav {
-  padding-top: 2px;
-}
+  /* When collapsed: stack icon above toggle button, tightly clustered with logo */
+  .admin-sidebar.collapsed .admin-brand {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 6px; padding: 16px 4px 16px 4px; border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    min-height: 0;
+  }
+  
+  .admin-sidebar.collapsed .admin-nav {
+    padding-top: 12px;
+  }
 
 .admin-brand-icon {
   width: 36px;
@@ -88,11 +86,7 @@
   white-space: nowrap;
 }
 
-.admin-sidebar.collapsed .admin-brand-text {
-  opacity: 0;
-  max-width: 0;
-  pointer-events: none;
-}
+.admin-sidebar.collapsed .admin-brand-text { display: none; opacity: 0; max-width: 0; pointer-events: none; }
 
 .admin-brand-title {
   font-size: 12px;
@@ -454,3 +448,5 @@
   .admin-content { position: relative; padding: 12px; }
   .admin-hamburger { position: absolute; top: 10px; left: 10px; }
 }
+
+
