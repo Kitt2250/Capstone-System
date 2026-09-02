@@ -3,7 +3,7 @@
 .reports-page-wrapper, .wk-page {
     padding: 0 0 2.5rem;
     flex: 1;
-    min-height: 100vh;
+    min-height: 100dvh;
     width: 100%;
     background: #e8edf4;
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -612,3 +612,4 @@ tbody td {
     .report-tabs .tab-btn { font-size: 0.6rem; padding: 0.2rem 0.6rem; }
     .report-tabs .tab-btn i { font-size: 0.5rem; }
 }
+
