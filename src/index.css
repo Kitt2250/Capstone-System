@@ -1,0 +1,93 @@
+
+
+.global-logout-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100dvh;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999999;
+  padding: 1rem;
+}
+
+.global-logout-modal {
+  background: white;
+  width: 100%;
+  max-width: 360px;
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes modalPop {
+  0% { transform: scale(0.9); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.glm-icon {
+  width: 64px;
+  height: 64px;
+  background: #fdf5e6;
+  color: #d4af37;
+  font-size: 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin: 0 auto 1.2rem;
+}
+
+.global-logout-modal h2 {
+  color: #1a3d5c;
+  font-size: 1.35rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.global-logout-modal p {
+  color: #6a8aaa;
+  font-size: 0.95rem;
+  margin-bottom: 1.8rem;
+  line-height: 1.4;
+}
+
+.glm-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.glm-cancel, .glm-confirm {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.glm-cancel {
+  background: #e2e8f0;
+  color: #475569;
+}
+.glm-cancel:hover {
+  background: #cbd5e1;
+}
+
+.glm-confirm {
+  background: #d4af37;
+  color: #1a3d5c;
+}
+.glm-confirm:hover {
+  background: #c49a2e;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+}
+

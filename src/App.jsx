@@ -55,9 +55,16 @@ function App() {
     return unsubscribe;
   }, []);
 
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+
   const handleSignOut = async () => {
+    setShowLogoutModal(false);
     await signOut(auth);
     navigate("/login");
+  };
+
+  const requestSignOut = () => {
+    setShowLogoutModal(true);
   };
 
   if (authState.loading) {
@@ -74,7 +81,23 @@ function App() {
   const { user, role } = authState;
 
   return (
-    <Routes>
+    <>
+      {showLogoutModal && (
+        <div className="global-logout-overlay">
+          <div className="global-logout-modal">
+            <div className="glm-icon">
+              <i className="fas fa-sign-out-alt"></i>
+            </div>
+            <h2>Confirm Logout</h2>
+            <p>Are you sure you want to sign out of your account?</p>
+            <div className="glm-actions">
+              <button className="glm-cancel" onClick={() => setShowLogoutModal(false)}>Cancel</button>
+              <button className="glm-confirm" onClick={handleSignOut}>Logout</button>
+            </div>
+          </div>
+        </div>
+      )}
+      <Routes>
       <Route
         path="/login"
         element={
@@ -98,7 +121,7 @@ function App() {
         path="/admin/*"
         element={
           user && role === "admin"
-            ? <AdminNavigation onSignOut={handleSignOut} />
+            ? <AdminNavigation onSignOut={requestSignOut} />
             : <Navigate to="/login" replace />
         }
       />
@@ -107,7 +130,7 @@ function App() {
         path="/family/*"
         element={
           user && role === "family"
-            ? <FamilyNavigation onSignOut={handleSignOut} />
+            ? <FamilyNavigation onSignOut={requestSignOut} />
             : <Navigate to="/login" replace />
         }
       />
@@ -116,7 +139,7 @@ function App() {
         path="/staff/*"
         element={
           user && role === "staff"
-            ? <StaffNavigation onSignOut={handleSignOut} />
+            ? <StaffNavigation onSignOut={requestSignOut} />
             : <Navigate to="/login" replace />
         }
       />
@@ -128,6 +151,7 @@ function App() {
 
       <Route path="*" element={<FallbackRoute to="/login" />} />
     </Routes>
+    </>
   );
 }
 
