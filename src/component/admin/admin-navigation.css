@@ -47,14 +47,19 @@
   transition: padding 280ms ease, min-height 280ms ease;
 }
 
-/* When collapsed: keep logo and toggle button side-by-side */
+/* When collapsed: stack icon above toggle button, tight spacing */
 .admin-sidebar.collapsed .admin-brand {
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 4px;
-  padding: 8px 4px;
+  gap: 2px;
+  padding: 12px 4px 2px 4px;
+  border-bottom-color: transparent;
   min-height: 0;
+}
+
+.admin-sidebar.collapsed .admin-nav {
+  padding-top: 2px;
 }
 
 .admin-brand-icon {
@@ -108,9 +113,9 @@
 
 /* ── Toggle Button ───────────────────────────────── */
 .admin-toggle-btn {
-  width: 26px;
-  height: 26px;
-  min-width: 26px;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
   border-radius: 8px;
   border: none;
   background: rgba(255, 255, 255, 0.12);
