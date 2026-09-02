@@ -249,11 +249,7 @@
   justify-content: center;
 }
 
-.admin-user-avatar {
-  width: 36px;
-  height: 36px;
-  min-width: 36px;
-  border-radius: 8px;
+.admin-user-avatar { width: 36px; height: 36px; min-width: 36px; border-radius: 50%;
   background: #f5c842;
   color: #1a3b5d;
   font-size: 11px;
@@ -271,12 +267,7 @@
   transition: opacity 180ms ease, max-width 280ms ease;
 }
 
-.admin-sidebar.collapsed .admin-user-info {
-  opacity: 0;
-  max-width: 0;
-  flex: 0;
-  pointer-events: none;
-}
+.admin-sidebar.collapsed .admin-user-info { display: none; opacity: 0; max-width: 0; flex: 0; pointer-events: none; }
 
 .admin-user-name {
   font-size: 12px;
@@ -316,13 +307,7 @@
   color: #ffffff;
 }
 
-.admin-sidebar.collapsed .admin-signout-btn {
-  opacity: 0;
-  max-width: 0;
-  min-width: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
+.admin-sidebar.collapsed .admin-signout-btn { display: none; opacity: 0; max-width: 0; min-width: 0; overflow: hidden; pointer-events: none; }
 
 /* ── Main Content ────────────────────────────────── */
 .admin-content {
@@ -448,5 +433,7 @@
   .admin-content { position: relative; padding: 12px; }
   .admin-hamburger { position: absolute; top: 10px; left: 10px; }
 }
+
+
 
 

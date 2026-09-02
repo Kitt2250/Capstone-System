@@ -260,12 +260,7 @@
   transition: opacity 180ms ease, max-width 280ms ease;
 }
 
-.fam-sidebar.collapsed .fam-user-info {
-  opacity: 0;
-  max-width: 0;
-  flex: 0;
-  pointer-events: none;
-}
+.fam-sidebar.collapsed .fam-user-info { display: none; opacity: 0; max-width: 0; flex: 0; pointer-events: none; }
 
 .fam-user-name {
   font-size: 12px;
@@ -305,13 +300,7 @@
   color: #ffffff;
 }
 
-.fam-sidebar.collapsed .fam-signout-btn {
-  opacity: 0;
-  max-width: 0;
-  min-width: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
+.fam-sidebar.collapsed .fam-signout-btn { display: none; opacity: 0; max-width: 0; min-width: 0; overflow: hidden; pointer-events: none; }
 
 /* ── Main Content ────────────────────────────────── */
 .fam-content {
@@ -450,3 +439,5 @@
   .fam-page-wrapper { padding: 12px; }
   .fam-hamburger { position: absolute; top: 10px; left: 10px; }
 }
+
+
