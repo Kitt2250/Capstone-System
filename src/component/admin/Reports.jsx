@@ -193,7 +193,7 @@ export default function Reports() {
                     <div className="tab-content active">
                         <div className="summary-grid">
                             <div className="summary-card"><div className="icon gold"><i className="fas fa-coins"></i></div><div className="label">Total Revenue</div><div className="value">₱860,000</div><div className="change up"><i className="fas fa-arrow-up"></i> +12.5% vs last month</div></div>
-                            <div className="summary-card"><div className="icon blue"><i class="fas fa-bed"></i></div><div class="label">Wake Space Revenue</div><div class="value">₱111,000</div><div class="change up"><i class="fas fa-arrow-up"></i> +8.3% vs last month</div></div>
+                            <div className="summary-card"><div className="icon blue"><i className="fas fa-bed"></i></div><div className="label">Wake Space Revenue</div><div className="value">₱111,000</div><div className="change up"><i className="fas fa-arrow-up"></i> +8.3% vs last month</div></div>
                             <div className="summary-card"><div className="icon red"><i className="fas fa-arrow-down"></i></div><div className="label">Total Expenses</div><div className="value">₱172,000</div><div className="change down"><i className="fas fa-arrow-down"></i> -3.2% vs last month</div></div>
                             <div className="summary-card"><div className="icon green"><i className="fas fa-chart-line"></i></div><div className="label">Net Income</div><div className="value">₱688,000</div><div className="change up"><i className="fas fa-arrow-up"></i> +15.8% vs last month</div></div>
                         </div>
