@@ -104,7 +104,7 @@ function Settings() {
   };
 
   const now = new Date();
-  const currentMonthYear = `${MONTHS[now.getMonth()]} ${now.getFullYear()}`;
+  
 
   if (loading) {
     return (
@@ -120,18 +120,7 @@ function Settings() {
       <Toast toast={toast} onClose={() => setToast(null)} />
 
       {/* ── TOP BAR ── */}
-      <div className="set-topbar">
-        <div className="set-topbar-left">
-          <h1>System Settings <span style={{ color: "#d4af37" }}>✦</span></h1>
-          <div className="set-greeting">Configure system preferences and notifications</div>
-        </div>
-        <div className="set-topbar-right">
-          <div className="set-date-badge">
-            <i className="fas fa-calendar-alt" style={{ color: "#d4af37", marginRight: 6 }}></i>
-            {currentMonthYear}
-          </div>
-        </div>
-      </div>
+      <AdminTopbar title="System Settings" greeting="Configure system preferences and notifications" />
 
       {/* ── SETTINGS CONTAINER ── */}
       <div className="set-container">

@@ -188,25 +188,12 @@ function BackupRestore() {
   const formattedSize = oldBackupsSize > 1000 ? (oldBackupsSize / 1000).toFixed(1) + " GB" : oldBackupsSize.toFixed(1) + " MB";
 
   const now = new Date();
-  const currentMonthYear = ["January","February","March","April","May","June","July","August","September","October","November","December"][now.getMonth()] + " " + now.getFullYear();
-
   return (
     <div className="br-wrapper">
       <Toast toast={toast} onClose={() => setToast(null)} />
 
       {/* ── TOP BAR ── */}
-      <div className="br-topbar">
-        <div className="br-topbar-left">
-          <h1>Backup & Restore <span style={{ color: "#d4af37" }}>✦</span></h1>
-          <div className="br-greeting">Manage system backups and data recovery</div>
-        </div>
-        <div className="br-topbar-right">
-          <div className="br-date-badge">
-            <i className="fas fa-calendar-alt" style={{ color: "#d4af37", marginRight: 6 }}></i>
-            {currentMonthYear}
-          </div>
-        </div>
-      </div>
+      <AdminTopbar title="Backup & Restore" greeting="Manage system backups and data recovery" />
 
       {/* ── CONTAINER ── */}
       <div className="br-container">
