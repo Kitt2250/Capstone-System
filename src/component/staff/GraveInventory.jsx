@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "./grave-inventory.css";
 import StaffTopbar from "./StaffTopbar";
+import { downloadCSV } from "../../utils/exportToCSV";
 
 const PRICE_DATA = {
   'Single Niche': { price: '₱150,000.00', size: '1 x 3 = 3 sqm (2 vaults)', contract: 'Staggered / Pre-Need (1 yr)' },
@@ -174,8 +175,11 @@ function GraveInventory() {
   };
 
   const exportInventory = () => {
-    showToast(`📥 Exporting ${filteredInventory.length} lots...`, 'info');
-    setTimeout(() => showToast(`✅ ${filteredInventory.length} lots exported!`, 'success'), 1500);
+    showToast(`⏳ Generating CSV for ${filteredInventory.length} lots...`, 'info');
+    setTimeout(() => {
+        downloadCSV(filteredInventory, `Grave_Inventory_${new Date().toISOString().slice(0,10)}.csv`);
+        showToast(`✅ ${filteredInventory.length} lots exported!`, 'success');
+    }, 1000);
   };
   
   // Summary Stats

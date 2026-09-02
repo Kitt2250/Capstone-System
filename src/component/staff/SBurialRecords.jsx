@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./sburial-records.css";
 import StaffTopbar from "./StaffTopbar";
+import { downloadCSV } from "../../utils/exportToCSV";
 
 const INITIAL_RECORDS = [
   { id: 'B-2847', name: 'Alejandro Reyes Sr.', grave: 'A-142', type: 'Single Niche', date: '2025-11-23', contact: 'Ana Reyes', phone: '0917-123-4567', payment: 'Installment', contract: '2026-11-23', interment: true, docs: true },
@@ -140,8 +141,11 @@ function SBurialRecords() {
   };
 
   const exportRecords = () => {
-    showToast(`📥 Exporting ${filteredRecords.length} records...`, 'info');
-    setTimeout(() => showToast(`✅ ${filteredRecords.length} records exported!`, 'success'), 1500);
+    showToast(`⏳ Generating CSV for ${filteredRecords.length} records...`, 'info');
+    setTimeout(() => {
+        downloadCSV(filteredRecords, `Burial_Records_${new Date().toISOString().slice(0,10)}.csv`);
+        showToast(`✅ ${filteredRecords.length} records exported!`, 'success');
+    }, 1000);
   };
 
   return (

@@ -13,6 +13,7 @@ import Reports from "./Reports";
 import MyAccount from "./MyAccount";
 import SNotifications from "./Notifications";
 import POSTransactions from "./POSTransactions";
+import Renewals from "./Renewals";
 
 function FallbackRoute({ to }) {
   const navigate = useNavigate();
@@ -34,6 +35,7 @@ const mainItems = [
 
 const managementItems = [
   { key: "wake",         label: "Wake Scheduling",     path: "/staff/wake" },
+  { key: "renewals",     label: "Renewals",            path: "/staff/renewals" },
   { key: "notifications",label: "Notifications",       path: "/staff/notifications" },
   { key: "reports",      label: "Reports",             path: "/staff/reports" },
   { key: "account",      label: "My Account",          path: "/staff/account" },
@@ -104,6 +106,12 @@ function StaffNavIcon({ navKey }) {
       <line x1="16" y1="2" x2="16" y2="6" />
       <line x1="8" y1="2" x2="8" y2="6" />
       <line x1="3" y1="10" x2="21" y2="10" />
+    </svg>
+  );
+  if (navKey === "renewals") return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
+      <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3" />
     </svg>
   );
   if (navKey === "notifications") return (
@@ -291,6 +299,7 @@ function StaffNavigation({ onSignOut }) {
           <Route path="pos" element={<POSTransactions />} />
           <Route path="installment" element={<InstallmentPayments />} />
           <Route path="wake" element={<WakeScheduling />} />
+          <Route path="renewals" element={<Renewals />} />
           <Route path="notifications" element={<SNotifications />} />
           <Route path="reports" element={<Reports />} />
           <Route path="account" element={<MyAccount />} />  

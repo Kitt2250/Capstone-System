@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './wake-scheduling.css';
 import './staff-shared.css';
 import StaffTopbar from './StaffTopbar';
+import { downloadCSV } from '../../utils/exportToCSV';
 
 const INITIAL_CLIENTS = [
     { id: 'C-001', name: 'Ana Reyes', contact: '0917-123-4567', email: 'ana.reyes@email.com', relationship: 'Spouse' },
@@ -230,7 +231,27 @@ export default function WakeScheduling() {
     };
 
     const getStatusClass = (st) => st === 'Confirmed' ? 'confirmed' : st === 'Pending' ? 'pending' : st === 'Completed' ? 'completed' : 'cancelled';
-    const getStatusIcon = (st) => st === 'Confirmed' ? 'fa-check-circle' : st === 'Pending' ? 'fa-clock' : st === 'Completed' ? 'fa-check-double' : 'fa-times-circle';
+    const exportWakes = () => {
+        showToast(`⏳ Generating CSV for ${filteredWakes.length} wakes...`, 'info');
+        setTimeout(() => {
+            // Need to merge wake and client data for a useful export
+            const exportData = filteredWakes.map(w => {
+                const c = getClient(w.clientId);
+                return {
+                    'Booking ID': w.id,
+                    'Client Name': c ? c.name : 'Unknown',
+                    'Contact': c ? c.contact : 'Unknown',
+                    'Deceased': w.deceased,
+                    'Start Date': w.start,
+                    'End Date': w.end,
+                    'Status': w.status,
+                    'Notes': w.notes || ''
+                };
+            });
+            downloadCSV(exportData, `Wake_Schedules_${new Date().toISOString().slice(0,10)}.csv`);
+            showToast(`✅ ${filteredWakes.length} wakes exported!`, 'success');
+        }, 1000);
+    };
 
     return (
         <div className="wk-page">
@@ -405,7 +426,7 @@ export default function WakeScheduling() {
                             <span className="wake-count">{filteredWakes.length} total</span>
                         </div>
                         <div className="wake-header-right">
-                            <button className="btn-secondary" onClick={() => showToast('Exporting...')}><i className="fas fa-file-export"></i> Export</button>
+                            <button className="btn-secondary" onClick={exportWakes}><i className="fas fa-file-export"></i> Export</button>
                             <button className="btn-primary" onClick={handleAddClick}><i className="fas fa-plus-circle"></i> New Reservation</button>
                         </div>
                     </div>

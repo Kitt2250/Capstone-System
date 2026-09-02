@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './staff-shared.css';
 import StaffTopbar from './StaffTopbar';
+import { downloadCSV } from '../../utils/exportToCSV';
 
 const graveTypes = [
     { name: 'Single Niche', total: 45, available: 12, occupied: 28, reserved: 5 },
@@ -47,6 +48,20 @@ export default function Reports() {
         setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3500);
     };
 
+    const handleExportCSV = () => {
+        showToast(`⏳ Generating CSV for ${currentTab}...`, 'info');
+        setTimeout(() => {
+            let data = [];
+            if (currentTab === 'overview') data = graveTypes;
+            else if (currentTab === 'financial') data = recentTransactions;
+            else if (currentTab === 'collections') data = overdueAccounts;
+            else if (currentTab === 'contracts') data = expiringContracts;
+            
+            downloadCSV(data, `${currentTab}_report_${new Date().toISOString().slice(0,10)}.csv`);
+            showToast(`✅ ${currentTab} report exported!`, 'success');
+        }, 800);
+    };
+
     const handleDateRange = (range) => {
         setDateRange(range);
         const today = new Date();
@@ -71,8 +86,8 @@ export default function Reports() {
                         <h2><i className="fas fa-chart-pie" style={{color: '#d4af37', marginRight: '8px'}}></i>Analytics Dashboard</h2>
                     </div>
                     <div className="reports-header-right">
-                        <button className="btn-secondary" onClick={() => showToast('Generating PDF...', 'info')}><i className="fas fa-file-export"></i> Export PDF</button>
-                        <button className="btn-secondary" onClick={() => showToast('Exporting CSV...', 'info')}><i className="fas fa-file-csv"></i> Export CSV</button>
+                        <button className="btn-secondary" onClick={() => window.print()}><i className="fas fa-file-export"></i> Export PDF</button>
+                        <button className="btn-secondary" onClick={handleExportCSV}><i className="fas fa-file-csv"></i> Export CSV</button>
                     </div>
                 </div>
 

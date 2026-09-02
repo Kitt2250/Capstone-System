@@ -1,0 +1,199 @@
+/* ----- RENEWALS CONTAINER ----- */
+.renewals-container {
+    background: white;
+    border-radius: 20px;
+    padding: 1.8rem 2rem 2rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(212, 175, 55, 0.08);
+    position: relative;
+}
+
+/* ===== INFO BANNER ===== */
+.info-banner {
+    background: #f0f4f8;
+    border-left: 4px solid #d4af37;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    font-size: 0.75rem;
+    color: #1a3d5c;
+}
+.info-banner i { color: #d4af37; font-size: 0.9rem; }
+.info-banner strong { color: #3670AF; }
+.info-banner .renewable-tag {
+    display: inline-block; padding: 0.05rem 0.5rem; border-radius: 10px; font-size: 0.6rem; font-weight: 600; background: #eafaf1; color: #27ae60; margin: 0 2px;
+}
+.info-banner .non-renewable-tag {
+    display: inline-block; padding: 0.05rem 0.5rem; border-radius: 10px; font-size: 0.6rem; font-weight: 600; background: #fdedec; color: #c0392b; margin: 0 2px;
+}
+
+/* ----- STATS CARDS ----- */
+.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin-bottom: 1.5rem; }
+.stat-card {
+    background: #f8fafc; border-radius: 16px; padding: 1rem 1.2rem; border: 1px solid rgba(212, 175, 55, 0.06); transition: 0.3s; position: relative; overflow: hidden;
+}
+.stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); }
+.stat-card .stat-icon { float: right; font-size: 1.6rem; opacity: 0.15; color: #1a3d5c; }
+.stat-card .stat-icon.gold { color: #d4af37; }
+.stat-card .stat-icon.blue { color: #3670AF; }
+.stat-card .stat-icon.red { color: #c0392b; }
+.stat-card .stat-icon.green { color: #27ae60; }
+.stat-card .stat-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #7a9fbe; font-weight: 600; }
+.stat-card .stat-value { font-size: 1.8rem; font-weight: 700; color: #1a3d5c; margin: 0.1rem 0; }
+.stat-card .stat-sub { font-size: 0.7rem; color: #8aaccc; }
+
+/* ----- SEARCH BAR ----- */
+.search-bar { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.search-bar .search-wrapper { flex: 1; min-width: 200px; position: relative; }
+.search-bar .search-wrapper input {
+    width: 100%; padding: 0.6rem 3rem 0.6rem 2.6rem; border: 1px solid #dce3ec; border-radius: 10px; font-size: 0.9rem; transition: 0.3s; background: #f8fafc; color: #1a3d5c; outline: none;
+}
+.search-bar .search-wrapper input:focus { border-color: #d4af37; box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1); background: white; }
+.search-bar .search-wrapper .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #8aaccc; font-size: 0.9rem; }
+.search-bar .search-wrapper .clear-btn { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #8aaccc; cursor: pointer; font-size: 1rem; padding: 4px; border-radius: 50%; transition: 0.2s; }
+.search-bar .search-wrapper .clear-btn:hover { color: #c0392b; background: #fdedec; }
+.search-bar .filter-group { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.search-bar .filter-group select {
+    padding: 0.6rem 1rem; border: 1px solid #dce3ec; border-radius: 10px; font-size: 0.85rem; background: #f8fafc; color: #1a3d5c; cursor: pointer; transition: 0.3s; outline: none; min-width: 140px;
+}
+.search-bar .filter-group select:focus { border-color: #d4af37; box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1); }
+
+/* ----- ACCOUNT LIST ----- */
+.account-list { display: flex; flex-direction: column; gap: 0.8rem; }
+.account-card {
+    background: #f8fafc; border-radius: 14px; padding: 1rem 1.2rem; border: 1px solid rgba(212, 175, 55, 0.06); transition: 0.3s; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.8rem;
+}
+.account-card:hover { border-color: rgba(212, 175, 55, 0.2); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); }
+.account-card .account-info { flex: 1; min-width: 180px; }
+.account-card .account-info .client-name { font-weight: 600; font-size: 1rem; color: #1a3d5c; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.account-card .account-info .client-name .grave-type { font-size: 0.65rem; font-weight: 500; padding: 0.05rem 0.5rem; border-radius: 10px; }
+.account-card .account-info .client-name .grave-type.columbarium { background: #e3effa; color: #3670AF; }
+.account-card .account-info .client-name .grave-type.apartment { background: #eafaf1; color: #27ae60; }
+.account-card .account-info .client-name .grave-type.bonevault { background: #f0f2f5; color: #7f8c8d; }
+.account-card .account-info .details { font-size: 0.8rem; color: #7a9fbe; margin-top: 2px; }
+.account-card .account-info .details span { margin-right: 12px; }
+.account-card .account-info .details .ren-id { font-family: 'Courier New', monospace; font-size: 0.75rem; color: #6a8aaa; }
+
+.account-card .account-balance { text-align: right; min-width: 120px; }
+.account-card .account-balance .paid { font-size: 0.75rem; color: #7a9fbe; }
+.account-card .account-balance .paid strong { color: #27ae60; }
+.account-card .account-balance .balance { font-size: 1.1rem; font-weight: 700; }
+.account-card .account-balance .balance.positive { color: #27ae60; }
+.account-card .account-balance .balance.negative { color: #c0392b; }
+.account-card .account-balance .balance.zero { color: #7a9fbe; }
+
+.account-card .account-actions { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+.account-card .account-actions button {
+    border: none; padding: 0.4rem 1rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 0.8rem; display: flex; align-items: center; gap: 6px;
+}
+.account-card .account-actions .btn-renew { background: #d4af37; color: #1a3d5c; }
+.account-card .account-actions .btn-renew:hover { background: #c49a2e; transform: scale(1.05); }
+.account-card .account-actions .btn-details { background: #e3effa; color: #3670AF; font-weight: 500; }
+.account-card .account-actions .btn-details:hover { background: #3670AF; color: white; }
+.account-card .account-actions .btn-history { background: none; border: 1px solid #dce3ec; color: #1a3d5c; font-weight: 500; }
+.account-card .account-actions .btn-history:hover { background: #f8fafc; border-color: #3670AF; color: #3670AF; }
+
+.account-card .status-badge { font-size: 0.65rem; padding: 0.1rem 0.6rem; border-radius: 12px; font-weight: 500; display: inline-block; }
+.account-card .status-badge.expired { background: #fdedec; color: #c0392b; }
+.account-card .status-badge.expiring { background: #fef9e7; color: #f39c12; }
+.account-card .status-badge.active { background: #e3effa; color: #3670AF; }
+.account-card .status-badge.renewed { background: #eafaf1; color: #27ae60; }
+
+.empty-state { text-align: center; padding: 2rem 0; color: #8aaccc; }
+.empty-state i { font-size: 2.5rem; display: block; margin-bottom: 0.5rem; color: #dce3ec; }
+
+/* ----- EXPIRY BADGE ----- */
+.expiry-badge { font-size: 0.65rem; padding: 0.1rem 0.5rem; border-radius: 12px; font-weight: 600; display: inline-block; margin-left: 6px; }
+.expiry-badge.current { background: #e3effa; color: #3670AF; }
+.expiry-badge.warning { background: #fef9e7; color: #f39c12; }
+.expiry-badge.urgent { background: #fdedec; color: #c0392b; }
+.expiry-badge.critical { background: #c0392b; color: white; }
+
+/* ===== PROGRESS BAR ===== */
+.progress-container { margin: 0.3rem 0; }
+.progress-track { width: 100%; height: 8px; background: #e8edf4; border-radius: 10px; overflow: hidden; position: relative; }
+.progress-track .progress-fill { height: 100%; border-radius: 10px; transition: width 0.5s ease; }
+.progress-track .progress-fill.green { background: linear-gradient(90deg, #27ae60, #2ecc71); }
+.progress-track .progress-fill.yellow { background: linear-gradient(90deg, #f39c12, #f1c40f); }
+.progress-track .progress-fill.red { background: linear-gradient(90deg, #c0392b, #e74c3c); }
+.progress-label { font-size: 0.7rem; color: #7a9fbe; display: flex; justify-content: space-between; margin-top: 2px; }
+
+/* ===== DETAILS MODAL ===== */
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.3rem 1.5rem; margin-bottom: 0.5rem; }
+.detail-grid .detail-item .label { font-size: 0.7rem; color: #8aaccc; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+.detail-grid .detail-item .value { font-size: 0.9rem; color: #1a3d5c; font-weight: 500; margin-top: 1px; }
+.detail-grid .detail-item .value .grave-badge { padding: 0.15rem 0.6rem; border-radius: 10px; font-size: 0.7rem; font-weight: 500; display: inline-block; }
+.detail-grid .detail-item .value .grave-badge.columbarium { background: #e3effa; color: #3670AF; }
+.detail-grid .detail-item .value .grave-badge.apartment { background: #eafaf1; color: #27ae60; }
+.detail-grid .detail-item .value .grave-badge.bonevault { background: #f0f2f5; color: #7f8c8d; }
+
+.contact-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.contact-row .contact-value { font-weight: 500; color: #1a3d5c; }
+.contact-row .btn-contact { background: none; border: 1px solid #dce3ec; padding: 0.1rem 0.6rem; border-radius: 4px; font-size: 0.7rem; color: #3670AF; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 3px; }
+.contact-row .btn-contact:hover { background: #e3effa; border-color: #3670AF; }
+.contact-row .btn-contact.call { color: #27ae60; }
+.contact-row .btn-contact.call:hover { background: #eafaf1; border-color: #27ae60; }
+
+.detail-payments { margin-top: 0.8rem; border-top: 1px solid #e8edf4; padding-top: 0.5rem; }
+.detail-payments .pay-title { font-size: 0.8rem; font-weight: 600; color: #1a3d5c; margin-bottom: 0.3rem; }
+.detail-payments .pay-title i { color: #d4af37; }
+.detail-payment-item { display: flex; justify-content: space-between; padding: 0.25rem 0; border-bottom: 1px solid #f0f2f5; font-size: 0.8rem; }
+.detail-payment-item:last-child { border-bottom: none; }
+.detail-payment-item .dp-date { color: #7a9fbe; }
+.detail-payment-item .dp-amount { font-weight: 600; color: #27ae60; }
+.detail-payment-item .dp-receipt { font-family: 'Courier New', monospace; font-size: 0.7rem; color: #6a8aaa; }
+
+/* ===== NOTES SECTION ===== */
+.notes-section { margin-top: 1rem; border-top: 1px solid #e8edf4; padding-top: 0.8rem; }
+.notes-section .notes-title { font-size: 0.8rem; font-weight: 600; color: #1a3d5c; margin-bottom: 0.4rem; display: flex; align-items: center; gap: 6px; }
+.notes-section .notes-title i { color: #d4af37; }
+.notes-list { max-height: 120px; overflow-y: auto; margin-bottom: 0.4rem; }
+.notes-list::-webkit-scrollbar { width: 3px; }
+.notes-list::-webkit-scrollbar-thumb { background: #dce3ec; border-radius: 10px; }
+.note-item { display: flex; justify-content: space-between; padding: 0.2rem 0.3rem; border-bottom: 1px solid #f0f2f5; font-size: 0.75rem; color: #1a3d5c; }
+.note-item:last-child { border-bottom: none; }
+.note-item .note-text { flex: 1; margin-right: 8px; }
+.note-item .note-meta { font-size: 0.6rem; color: #8aaccc; white-space: nowrap; }
+.notes-input-row { display: flex; gap: 0.5rem; }
+.notes-input-row input { flex: 1; padding: 0.3rem 0.6rem; border: 1px solid #dce3ec; border-radius: 6px; font-size: 0.8rem; background: #f8fafc; color: #1a3d5c; outline: none; transition: 0.3s; }
+.notes-input-row input:focus { border-color: #d4af37; box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1); background: white; }
+.notes-input-row .btn-add-note { background: #d4af37; border: none; padding: 0.3rem 0.8rem; border-radius: 6px; color: #1a3d5c; font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 0.8rem; white-space: nowrap; }
+
+/* ===== QUICK ACTION BUTTONS ===== */
+.quick-actions-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #e8edf4; }
+.quick-actions-row .btn-quick { padding: 0.3rem 1rem; border-radius: 8px; border: none; font-weight: 500; cursor: pointer; transition: 0.3s; font-size: 0.75rem; display: flex; align-items: center; gap: 5px; }
+.quick-actions-row .btn-quick.print { background: #f8fafc; border: 1px solid #dce3ec; color: #1a3d5c; }
+.quick-actions-row .btn-quick.print:hover { background: #e8edf4; }
+.quick-actions-row .btn-quick.reminder { background: #3670AF; color: white; }
+.quick-actions-row .btn-quick.reminder:hover { background: #2c5f82; }
+.quick-actions-row .btn-quick.contacted { background: #fef9e7; color: #f39c12; border: 1px solid #f39c12; }
+.quick-actions-row .btn-quick.contacted:hover { background: #f39c12; color: white; }
+
+/* ===== HISTORY MODAL ===== */
+.history-list { max-height: 250px; overflow-y: auto; }
+.history-list::-webkit-scrollbar { width: 4px; }
+.history-list::-webkit-scrollbar-thumb { background: #dce3ec; border-radius: 10px; }
+.history-item { display: flex; justify-content: space-between; padding: 0.4rem 0; border-bottom: 1px solid #f0f2f5; font-size: 0.85rem; }
+.history-item:last-child { border-bottom: none; }
+.history-item .h-date { color: #7a9fbe; }
+.history-item .h-amount { font-weight: 600; color: #27ae60; }
+.history-item .h-amount.negative { color: #c0392b; }
+.history-item .h-receipt { font-family: 'Courier New', monospace; font-size: 0.75rem; color: #6a8aaa; }
+.history-empty { text-align: center; color: #8aaccc; padding: 1rem 0; }
+
+@media (max-width:1024px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .account-card { flex-direction: column; align-items: stretch; gap: 0.5rem; }
+    .account-card .account-balance { text-align: left; }
+    .account-card .account-actions { justify-content: flex-start; }
+}
+@media (max-width:768px) {
+    .stats-grid { grid-template-columns: 1fr; }
+    .search-bar { flex-direction: column; }
+    .account-card .account-info .client-name { flex-wrap: wrap; }
+    .detail-grid { grid-template-columns: 1fr; }
+}
