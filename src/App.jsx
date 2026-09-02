@@ -85,14 +85,15 @@ function App() {
       {showLogoutModal && (
         <div className="global-logout-overlay">
           <div className="global-logout-modal">
-            <div className="glm-icon">
-              <i className="fas fa-sign-out-alt"></i>
+            <div className="glm-header">
+              <h2>Confirm Logout</h2>
+              <p>Are you sure you want to sign out of your account?</p>
             </div>
-            <h2>Confirm Logout</h2>
-            <p>Are you sure you want to sign out of your account?</p>
             <div className="glm-actions">
               <button className="glm-cancel" onClick={() => setShowLogoutModal(false)}>Cancel</button>
-              <button className="glm-confirm" onClick={handleSignOut}>Logout</button>
+              <button className="glm-confirm" onClick={handleSignOut}>
+                <i className="fas fa-sign-out-alt" style={{marginRight: 6}}></i> Logout
+              </button>
             </div>
           </div>
         </div>

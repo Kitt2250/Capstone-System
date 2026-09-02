@@ -1,70 +1,61 @@
-
 .global-logout-overlay {
   position: fixed;
-  top: 0; left: 0; width: 100vw; height: 100dvh;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 999999;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 999999;
   padding: 1rem;
 }
 
 .global-logout-modal {
   background: white;
+  border-radius: 20px;
+  padding: 1.5rem 1.8rem;
+  max-width: 400px;
   width: 100%;
-  max-width: 310px;
-  border-radius: 14px;
-  padding: 1.5rem 1.2rem;
-  text-align: center;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+  animation: um-slide-up 0.25s ease;
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  animation: modalPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  text-align: left;
 }
 
-@keyframes modalPop {
-  0% { transform: scale(0.9); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
+@keyframes um-slide-up {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
 }
 
-.glm-icon {
-  width: 48px;
-  height: 48px;
-  background: #fdf5e6;
-  color: #d4af37;
-  font-size: 1.3rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  margin: 0 auto 0.8rem;
+.glm-header {
+  margin-bottom: 1.2rem;
 }
 
-.global-logout-modal h2 {
+.glm-header h2 {
+  font-size: 1.2rem;
   color: #1a3d5c;
-  font-size: 1.15rem;
-  margin-bottom: 0.3rem;
+  margin: 0 0 0.3rem 0;
   font-weight: 700;
 }
 
-.global-logout-modal p {
+.glm-header p {
+  font-size: 0.88rem;
   color: #6a8aaa;
-  font-size: 0.85rem;
-  margin-bottom: 1.2rem;
-  line-height: 1.4;
-  padding: 0 0.5rem;
+  margin: 0;
 }
 
 .glm-actions {
   display: flex;
   gap: 0.8rem;
+  justify-content: flex-end;
+  margin-top: 1.4rem;
+  border-top: 1px solid #e8edf4;
+  padding-top: 1.2rem;
 }
 
 .glm-cancel, .glm-confirm {
-  flex: 1;
-  padding: 0.6rem 0.8rem;
+  padding: 0.6rem 1.2rem;
   border-radius: 8px;
   font-size: 0.85rem;
   font-weight: 600;
@@ -89,4 +80,10 @@
   background: #c49a2e;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+}
+
+@media (max-width: 480px) {
+  .global-logout-modal { padding: 1.4rem 1.2rem; }
+  .glm-actions { flex-direction: column; }
+  .glm-actions button { width: 100%; justify-content: center; }
 }
