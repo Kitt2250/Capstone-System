@@ -48,14 +48,7 @@
 }
 
 /* When collapsed: stack icon above toggle button, both centered */
-.fam-sidebar.collapsed .fam-brand {
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 2px;
-  padding: 8px 0;
-  min-height: 0;
-}
+.fam-sidebar.collapsed .fam-brand { flex-direction: column; justify-content: center; align-items: center; gap: 6px; padding: 16px 4px 16px 4px; border-bottom: 1px solid rgba(255, 255, 255, 0.12); min-height: 0; }
 
 .fam-brand-icon {
   width: 36px;
@@ -83,11 +76,7 @@
   white-space: nowrap;
 }
 
-.fam-sidebar.collapsed .fam-brand-text {
-  opacity: 0;
-  max-width: 0;
-  pointer-events: none;
-}
+.fam-sidebar.collapsed .fam-brand-text { display: none; opacity: 0; max-width: 0; pointer-events: none; }
 
 .fam-brand-title {
   font-size: 12px;

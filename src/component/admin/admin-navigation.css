@@ -107,10 +107,10 @@
 
 /* ── Toggle Button ───────────────────────────────── */
 .admin-toggle-btn {
-  width: 36px;
-  height: 36px;
-  min-width: 36px;
-  border-radius: 8px;
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  border-radius: 50%;
   border: none;
   background: rgba(255, 255, 255, 0.12);
   color: rgba(255, 255, 255, 0.85);
