@@ -560,7 +560,7 @@
   .br-quick-actions button { flex: 1; justify-content: center; text-align: center; }
 }
 
-@media (max-width: 768px) {`n  .br-topbar { padding-left: 52px !important; padding-top: 6px; }
+@media (max-width: 768px) { .br-topbar { padding-left: 52px !important; padding-top: 6px; }
   .br-container { padding: 1.2rem; }
   .br-topbar-left h1 { font-size: 1.3rem; }
   .br-modal { padding: 1.5rem; margin: 1rem; }
@@ -579,3 +579,4 @@
   .br-section-actions button { width: 100%; justify-content: center; }
   .br-file-list { overflow-x: auto; }
 }
+
