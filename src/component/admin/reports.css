@@ -1,3 +1,4 @@
+.reports-page { display: flex; flex-direction: column; gap: 1.6rem; }
 /* ----- REPORTS CONTAINER ----- */
 .reports-container {
     background: white;

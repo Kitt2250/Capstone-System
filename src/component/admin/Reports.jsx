@@ -161,7 +161,7 @@ export default function Reports() {
 
             <AdminTopbar title="Reports ✦" greeting="Financial, burial, and operational reports" />
 
-            <div className="reports-container" style={{ margin: '0 20px' }}>
+            <div className="reports-container" >
                 <div className="report-header">
                     <div className="report-header-left">
                         <h2><i className="fas fa-chart-pie" style={{color:'#d4af37', marginRight:'8px'}}></i>Analytics Dashboard</h2>
