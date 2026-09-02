@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { NavLink, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase.config";
+import LogoutModal from "../LogoutModal";
 import "./admin-navigation.css";
 import logoIcon from "../../assets/logo-icon.png";
 import DashboardA from "./DashboardA";
@@ -137,6 +138,7 @@ function AdminNavigation({ onSignOut }) {
     return localStorage.getItem("adminSidebarCollapsed") === "true";
   });
   const [mobileOpen, setMobileOpen] = useState(false);
+    const [showLogout, setShowLogout] = useState(false);
 
   const toggleSidebar = () => {
     setCollapsed(prev => {
@@ -229,7 +231,7 @@ function AdminNavigation({ onSignOut }) {
               <div className="admin-user-name">{currentUser?.name || "Loading..."}</div>
               <div className="admin-user-email">{currentUser?.email || auth.currentUser?.email || ""}</div>
             </div>
-            <button className="admin-signout-btn" onClick={onSignOut} title="Sign Out">
+            <button className="admin-signout-btn" onClick={() => setShowLogout(true)} title="Sign Out">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                 width="15" height="15">
@@ -262,9 +264,10 @@ function AdminNavigation({ onSignOut }) {
           <Route path="backup"    element={<BackupRestore />} />
           <Route path="*"         element={<FallbackRoute to="dashboard" />} />
         </Routes>
-      </main>
+      {showLogout && <LogoutModal onClose={() => setShowLogout(false)} onConfirm={onSignOut} />} </main>
     </div>
   );
 }
 
 export default AdminNavigation;
+

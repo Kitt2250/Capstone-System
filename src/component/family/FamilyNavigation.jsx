@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { NavLink, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase.config";
+import LogoutModal from "../LogoutModal";
 import "./family-navigation.css";
 import logoIcon from "../../assets/logo-icon.png";
 
@@ -122,6 +123,7 @@ function FamilyNavigation({ onSignOut }) {
   };
 
   const [mobileOpen, setMobileOpen] = useState(false);
+    const [showLogout, setShowLogout] = useState(false);
   const closeMobile = () => setMobileOpen(false);
 
   useEffect(() => {
@@ -205,7 +207,7 @@ function FamilyNavigation({ onSignOut }) {
               <div className="fam-user-name">{currentUser?.name || "Loading..."}</div>
               <div className="fam-user-email">{currentUser?.email || auth.currentUser?.email || ""}</div>
             </div>
-            <button className="fam-signout-btn" onClick={onSignOut} title="Sign Out">
+            <button className="fam-signout-btn" onClick={() => setShowLogout(true)} title="Sign Out">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                 width="15" height="15">
@@ -236,9 +238,10 @@ function FamilyNavigation({ onSignOut }) {
           <Route path="account"       element={<MyAccount />} />
           <Route path="*"             element={<FallbackRoute to="burial" />} />
         </Routes>
-      </main>
+      {showLogout && <LogoutModal onClose={() => setShowLogout(false)} onConfirm={onSignOut} />} </main>
     </div>
   );
 }
 
 export default FamilyNavigation;
+

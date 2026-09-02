@@ -55,16 +55,9 @@ function App() {
     return unsubscribe;
   }, []);
 
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
-
   const handleSignOut = async () => {
-    setShowLogoutModal(false);
     await signOut(auth);
     navigate("/login");
-  };
-
-  const requestSignOut = () => {
-    setShowLogoutModal(true);
   };
 
   if (authState.loading) {
@@ -82,22 +75,6 @@ function App() {
 
   return (
     <>
-      {showLogoutModal && (
-        <div className="global-logout-overlay">
-          <div className="global-logout-modal">
-            <div className="glm-header">
-              <h2>Confirm Logout</h2>
-              <p>Are you sure you want to sign out of your account?</p>
-            </div>
-            <div className="glm-actions">
-              <button className="glm-cancel" onClick={() => setShowLogoutModal(false)}>Cancel</button>
-              <button className="glm-confirm" onClick={handleSignOut}>
-                <i className="fas fa-sign-out-alt" style={{marginRight: 6}}></i> Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
       <Routes>
       <Route
         path="/login"
@@ -122,7 +99,7 @@ function App() {
         path="/admin/*"
         element={
           user && role === "admin"
-            ? <AdminNavigation onSignOut={requestSignOut} />
+            ? <AdminNavigation onSignOut={handleSignOut} />
             : <Navigate to="/login" replace />
         }
       />
@@ -131,7 +108,7 @@ function App() {
         path="/family/*"
         element={
           user && role === "family"
-            ? <FamilyNavigation onSignOut={requestSignOut} />
+            ? <FamilyNavigation onSignOut={handleSignOut} />
             : <Navigate to="/login" replace />
         }
       />
@@ -140,7 +117,7 @@ function App() {
         path="/staff/*"
         element={
           user && role === "staff"
-            ? <StaffNavigation onSignOut={requestSignOut} />
+            ? <StaffNavigation onSignOut={handleSignOut} />
             : <Navigate to="/login" replace />
         }
       />

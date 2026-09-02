@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { NavLink, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase.config";
+import LogoutModal from "../LogoutModal";
 import "./staff-navigation.css";
 import logoIcon from "../../assets/logo-icon.png";
 import DashboardS from "./DashboardS";
@@ -179,6 +180,7 @@ function StaffNavigation({ onSignOut }) {
     return localStorage.getItem("staffSidebarCollapsed") === "true";
   });
   const [mobileOpen, setMobileOpen] = useState(false);
+    const [showLogout, setShowLogout] = useState(false);
 
   const toggleSidebar = () => {
     setCollapsed(prev => {
@@ -268,7 +270,7 @@ function StaffNavigation({ onSignOut }) {
               <div className="sn-user-name">{currentUser?.name || "Loading..."}</div>
               <div className="sn-user-email">{currentUser?.email || auth.currentUser?.email || ""}</div>
             </div>
-            <button className="sn-signout-btn" onClick={onSignOut} title="Sign Out">
+            <button className="sn-signout-btn" onClick={() => setShowLogout(true)} title="Sign Out">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                 width="15" height="15">
@@ -305,9 +307,10 @@ function StaffNavigation({ onSignOut }) {
           <Route path="account" element={<MyAccount />} />  
           <Route path="*"             element={<FallbackRoute to="dashboard" />} />
         </Routes>
-      </main>
+      {showLogout && <LogoutModal onClose={() => setShowLogout(false)} onConfirm={onSignOut} />} </main>
     </div>
   );
 }
 
 export default StaffNavigation;
+
