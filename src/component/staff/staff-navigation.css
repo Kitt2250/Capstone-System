@@ -395,13 +395,7 @@
   .sn-sidebar.mobile-open.collapsed {
     width: 72px;
   }
-  .sn-sidebar.mobile-open .sn-brand-text,
-  .sn-sidebar.mobile-open .sn-nav-section-label,
-  .sn-sidebar.mobile-open .sn-menu-label,
-  .sn-sidebar.mobile-open .sn-user-info,
-  .sn-sidebar.mobile-open .sn-signout-btn { 
-    display: flex; opacity: 1; width: auto; 
-  }
+  .sn-sidebar.mobile-open .sn-brand-text, .sn-sidebar.mobile-open .sn-user-info { display: flex; flex-direction: column; justify-content: center; opacity: 1; width: auto; } .sn-sidebar.mobile-open .sn-nav-section-label, .sn-sidebar.mobile-open .sn-menu-label, .sn-sidebar.mobile-open .sn-signout-btn { display: flex; opacity: 1; width: auto; }
   .sn-sidebar.mobile-open.collapsed .sn-brand-text,
   .sn-sidebar.mobile-open.collapsed .sn-nav-section-label,
   .sn-sidebar.mobile-open.collapsed .sn-menu-label,
@@ -426,6 +420,7 @@
   .sn-content { position: relative; padding: 12px; }
   .sn-hamburger { position: absolute; top: 10px; left: 10px; }
 }
+
 
 
 

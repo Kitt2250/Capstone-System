@@ -401,11 +401,7 @@
   }
   
   /* Show all labels when open on mobile */
-  .admin-sidebar.mobile-open .admin-brand-text,
-  .admin-sidebar.mobile-open .admin-nav-section-label,
-  .admin-sidebar.mobile-open .admin-menu-label,
-  .admin-sidebar.mobile-open .admin-user-info,
-  .admin-sidebar.mobile-open .admin-signout-btn { display: flex; opacity: 1; width: auto; }
+  .admin-sidebar.mobile-open .admin-brand-text, .admin-sidebar.mobile-open .admin-user-info { display: flex; flex-direction: column; justify-content: center; opacity: 1; width: auto; } .admin-sidebar.mobile-open .admin-nav-section-label, .admin-sidebar.mobile-open .admin-menu-label, .admin-sidebar.mobile-open .admin-signout-btn { display: flex; opacity: 1; width: auto; }
   
   /* Hide them when collapsed on mobile */
   .admin-sidebar.mobile-open.collapsed .admin-brand-text,
@@ -433,6 +429,7 @@
   .admin-content { position: relative; padding: 12px; }
   .admin-hamburger { position: absolute; top: 10px; left: 10px; }
 }
+
 
 
 

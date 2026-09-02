@@ -406,11 +406,7 @@
   .fam-sidebar.mobile-open.collapsed {
     width: 64px;
   }
-  .fam-sidebar.mobile-open .fam-brand-text,
-  .fam-sidebar.mobile-open .fam-nav-section-label,
-  .fam-sidebar.mobile-open .fam-menu-label,
-  .fam-sidebar.mobile-open .fam-user-info,
-  .fam-sidebar.mobile-open .fam-signout-btn { display: flex; opacity: 1; width: auto; }
+  .fam-sidebar.mobile-open .fam-brand-text, .fam-sidebar.mobile-open .fam-user-info { display: flex; flex-direction: column; justify-content: center; opacity: 1; width: auto; } .fam-sidebar.mobile-open .fam-nav-section-label, .fam-sidebar.mobile-open .fam-menu-label, .fam-sidebar.mobile-open .fam-signout-btn { display: flex; opacity: 1; width: auto; }
 
   /* Hide them when collapsed on mobile */
   .fam-sidebar.mobile-open.collapsed .fam-brand-text,
@@ -439,6 +435,7 @@
   .fam-page-wrapper { padding: 12px; }
   .fam-hamburger { position: absolute; top: 10px; left: 10px; }
 }
+
 
 
 
