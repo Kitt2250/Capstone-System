@@ -2,7 +2,6 @@
 /* ----- PAGE WRAPPER — fills sn-content area ----- */
 .pos-page-wrapper {
     width: 100%;
-    min-width: min-content;
     box-sizing: border-box;
     padding: 0;
     background: transparent;
@@ -79,7 +78,6 @@
     border: 1px solid rgba(212, 175, 55, 0.08);
     position: relative;
     width: 100%;
-    min-width: min-content;
 }
 
 
@@ -148,7 +146,7 @@
 /* ----- TWO-COLUMN LAYOUT ----- */
 .pos-two-col {
     display: grid;
-    grid-template-columns: 1fr 1.1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 1.5rem;
 }
 
@@ -182,6 +180,8 @@
     width: 100%;
     border-collapse: collapse;
     font-size: 0.8rem;
+    table-layout: fixed;
+    width: 100%;
 }
 .product-table th {
     text-align: left;
@@ -1356,6 +1356,8 @@
     .date-picker-row { flex-direction: column; }
     .modal .form-row { grid-template-columns: 1fr; }
     .product-table { font-size: 0.7rem;
+    table-layout: fixed;
+    width: 100%;
 }
     .product-table th, .product-table td { padding: 0.2rem 0.2rem; }
     #wakeModal .modal { padding: 1.2rem; }
@@ -1383,8 +1385,14 @@
 @media (max-width: 1400px) {
     .pos-container { padding: 1.2rem 1.5rem !important; }
     .pos-two-col { gap: 0.8rem !important; }
-    .product-table { font-size: 0.72rem !important; }
+    .product-table { font-size: 0.72rem !important;     table-layout: fixed;
+    width: 100%;
+}
     .product-table th, .product-table td { padding: 0.25rem 0.3rem !important; }
     .right-panel .panel-box { padding: 0.6rem 0.8rem !important; }
     .pos-page-wrapper .topbar { margin-bottom: 1rem !important; }
 }
+
+.left-panel, .right-panel { min-width: 0; }
+
+.product-table th, .product-table td { word-wrap: break-word; white-space: normal; }
