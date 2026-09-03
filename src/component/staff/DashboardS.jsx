@@ -183,27 +183,27 @@ function DashboardS() {
             <a href="#" className="ds-view-link-gold">View all <i className="fas fa-chevron-right" style={{ fontSize: "0.6rem" }}></i></a>
           </div>
 
-          <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', borderBottom: '1px solid #f3f4f6', paddingBottom: '12px' }}>
-            <button style={{ padding: '6px 12px', borderRadius: '20px', border: filter === 'all' ? '1px solid #1a3b5d' : '1px solid #e5e7eb', background: filter === 'all' ? '#1a3b5d' : 'white', color: filter === 'all' ? 'white' : '#6b7280', fontSize: '12px', cursor: 'pointer' }} onClick={() => setFilter('all')}>
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', borderBottom: '1px solid #f3f4f6', paddingBottom: '12px', flexWrap: 'wrap' }}>
+            <button style={{ padding: '6px 12px', borderRadius: '20px', border: filter === 'all' ? '1px solid #1a3b5d' : '1px solid #e5e7eb', background: filter === 'all' ? '#1a3b5d' : 'white', color: filter === 'all' ? 'white' : '#6b7280', fontSize: '12px', cursor: 'pointer', whiteSpace: 'nowrap' }} onClick={() => setFilter('all')}>
               All ({SCHEDULE_DATA.length})
             </button>
-            <button style={{ padding: '6px 12px', borderRadius: '20px', border: filter === 'burial' ? '1px solid #1a3b5d' : '1px solid #e5e7eb', background: filter === 'burial' ? '#1a3b5d' : 'white', color: filter === 'burial' ? 'white' : '#6b7280', fontSize: '12px', cursor: 'pointer' }} onClick={() => setFilter('burial')}>
+            <button style={{ padding: '6px 12px', borderRadius: '20px', border: filter === 'burial' ? '1px solid #1a3b5d' : '1px solid #e5e7eb', background: filter === 'burial' ? '#1a3b5d' : 'white', color: filter === 'burial' ? 'white' : '#6b7280', fontSize: '12px', cursor: 'pointer', whiteSpace: 'nowrap' }} onClick={() => setFilter('burial')}>
               Burials
             </button>
-            <button style={{ padding: '6px 12px', borderRadius: '20px', border: filter === 'payment' ? '1px solid #1a3b5d' : '1px solid #e5e7eb', background: filter === 'payment' ? '#1a3b5d' : 'white', color: filter === 'payment' ? 'white' : '#6b7280', fontSize: '12px', cursor: 'pointer' }} onClick={() => setFilter('payment')}>
+            <button style={{ padding: '6px 12px', borderRadius: '20px', border: filter === 'payment' ? '1px solid #1a3b5d' : '1px solid #e5e7eb', background: filter === 'payment' ? '#1a3b5d' : 'white', color: filter === 'payment' ? 'white' : '#6b7280', fontSize: '12px', cursor: 'pointer', whiteSpace: 'nowrap' }} onClick={() => setFilter('payment')}>
               Payments
             </button>
-            <button style={{ padding: '6px 12px', borderRadius: '20px', border: filter === 'wake' ? '1px solid #1a3b5d' : '1px solid #e5e7eb', background: filter === 'wake' ? '#1a3b5d' : 'white', color: filter === 'wake' ? 'white' : '#6b7280', fontSize: '12px', cursor: 'pointer' }} onClick={() => setFilter('wake')}>
+            <button style={{ padding: '6px 12px', borderRadius: '20px', border: filter === 'wake' ? '1px solid #1a3b5d' : '1px solid #e5e7eb', background: filter === 'wake' ? '#1a3b5d' : 'white', color: filter === 'wake' ? 'white' : '#6b7280', fontSize: '12px', cursor: 'pointer', whiteSpace: 'nowrap' }} onClick={() => setFilter('wake')}>
               Wake
             </button>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {filteredSchedule.map(item => (
-              <div key={item.id} style={{ display: 'flex', alignItems: 'center', padding: '12px', background: '#f9fafb', borderRadius: '8px' }}>
-                <div style={{ fontWeight: 600, fontSize: '13px', color: '#111827', minWidth: '80px' }}>{item.time}</div>
-                <div style={{ flex: 1, fontSize: '14px', color: '#374151' }}>{item.event}</div>
-                <span style={{ fontSize: '11px', padding: '4px 10px', borderRadius: '12px', background: '#e5e7eb', textTransform: 'capitalize' }}>{item.type}</span>
+              <div key={item.id} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', padding: '12px', background: '#f9fafb', borderRadius: '8px' }}>
+                <div style={{ fontWeight: 600, fontSize: '12px', color: '#111827', minWidth: '72px', flexShrink: 0 }}>{item.time}</div>
+                <div style={{ flex: 1, fontSize: '13px', color: '#374151', wordBreak: 'break-word', minWidth: 0 }}>{item.event}</div>
+                <span style={{ fontSize: '11px', padding: '3px 8px', borderRadius: '12px', background: '#e5e7eb', textTransform: 'capitalize', flexShrink: 0 }}>{item.type}</span>
               </div>
             ))}
             {filteredSchedule.length === 0 && (

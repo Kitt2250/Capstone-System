@@ -314,6 +314,7 @@
   flex: 1;
   height: 100dvh;
   overflow-y: auto;
+  overflow-x: hidden;
   background: #e8edf4;
   padding: 24px 28px;
   min-width: 0;

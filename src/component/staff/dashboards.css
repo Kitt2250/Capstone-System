@@ -11,6 +11,9 @@
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   background: #e8edf4;
   min-height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 /* ── Toast ────────────────────────────────────────── */
