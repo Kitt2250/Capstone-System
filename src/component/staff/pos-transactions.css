@@ -372,16 +372,7 @@
             border: 1px solid rgba(212, 175, 55, 0.08);
             position: relative;
         }
-        .pos-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #3670AF, #d4af37);
-            border-radius: 20px 20px 0 0;
-        }
+        
 
         /* ----- POS HEADER ----- */
         .pos-header {
@@ -1845,9 +1836,7 @@
                 box-shadow: none !important;
                 border: 1px solid #ddd !important;
             }
-            .pos-container::before {
-                display: none !important;
-            }
+            
         }
     
 /* Fix for overflow */
@@ -1875,13 +1864,9 @@
 .product-list-section, .table-responsive, .product-table {
     max-width: 100%;
 }
-.table-responsive {
-    overflow-x: auto;
-}
 
-.product-list-section {
-    overflow-x: auto;
-}
+
+
 
 .pos-page-wrapper * {
     box-sizing: border-box;
