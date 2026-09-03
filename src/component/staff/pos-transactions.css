@@ -177,12 +177,9 @@
 }
 
 .product-table {
-    width: 100%;
-    border-collapse: collapse;
+        border-collapse: collapse;
     font-size: 0.8rem;
-    table-layout: fixed;
-    width: 100%;
-}
+        }
 .product-table th {
     text-align: left;
     padding: 0.3rem 0.4rem;
@@ -1345,9 +1342,7 @@
     .date-picker-row { flex-direction: column; }
     .modal .form-row { grid-template-columns: 1fr; }
     .product-table { font-size: 0.7rem;
-    table-layout: fixed;
-    width: 100%;
-}
+        }
     .product-table th, .product-table td { padding: 0.2rem 0.2rem; }
     #wakeModal .modal { padding: 1.2rem; }
     .wake-booking-summary .wake-row { font-size: 0.75rem; }
@@ -1374,9 +1369,7 @@
 @media (max-width: 1400px) {
     .pos-container { padding: 1.2rem 1.5rem !important; }
     .pos-two-col { gap: 0.8rem !important; }
-    .product-table { font-size: 0.72rem !important;     table-layout: fixed;
-    width: 100%;
-}
+    .product-table { font-size: 0.72rem !important;         }
     .product-table th, .product-table td { padding: 0.25rem 0.3rem !important; }
     .right-panel .panel-box { padding: 0.6rem 0.8rem !important; }
     .pos-page-wrapper .topbar { margin-bottom: 1rem !important; }
