@@ -1,9 +1,6 @@
-/* ----- RESET & BASE (Scoped to POS) ----- */
 .pos-page-wrapper {
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    background: #e8edf4;
-    min-height: 100vh;
-    padding: 1.8rem 2.2rem 2.5rem;
+    /* Removed extra padding, background, and min-height because sn-content already provides it */
 }
 
 /* ----- TOP BAR ----- */
@@ -67,7 +64,7 @@
 .pos-container {
     background: white;
     border-radius: 20px;
-    padding: 1.8rem 2rem 2rem;
+    padding: 1.2rem 1.5rem 1.5rem;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
     border: 1px solid rgba(212, 175, 55, 0.08);
     position: relative;
@@ -132,12 +129,12 @@
 }
 
 /* ----- LEFT: Product List ----- */
-.left-panel { display: flex; flex-direction: column; gap: 1rem; }
 .product-list-section {
     background: #f8fafc;
     border-radius: 12px;
     padding: 0.8rem 1rem;
     border: 1px solid rgba(212, 175, 55, 0.06);
+    overflow-x: auto;
 }
 .product-list-section .section-title {
     font-size: 0.8rem;
@@ -175,7 +172,7 @@
 .wake-product-row .wake-avail { font-size: 0.7rem; font-weight: 500; color: #27ae60; }
 .wake-product-row .wake-avail.sold-out { color: #c0392b; }
 
-.cart-section { background: #f8fafc; border-radius: 12px; padding: 0.8rem 1rem; border: 1px solid rgba(212, 175, 55, 0.06); }
+.cart-section { background: #f8fafc; border-radius: 12px; padding: 0.8rem 1rem; border: 1px solid rgba(212, 175, 55, 0.06); overflow-x: auto; }
 .cart-section .cart-title { font-size: 0.85rem; font-weight: 600; color: #1a3d5c; margin-bottom: 0.4rem; display: flex; justify-content: space-between; }
 .cart-items-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
 .cart-items-table th { text-align: left; padding: 0.2rem; border-bottom: 1px solid #e8edf4; color: #7a9fbe; font-size: 0.6rem; text-transform: uppercase; }
@@ -187,8 +184,7 @@
 .btn-map-sm { background: #1a7a3a; border: none; color: white; cursor: pointer; font-size: 0.6rem; padding: 0.1rem 0.5rem; border-radius: 4px; display: inline-flex; gap: 3px; }
 
 /* ----- RIGHT: Transaction Panel ----- */
-.right-panel { display: flex; flex-direction: column; gap: 0.8rem; }
-.panel-box { background: #f8fafc; border-radius: 12px; padding: 0.8rem 1rem; border: 1px solid rgba(212, 175, 55, 0.06); }
+.panel-box { background: #f8fafc; border-radius: 12px; padding: 0.8rem 1rem; border: 1px solid rgba(212, 175, 55, 0.06); overflow-x: auto; }
 
 .client-payment-row { display: flex; gap: 0.8rem; flex-wrap: wrap; }
 .form-group { flex: 1; min-width: 120px; margin-bottom: 0.2rem; }
@@ -291,7 +287,10 @@
 .pos-toast.info { background: #3670AF; }
 .pos-toast.warning { background: #f39c12; }
 
-@media (max-width: 1024px) {
+.left-panel { display: flex; flex-direction: column; gap: 1rem; min-width: 0; }
+.right-panel { display: flex; flex-direction: column; gap: 0.8rem; min-width: 0; }
+
+@media (max-width: 1200px) {
     .pos-two-col { grid-template-columns: 1fr; }
     .pos-header { flex-direction: column; align-items: stretch; }
     .pos-header-right { width: 100%; justify-content: space-between; }
