@@ -1171,56 +1171,78 @@
 .ds-modal-confirm-btn:hover { background: #b8942e; }
 
 /* ── Responsive ───────────────────────────────────── */
+/* ── Main dashboard two-column grid ─────────────────────────── */
+.ds-main-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 24px;
+  margin-top: 24px;
+}
+
+/* ── Responsive breakpoints ──────────────────────────────────── */
 @media (max-width: 1100px) {
-  .ds-stats-grid     { grid-template-columns: repeat(2, 1fr); }
-  .ds-charts-row     { grid-template-columns: 1fr; }
-  .ds-map-grid       { grid-template-columns: repeat(3, 1fr); }
+  .ds-stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .ds-charts-row { grid-template-columns: 1fr; }
+  .ds-map-grid   { grid-template-columns: repeat(3, 1fr); }
+  .ds-main-grid  { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 860px) {
-  .ds-notifs-grid    { grid-template-columns: 1fr; }
-  .ds-map-grid       { grid-template-columns: repeat(2, 1fr); }
-  .ds-map-legend     { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
-  .ds-leg-total      { margin-left: 0; }
+  .ds-notifs-grid { grid-template-columns: 1fr; }
+  .ds-map-grid    { grid-template-columns: repeat(2, 1fr); }
+  .ds-map-legend  { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+  .ds-leg-total   { margin-left: 0; }
+  .ds-main-grid   { gap: 16px; }
+  .ds-stats-grid  { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  /* Hamburger topbar */
+  .ds-topbar {
+    padding-left: 52px !important;
+    padding-top: 6px;
+    flex-wrap: nowrap;
+    align-items: center;
+  }
+  .ds-topbar-left  { flex: 1; min-width: 0; }
+  .ds-topbar-right { flex-shrink: 0; display: flex; align-items: center; gap: 1.2rem; }
+
+  .ds-title    { font-size: 1.3rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ds-greeting { font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ds-notif-dropdown { right: -16px; width: 320px; max-width: 90vw; }
+
+  /* Go single-column */
+  .ds-main-grid  { grid-template-columns: 1fr; gap: 16px; margin-top: 16px; }
+  .ds-stats-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .ds-stat-card  { padding: 1rem 1.1rem; }
+  .ds-chart-box  { padding: 1rem 1.2rem; }
 }
 
 @media (max-width: 600px) {
-  .ds-stats-grid     { grid-template-columns: 1fr; }
-  .ds-map-grid       { grid-template-columns: repeat(2, 1fr); }
-  .ds-map-filters    { flex-direction: column; width: 100%; }
+  .ds-map-grid    { grid-template-columns: repeat(2, 1fr); }
+  .ds-map-filters { flex-direction: column; width: 100%; }
   .ds-section-select,
-  .ds-filter-btn     { width: 100%; }
-  .ds-title          { font-size: 1.25rem; }
-  .ds-date-badge     { display: none; }
+  .ds-filter-btn  { width: 100%; }
+  .ds-title       { font-size: 1.2rem; }
+  .ds-date-badge  { display: none; }
+  .ds-main-grid   { gap: 12px; }
 }
-
-@media (max-width: 420px) {
-  .ds-map-grid { grid-template-columns: 1fr; }
-}
-
 
 @media (max-width: 480px) {
+  .ds-stats-grid     { grid-template-columns: 1fr 1fr !important; gap: 8px; }
+  .ds-stat-card      { padding: 0.8rem 1rem; border-radius: 14px; }
+  .ds-stat-value     { font-size: 1.4rem; }
+  .ds-stat-label     { font-size: 0.72rem; }
   .ds-recent-section { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  .ds-stats-grid { grid-template-columns: 1fr !important; }
-}
-/* -- Hamburger Topbar Fix (=768px) ------------- */
-@media (max-width: 768px) {
-  .ds-topbar { 
-    padding-left: 52px !important; 
-    padding-top: 6px; 
-    flex-wrap: nowrap; 
-    align-items: center; 
-  }
-  .ds-topbar-left { flex: 1; min-width: 0; }
-  
-.ds-topbar-left { flex: 1; min-width: 0; }
-.ds-topbar-right { flex-shrink: 0; display: flex; align-items: center; gap: 1.2rem; }
-
-  .ds-title { font-size: 1.3rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .ds-greeting { font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .ds-notif-dropdown { right: -16px; width: 320px; max-width: 90vw; }
-}
-@media (max-width: 480px) {
+  .ds-main-grid      { gap: 10px; margin-top: 12px; }
+  .ds-chart-box      { padding: 0.9rem 1rem; border-radius: 14px; }
   .ds-notif-dropdown { right: -12px; width: calc(100vw - 24px); }
-  .ds-title { font-size: 1.15rem; }
+  .ds-title          { font-size: 1.15rem; }
+  .ds-map-grid       { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 380px) {
+  .ds-stats-grid { grid-template-columns: 1fr 1fr !important; }
+  .ds-map-grid   { grid-template-columns: 1fr; }
+  .ds-stat-value { font-size: 1.2rem; }
 }

@@ -171,7 +171,7 @@ function DashboardS() {
       </div>
 
       {/* ── Dashboard Grid ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr', gap: '24px', marginTop: '24px' }}>
+      <div className="ds-main-grid">
         
         {/* LEFT: Schedule */}
         <div className="ds-chart-box">
