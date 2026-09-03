@@ -3,7 +3,7 @@ import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import { confirmPasswordReset, verifyPasswordResetCode } from "firebase/auth";
 import { auth } from "../firebase.config";
 import heavenBg from "../assets/heaven_background.jpg";
-import logoImg from "../assets/logo.png";
+import logoImg from "../assets/logo-new.png";
 import "./forgot-password.css"; // We reuse the CSS from forgot-password
 
 function ResetPassword() {

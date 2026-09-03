@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../firebase.config";
 import heavenBg from "../assets/heaven_background.jpg";
-import logoImg from "../assets/logo.png";
+import logoImg from "../assets/logo-new.png";
 import "./forgot-password.css";
 
 function ForgotPassword({ onBack }) {

@@ -4,7 +4,7 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../firebase.config";
 import { logAudit } from "../utils/logAudit";
 import heavenBg from "../assets/heaven_background.jpg";
-import logoImg from "../assets/logo.png";
+import logoImg from "../assets/logo-new.png";
 import "./login.css";
 
 function Login({ onForgotPassword, onLogin }) {
