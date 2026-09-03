@@ -1850,3 +1850,35 @@
             }
         }
     
+/* Fix for overflow */
+.pos-page-wrapper {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+.pos-container {
+    width: 100%;
+    box-sizing: border-box;
+    max-width: 100%;
+}
+.pos-two-col {
+    width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
+}
+.left-panel, .right-panel {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.product-list-section, .table-responsive, .product-table {
+    max-width: 100%;
+}
+.table-responsive {
+    overflow-x: auto;
+}
+
+.product-list-section {
+    overflow-x: auto;
+}

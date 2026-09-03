@@ -316,6 +316,7 @@
   overflow-y: auto;
   background: #e8edf4;
   padding: 24px 28px;
+  min-width: 0;
 }
 
 /* ── Shared page header ──────────────────────────── */
