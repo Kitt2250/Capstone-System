@@ -1,4 +1,75 @@
 
+/* ----- PAGE WRAPPER — fills sn-content area ----- */
+.pos-page-wrapper {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 0;
+    background: transparent;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    color: #1a3d5c;
+}
+.pos-page-wrapper * {
+    box-sizing: border-box;
+}
+
+/* ----- TOPBAR ----- */
+.pos-page-wrapper .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.8rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+    width: 100%;
+}
+.pos-page-wrapper .topbar-left h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #1a3d5c;
+    margin: 0;
+}
+.pos-page-wrapper .topbar-left h1 span { color: #d4af37; }
+.pos-page-wrapper .topbar-left .greeting {
+    font-size: 0.9rem;
+    color: #6a8aaa;
+    margin-top: 2px;
+}
+.pos-page-wrapper .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+}
+.pos-page-wrapper .date-badge {
+    background: white;
+    padding: 0.5rem 1.2rem;
+    border-radius: 40px;
+    font-size: 0.85rem;
+    color: #1a3d5c;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    border: 1px solid rgba(212,175,55,0.15);
+}
+.pos-page-wrapper .date-badge i { color: #d4af37; margin-right: 6px; }
+.pos-page-wrapper .notification-btn {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    background: white;
+    border: 1px solid rgba(212,175,55,0.1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    color: #1a3d5c;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: 0.2s;
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+}
+.pos-page-wrapper .notification-btn:hover { background: #faf3e0; }
+.pos-page-wrapper .notification-btn .dot {
+    position: absolute; top: 8px; right: 8px;
+    width: 8px; height: 8px;
+    background: #c0392b; border-radius: 50%; border: 2px solid white;
+}
+
 /* ----- POS CONTAINER ----- */
 .pos-container {
     background: white;
@@ -7,6 +78,7 @@
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
     border: 1px solid rgba(212, 175, 55, 0.08);
     position: relative;
+    width: 100%;
 }
 .pos-container::before {
     content: '';
@@ -18,6 +90,7 @@
     background: linear-gradient(90deg, #3670AF, #d4af37);
     border-radius: 20px 20px 0 0;
 }
+
 
 /* ----- POS HEADER ----- */
 .pos-header {
