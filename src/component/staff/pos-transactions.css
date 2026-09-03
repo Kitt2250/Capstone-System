@@ -146,7 +146,7 @@
 /* ----- TWO-COLUMN LAYOUT ----- */
 .pos-two-col {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: 1fr 1.1fr;
     gap: 1.5rem;
 }
 
@@ -177,9 +177,10 @@
 }
 
 .product-table {
-        border-collapse: collapse;
+    width: 100%;
+    border-collapse: collapse;
     font-size: 0.8rem;
-        }
+}
 .product-table th {
     text-align: left;
     padding: 0.3rem 0.4rem;
@@ -198,8 +199,19 @@
 .product-table tr:hover td {
     background: #f0f2f5;
 }
-
-
+.product-table .product-name-cell {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+    color: #1a3d5c;
+}
+.product-table .product-name-cell i {
+    font-size: 0.9rem;
+    color: #d4af37;
+    width: 18px;
+    text-align: center;
+}
 .product-table .product-price-cell {
     font-weight: 600;
     color: #3670AF;
@@ -554,7 +566,6 @@
     gap: 0.2rem 0.5rem;
 }
 .info-side-by-side .info-grid .form-group {
-    min-width: 0;
 }
 .info-side-by-side .info-grid .form-group label {
     display: block;
@@ -1342,7 +1353,7 @@
     .date-picker-row { flex-direction: column; }
     .modal .form-row { grid-template-columns: 1fr; }
     .product-table { font-size: 0.7rem;
-        }
+}
     .product-table th, .product-table td { padding: 0.2rem 0.2rem; }
     #wakeModal .modal { padding: 1.2rem; }
     .wake-booking-summary .wake-row { font-size: 0.75rem; }
@@ -1355,7 +1366,7 @@
     .modal .modal-actions { flex-direction: column; }
     .modal .modal-actions button { width: 100%; justify-content: center; }
     #checklistModal .modal-checklist { grid-template-columns: 1fr; }
-    
+    .product-table .product-name-cell { font-size: 0.7rem; }
 }
 @media print {
     .pos-header-right,
@@ -1365,30 +1376,3 @@
 }
 
 
-
-@media (max-width: 1400px) {
-    .pos-container { padding: 1.2rem 1.5rem !important; }
-    .pos-two-col { gap: 0.8rem !important; }
-    .product-table { font-size: 0.72rem !important;         }
-    .product-table th, .product-table td { padding: 0.25rem 0.3rem !important; }
-    .right-panel .panel-box { padding: 0.6rem 0.8rem !important; }
-    .pos-page-wrapper .topbar { margin-bottom: 1rem !important; }
-}
-
-.left-panel, .right-panel { min-width: 0; }
-
-.product-table th, .product-table td { word-wrap: break-word; white-space: normal; }
-
-.product-table .product-name-cell {
-    font-weight: 500;
-    color: #1a3d5c;
-    vertical-align: middle;
-}
-.product-table .product-name-cell i {
-    font-size: 0.9rem;
-    color: #d4af37;
-    width: 18px;
-    text-align: center;
-    margin-right: 6px;
-    display: inline-block;
-}
