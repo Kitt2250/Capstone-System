@@ -147,7 +147,7 @@
 /* ----- TWO-COLUMN LAYOUT ----- */
 .pos-two-col {
     display: grid;
-    grid-template-columns: 1.4fr 1fr;
+    grid-template-columns: 1fr 1.1fr;
     gap: 1.5rem;
 }
 
@@ -181,7 +181,6 @@
     width: 100%;
     border-collapse: collapse;
     font-size: 0.8rem;
-    table-layout: auto;
 }
 .product-table th {
     text-align: left;
@@ -1355,7 +1354,7 @@
     .discount-plan-row { flex-direction: column; }
     .date-picker-row { flex-direction: column; }
     .modal .form-row { grid-template-columns: 1fr; }
-    .product-table { font-size: 0.7rem;     table-layout: auto;
+    .product-table { font-size: 0.7rem;
 }
     .product-table th, .product-table td { padding: 0.2rem 0.2rem; }
     #wakeModal .modal { padding: 1.2rem; }
@@ -1378,6 +1377,4 @@
     
 }
 
-.pos-two-col, .left-panel, .right-panel {
-    min-width: 0;
-}
+
