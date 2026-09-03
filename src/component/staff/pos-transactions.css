@@ -80,16 +80,7 @@
     position: relative;
     width: 100%;
 }
-.pos-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #3670AF, #d4af37);
-    border-radius: 20px 20px 0 0;
-}
+
 
 
 /* ----- POS HEADER ----- */
@@ -156,7 +147,7 @@
 /* ----- TWO-COLUMN LAYOUT ----- */
 .pos-two-col {
     display: grid;
-    grid-template-columns: 1fr 1.1fr;
+    grid-template-columns: 1.4fr 1fr;
     gap: 1.5rem;
 }
 
@@ -190,6 +181,7 @@
     width: 100%;
     border-collapse: collapse;
     font-size: 0.8rem;
+    table-layout: auto;
 }
 .product-table th {
     text-align: left;
@@ -1363,7 +1355,8 @@
     .discount-plan-row { flex-direction: column; }
     .date-picker-row { flex-direction: column; }
     .modal .form-row { grid-template-columns: 1fr; }
-    .product-table { font-size: 0.7rem; }
+    .product-table { font-size: 0.7rem;     table-layout: auto;
+}
     .product-table th, .product-table td { padding: 0.2rem 0.2rem; }
     #wakeModal .modal { padding: 1.2rem; }
     .wake-booking-summary .wake-row { font-size: 0.75rem; }
@@ -1382,5 +1375,9 @@
     .pos-header-right,
     .btn-process { display: none !important; }
     .pos-container { box-shadow: none !important; border: 1px solid #ddd !important; }
-    .pos-container::before { display: none !important; }
+    
+}
+
+.pos-two-col, .left-panel, .right-panel {
+    min-width: 0;
 }
