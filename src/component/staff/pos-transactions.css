@@ -181,7 +181,6 @@
     width: 100%;
     border-collapse: collapse;
     font-size: 0.8rem;
-    table-layout: fixed;
 }
 .product-table th {
     text-align: left;
@@ -1356,7 +1355,6 @@
     .date-picker-row { flex-direction: column; }
     .modal .form-row { grid-template-columns: 1fr; }
     .product-table { font-size: 0.7rem;
-    table-layout: fixed;
 }
     .product-table th, .product-table td { padding: 0.2rem 0.2rem; }
     #wakeModal .modal { padding: 1.2rem; }
@@ -1381,4 +1379,11 @@
 
 
 
-.pos-two-col, .left-panel, .right-panel { min-width: 0; }
+@media (max-width: 1400px) {
+    .pos-container { padding: 1.2rem 1rem !important; }
+    .pos-two-col { gap: 0.8rem !important; }
+    .product-table { font-size: 0.72rem !important; }
+    .product-table th, .product-table td { padding: 0.3rem !important; }
+    .right-panel .panel-box { padding: 0.6rem !important; }
+    .client-payment-row .form-group { min-width: 90px !important; }
+}

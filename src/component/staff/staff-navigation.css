@@ -430,3 +430,7 @@
 
 
 
+
+@media (max-width: 1400px) {
+    .sn-content { padding: 12px 14px !important; }
+}
