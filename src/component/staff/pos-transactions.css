@@ -201,19 +201,8 @@
 .product-table tr:hover td {
     background: #f0f2f5;
 }
-.product-table .product-name-cell {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-weight: 500;
-    color: #1a3d5c;
-}
-.product-table .product-name-cell i {
-    font-size: 0.9rem;
-    color: #d4af37;
-    width: 18px;
-    text-align: center;
-}
+
+
 .product-table .product-price-cell {
     font-weight: 600;
     color: #3670AF;
@@ -1371,7 +1360,7 @@
     .modal .modal-actions { flex-direction: column; }
     .modal .modal-actions button { width: 100%; justify-content: center; }
     #checklistModal .modal-checklist { grid-template-columns: 1fr; }
-    .product-table .product-name-cell { font-size: 0.7rem; }
+    
 }
 @media print {
     .pos-header-right,
@@ -1396,3 +1385,17 @@
 .left-panel, .right-panel { min-width: 0; }
 
 .product-table th, .product-table td { word-wrap: break-word; white-space: normal; }
+
+.product-table .product-name-cell {
+    font-weight: 500;
+    color: #1a3d5c;
+    vertical-align: middle;
+}
+.product-table .product-name-cell i {
+    font-size: 0.9rem;
+    color: #d4af37;
+    width: 18px;
+    text-align: center;
+    margin-right: 6px;
+    display: inline-block;
+}
