@@ -49,13 +49,13 @@ export default function Reports() {
     };
 
     const handleExportCSV = () => {
-        showToast(`⏳ Generating CSV for ${currentTab}...`, 'info');
+        showToast(`📊 Generating CSV for ${currentTab}...`, 'info');
         setTimeout(() => {
             let data = [];
             if (currentTab === 'overview') data = graveTypes;
-            else if (currentTab === 'financial') data = recentTransactions;
-            else if (currentTab === 'collections') data = overdueAccounts;
-            else if (currentTab === 'contracts') data = expiringContracts;
+            else if (currentTab === 'revenue' || currentTab === 'payments') data = recentTransactions;
+            else if (currentTab === 'occupancy') data = overdueAccounts;
+            else if (currentTab === 'expiry') data = expiringContracts;
             
             downloadCSV(data, `${currentTab}_report_${new Date().toISOString().slice(0,10)}.csv`);
             showToast(`✅ ${currentTab} report exported!`, 'success');
@@ -211,10 +211,10 @@ export default function Reports() {
                                 <table>
                                     <thead><tr><th>Category</th><th style={{textAlign: 'right'}}>Amount</th><th style={{textAlign: 'right'}}>Percentage</th><th>Trend</th></tr></thead>
                                     <tbody>
-                                        <tr><td>Grave Lot Sales</td><td style={{textAlign: 'right'}}>{"\u20B1"}1,850,000</td><td style={{textAlign: 'right'}}>65%</td><td><span style={{color: '#27ae60'}}>↑ 12%</span></td></tr>
-                                        <tr><td>Wake Space Rental</td><td style={{textAlign: 'right'}}>{"\u20B1"}450,000</td><td style={{textAlign: 'right'}}>16%</td><td><span style={{color: '#27ae60'}}>↑ 8%</span></td></tr>
-                                        <tr><td>Installment Payments</td><td style={{textAlign: 'right'}}>{"\u20B1"}380,000</td><td style={{textAlign: 'right'}}>13%</td><td><span style={{color: '#f39c12'}}>→ 0%</span></td></tr>
-                                        <tr><td>Other Fees</td><td style={{textAlign: 'right'}}>{"\u20B1"}120,000</td><td style={{textAlign: 'right'}}>6%</td><td><span style={{color: '#c0392b'}}>↓ 3%</span></td></tr>
+                                        <tr><td>🪦 Grave Lot Sales</td><td style={{textAlign: 'right'}}>{"\u20B1"}1,850,000</td><td style={{textAlign: 'right'}}>65%</td><td><span style={{color: '#27ae60'}}>↑ 12%</span></td></tr>
+                                        <tr><td>🛏️ Wake Space Rental</td><td style={{textAlign: 'right'}}>{"\u20B1"}450,000</td><td style={{textAlign: 'right'}}>16%</td><td><span style={{color: '#27ae60'}}>↑ 8%</span></td></tr>
+                                        <tr><td>💰 Installment Payments</td><td style={{textAlign: 'right'}}>{"\u20B1"}380,000</td><td style={{textAlign: 'right'}}>13%</td><td><span style={{color: '#f39c12'}}>→ 0%</span></td></tr>
+                                        <tr><td>📋 Other Fees</td><td style={{textAlign: 'right'}}>{"\u20B1"}120,000</td><td style={{textAlign: 'right'}}>6%</td><td><span style={{color: '#c0392b'}}>↓ 3%</span></td></tr>
                                     </tbody>
                                 </table>
                             </div>
