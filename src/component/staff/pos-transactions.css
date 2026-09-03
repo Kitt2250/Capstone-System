@@ -178,6 +178,7 @@
 
 .product-table {
     width: max-content;
+    max-width: 100%;
     border-collapse: collapse;
     font-size: 0.8rem;
     
@@ -1415,4 +1416,18 @@
     border: 1px solid #e8edf4;
     border-radius: 12px;
     overflow-x: auto;
+}
+
+.product-table th { width: auto !important; }
+
+
+/* BRUTE FORCE COMPACT TABLE */
+.product-table {
+    width: max-content !important;
+    max-width: 100% !important;
+    table-layout: auto !important;
+}
+.product-table th, .product-table td {
+    width: auto !important;
+    white-space: nowrap !important;
 }
