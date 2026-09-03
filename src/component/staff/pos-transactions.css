@@ -1882,3 +1882,7 @@
 .product-list-section {
     overflow-x: auto;
 }
+
+.pos-page-wrapper * {
+    box-sizing: border-box;
+}
