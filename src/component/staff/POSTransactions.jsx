@@ -1,567 +1,487 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./pos-transactions.css";
 
-const LOT_TYPES = [
-  { key: "ground",    label: "Ground Burial Lot", price: 85000 },
-  { key: "apartment", label: "Apartment Niche",   price: 120000 },
-  { key: "mausoleum", label: "Mausoleum",         price: 350000 },
-  { key: "bonevault", label: "Bone Vault",        price: 45000 },
+const GRAVE_PRODUCTS = [
+  { id: 'g1', name: 'Standard Lawn Lot', icon: 'fa-seedling', price: 85000, available: 42, type: 'lot' },
+  { id: 'g2', name: 'Premium Lawn Lot', icon: 'fa-tree', price: 115000, available: 15, type: 'lot' },
+  { id: 'g3', name: 'Mausoleum Space', icon: 'fa-place-of-worship', price: 350000, available: 4, type: 'lot' },
+  { id: 'g4', name: 'Columbarium Niche', icon: 'fa-box', price: 65000, available: 89, type: 'lot' }
 ];
 
-const WAKE_VENUES = [
-  { name: "Chapel A",      rate: 8000 },
-  { name: "Chapel B",      rate: 8000 },
-  { name: "Open Pavilion", rate: 5000 },
-  { name: "Function Hall", rate: 12000 },
+const WAKE_PRODUCTS = [
+  { id: 'w1', name: 'Chapel A (Air-conditioned)', icon: 'fa-church', price: 8500, available: true, type: 'wake' },
+  { id: 'w2', name: 'Chapel B (Air-conditioned)', icon: 'fa-church', price: 8000, available: true, type: 'wake' },
+  { id: 'w3', name: 'Viewing Room 1', icon: 'fa-door-open', price: 5000, available: false, type: 'wake' },
+  { id: 'w4', name: 'Outdoor Pavilion', icon: 'fa-campground', price: 4000, available: true, type: 'wake' }
 ];
 
-const WEEKLY_SALES = {
-  lotSales: 860000,
-  wakeSpace: 111000,
-  total: 971000,
-  chart: [
-    { label: "Mon", lotSales: 90000,  wakeSpace: 20000 },
-    { label: "Tue", lotSales: 70000,  wakeSpace: 15000 },
-    { label: "Wed", lotSales: 140000, wakeSpace: 25000 },
-    { label: "Thu", lotSales: 100000, wakeSpace: 18000 },
-    { label: "Fri", lotSales: 170000, wakeSpace: 22000 },
-    { label: "Sat", lotSales: 55000,  wakeSpace: 8000 },
-    { label: "Sun", lotSales: 40000,  wakeSpace: 3000 },
-  ],
-};
-
-const MONTHLY_SALES = {
-  lotSales: 2542500,
-  wakeSpace: 602000,
-  total: 3144500,
-  chart: [
-    { label: "Jan", lotSales: 300000, wakeSpace: 90000 },
-    { label: "Feb", lotSales: 280000, wakeSpace: 85000 },
-    { label: "Mar", lotSales: 380000, wakeSpace: 100000 },
-    { label: "Apr", lotSales: 350000, wakeSpace: 95000 },
-    { label: "May", lotSales: 390000, wakeSpace: 110000 },
-    { label: "Jun", lotSales: 400000, wakeSpace: 120000 },
-  ],
-};
-
-const INITIAL_RECEIPTS = [
-  { receiptNo: "OR-2026-0342", client: "Rosa Mendoza", items: "Installment Payment - Lot B-098", amount: 15000, date: "2026-03-15" },
-  { receiptNo: "OR-2026-0341", client: "Pedro Garcia",  items: "Ground Burial Lot - A-201",        amount: 85000, date: "2026-03-15" },
-  { receiptNo: "OR-2026-0340", client: "Elena Santos",  items: "Installment Payment - Lot C-130",  amount: 10000, date: "2026-03-14" },
-  { receiptNo: "OR-2026-0339", client: "Roberto Lim",   items: "Bone Vault - D-014",                amount: 45000, date: "2026-03-14" },
-  { receiptNo: "OR-2026-0338", client: "Maria Cruz",    items: "Apartment Niche - B-047",           amount: 30000, date: "2026-03-13" },
+const REQUIREMENTS = [
+  { id: 'req1', label: 'Death Certificate', required: true },
+  { id: 'req2', label: 'Valid ID of Client', required: true },
+  { id: 'req3', label: 'Burial Permit', required: true },
+  { id: 'req4', label: 'Proof of Relation', required: false }
 ];
 
-const peso = (n) => "₱" + Number(n || 0).toLocaleString("en-PH");
-
-function CartIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
-      <circle cx="9" cy="21" r="1" />
-      <circle cx="20" cy="21" r="1" />
-      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-    </svg>
-  );
+function formatCurrency(amount) {
+  return '₱' + Number(amount).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-function WakeIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
-      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-      <line x1="12" y1="9" x2="12" y2="13" />
-      <line x1="12" y1="17" x2="12.01" y2="17" />
-    </svg>
-  );
+function generateReceiptId() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let result = 'REC-';
+  for (let i = 0; i < 8; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
 }
 
-function ChartIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
-      <line x1="18" y1="20" x2="18" y2="10" />
-      <line x1="12" y1="20" x2="12" y2="4" />
-      <line x1="6" y1="20" x2="6" y2="14" />
-    </svg>
-  );
-}
-
-function PlusIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" width="12" height="12">
-      <line x1="12" y1="5" x2="12" y2="19" />
-      <line x1="5" y1="12" x2="19" y2="12" />
-    </svg>
-  );
-}
-
-function CloseIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14">
-      <line x1="18" y1="6" x2="6" y2="18" />
-      <line x1="6" y1="6" x2="18" y2="18" />
-    </svg>
-  );
-}
-
-function ReceiptIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="20" height="20">
-      <line x1="12" y1="1" x2="12" y2="23" />
-      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-    </svg>
-  );
-}
-
-function PrintIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14">
-      <polyline points="6 9 6 2 18 2 18 9" />
-      <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
-      <rect x="6" y="14" width="12" height="8" />
-    </svg>
-  );
-}
-
-function BarChart({ data }) {
-  const maxVal = Math.max(...data.flatMap((d) => [d.lotSales, d.wakeSpace]));
-  const niceMax = Math.ceil(maxVal / 55000) * 55000 || 220000;
-  const yTicks = [0, 0.25, 0.5, 0.75, 1].map((f) => Math.round(niceMax * f));
-
-  return (
-    <div className="pos-barchart">
-      <div className="pos-barchart-yaxis">
-        {yTicks.slice().reverse().map((tick, i) => (
-          <span key={i}>₱{tick >= 1000 ? `${Math.round(tick / 1000)}k` : tick}</span>
-        ))}
-      </div>
-      <div className="pos-barchart-body">
-        {data.map((d) => (
-          <div className="pos-bar-group" key={d.label}>
-            <div className="pos-bar-track">
-              <div className="pos-bar pos-bar--sales" style={{ height: `${(d.lotSales / niceMax) * 100}%` }} title={`Lot Sales: ${peso(d.lotSales)}`} />
-              <div className="pos-bar pos-bar--wake" style={{ height: `${(d.wakeSpace / niceMax) * 100}%` }} title={`Wake Space: ${peso(d.wakeSpace)}`} />
-            </div>
-            <span className="pos-bar-label">{d.label}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function generateAccountCreds() {
-  const num = String(Math.floor(Math.random() * 900) + 100);
-  const email = `${num}cherubim@gmail.com`;
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
-  let pw = "Px";
-  for (let i = 0; i < 4; i++) pw += chars[Math.floor(Math.random() * chars.length)];
-  pw += Math.floor(Math.random() * 9000 + 1000);
-  return { email, password: pw };
-}
-
-function POSTransactions() {
-  const [period, setPeriod] = useState("weekly");
-
-  const [cartItems, setCartItems] = useState([]);
+export default function POSTransactions() {
+  const [cart, setCart] = useState([]);
   const [clientName, setClientName] = useState("");
-  const [paymentType, setPaymentType] = useState("");
-  const [section, setSection] = useState("");
-  const [block, setBlock] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("cash");
+  const [burialType, setBurialType] = useState("actual");
+  const [discountType, setDiscountType] = useState("none");
+  const [amountTendered, setAmountTendered] = useState("");
+  
+  const [checklist, setChecklist] = useState(
+    REQUIREMENTS.map(req => ({ ...req, checked: false }))
+  );
 
-  const [wakeVenue, setWakeVenue] = useState("");
-  const [wakeNights, setWakeNights] = useState(1);
+  const [receipts, setReceipts] = useState([
+    { id: 'REC-A8F9K2M1', client: 'Maria Santos', total: 85000, date: '2023-11-20', status: 'Paid' },
+    { id: 'REC-X7P2N9L4', client: 'Jose Rizal', total: 65000, date: '2023-11-19', status: 'Paid' }
+  ]);
 
-  const [receipts, setReceipts] = useState(INITIAL_RECEIPTS);
-  const [receiptModal, setReceiptModal] = useState(null);
+  const [activeModal, setActiveModal] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [toast, setToast] = useState(null);
 
-  const salesData = period === "weekly" ? WEEKLY_SALES : MONTHLY_SALES;
+  // Computed values
+  const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  let discount = 0;
+  if (discountType === 'senior') discount = subtotal * 0.20;
+  if (discountType === 'pwd') discount = subtotal * 0.20;
+  const total = subtotal - discount;
+  const change = Number(amountTendered) >= total ? Number(amountTendered) - total : 0;
 
-  const hasLotItem = cartItems.some((i) => i.type === "lot");
-  const total = cartItems.reduce((sum, i) => sum + i.price, 0);
-
-  const wakeRate = wakeVenue ? WAKE_VENUES.find((v) => v.name === wakeVenue)?.rate || 8000 : 8000;
-  const wakePreview = wakeRate * (Number(wakeNights) || 1);
-
-  const addLot = (lot) => {
-    setCartItems((prev) => [
-      ...prev,
-      { id: `${lot.key}-${Date.now()}`, label: lot.label, price: lot.price, type: "lot" },
-    ]);
+  const showToast = (message, type = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
   };
 
-  const addWake = () => {
-    if (!wakeVenue) return;
-    const nights = Number(wakeNights) || 1;
-    const rate = WAKE_VENUES.find((v) => v.name === wakeVenue)?.rate || 8000;
-    setCartItems((prev) => [
-      ...prev,
-      {
-        id: `wake-${Date.now()}`,
-        label: `Wake Space - ${wakeVenue} (${nights} night${nights > 1 ? "s" : ""})`,
-        price: rate * nights,
-        type: "wake",
-      },
-    ]);
-    setWakeVenue("");
-    setWakeNights(1);
+  const addToCart = (product) => {
+    if (product.type === 'lot') {
+      setSelectedProduct(product);
+      setActiveModal('addLot');
+    } else {
+      setSelectedProduct(product);
+      setActiveModal('addWake');
+    }
   };
 
-  const removeItem = (id) => {
-    setCartItems((prev) => prev.filter((i) => i.id !== id));
+  const confirmAddLot = (location) => {
+    setCart([...cart, { ...selectedProduct, cartId: Date.now(), quantity: 1, location }]);
+    setActiveModal(null);
+    showToast(`${selectedProduct.name} added to cart`);
   };
 
-  const resetTransaction = () => {
-    setCartItems([]);
-    setClientName("");
-    setPaymentType("");
-    setSection("");
-    setBlock("");
+  const confirmAddWake = (nights, dates) => {
+    setCart([...cart, { ...selectedProduct, cartId: Date.now(), quantity: nights, dates }]);
+    setActiveModal(null);
+    showToast(`${selectedProduct.name} added to cart`);
+  };
+
+  const removeFromCart = (cartId) => {
+    setCart(cart.filter(item => item.cartId !== cartId));
+  };
+
+  const toggleChecklist = (id) => {
+    setChecklist(checklist.map(item => item.id === id ? { ...item, checked: !item.checked } : item));
   };
 
   const handleProcessPayment = () => {
-    if (cartItems.length === 0 || !clientName.trim()) return;
-
-    const receiptNo = `OR-2026-${String(360 + receipts.length).padStart(4, "0")}`;
-    const creds = generateAccountCreds();
-    const today = new Date().toLocaleDateString("en-US", { year: "numeric", month: "numeric", day: "numeric" });
+    if (cart.length === 0) {
+      showToast("Cart is empty", "error");
+      return;
+    }
+    if (!clientName) {
+      showToast("Please enter client name", "error");
+      return;
+    }
+    if (burialType === 'actual') {
+      const requiredMissing = checklist.some(req => req.required && !req.checked);
+      if (requiredMissing) {
+        showToast("Please complete all required documents", "error");
+        return;
+      }
+    }
+    if (Number(amountTendered) < total) {
+      showToast("Amount tendered is insufficient", "error");
+      return;
+    }
 
     const newReceipt = {
-      receiptNo,
+      id: generateReceiptId(),
       client: clientName,
-      date: today,
-      payment: paymentType || "Cash",
-      email: creds.email,
-      password: creds.password,
-      items: cartItems,
-      total,
+      total: total,
+      date: new Date().toISOString().split('T')[0],
+      status: 'Paid'
     };
-
-    setReceiptModal(newReceipt);
-
-    setReceipts((prev) => [
-      {
-        receiptNo,
-        client: clientName,
-        items: cartItems.map((i) => i.label).join(", "),
-        amount: total,
-        date: today,
-      },
-      ...prev,
-    ]);
+    
+    setReceipts([newReceipt, ...receipts]);
+    setActiveModal('paymentSuccess');
   };
 
-  const closeReceiptModal = () => {
-    setReceiptModal(null);
-    resetTransaction();
+  const resetTransaction = () => {
+    setCart([]);
+    setClientName("");
+    setPaymentMethod("cash");
+    setBurialType("actual");
+    setDiscountType("none");
+    setAmountTendered("");
+    setChecklist(REQUIREMENTS.map(req => ({ ...req, checked: false })));
+    setActiveModal(null);
   };
+
+  const checkedCount = checklist.filter(c => c.checked).length;
+  const progressPercent = (checkedCount / checklist.length) * 100;
 
   return (
-    <div className="pos-page">
-      <div className="pos-topbar">
-        <span>Cherubim of Heaven Memorial Park</span>
+    <div className="pos-page-wrapper">
+      {/* Topbar */}
+      <div className="topbar">
+        <div className="topbar-left">
+          <h1>POS Transactions <span>• Staff</span></h1>
+          <div className="greeting">Good day! Ready to process new transactions.</div>
+        </div>
+        <div className="topbar-right">
+          <div className="date-badge">
+            <i className="fas fa-calendar-alt"></i> {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+          </div>
+          <button className="notification-btn"><i className="fas fa-bell"></i></button>
+        </div>
       </div>
 
-      <div className="pos-header">
-        <h1>POS Transactions</h1>
-        <p>Process grave lot sales, wake space rentals, and payments</p>
-      </div>
-
-      <div className="pos-layout">
-        {/* LEFT COLUMN */}
-        <div className="pos-main-col">
-          {/* Grave Lot Types */}
-          <div className="pos-card">
-            <div className="pos-card-heading">
-              <CartIcon /> Grave Lot Types
-            </div>
-            <div className="pos-lot-grid">
-              {LOT_TYPES.map((lot) => (
-                <button key={lot.key} className="pos-lot-btn" onClick={() => addLot(lot)}>
-                  <div>
-                    <p className="pos-lot-name">{lot.label}</p>
-                    <p className="pos-lot-hint">Click to add</p>
-                  </div>
-                  <div className="pos-lot-right">
-                    <span className="pos-lot-price">{peso(lot.price)}</span>
-                    <span className="pos-lot-plus"><PlusIcon /></span>
-                  </div>
-                </button>
-              ))}
-            </div>
+      <div className="pos-container">
+        <div className="pos-header">
+          <div className="pos-header-left">
+            <h2>New Transaction</h2>
+            <p>Process grave lot sales and wake space rentals</p>
           </div>
-
-          {/* Wake Space Rental */}
-          <div className="pos-card">
-            <div className="pos-card-heading">
-              <WakeIcon /> Wake Space Rental
-            </div>
-            <div className="pos-wake-row">
-              <div className="pos-wake-field pos-wake-field--venue">
-                <label>Venue</label>
-                <select value={wakeVenue} onChange={(e) => setWakeVenue(e.target.value)}>
-                  <option value="">Select venue</option>
-                  {WAKE_VENUES.map((v) => (
-                    <option key={v.name} value={v.name}>{v.name}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="pos-wake-field pos-wake-field--nights">
-                <label>Nights</label>
-                <input
-                  type="number"
-                  min="1"
-                  value={wakeNights}
-                  onChange={(e) => setWakeNights(e.target.value)}
-                />
-              </div>
-              <button className="pos-wake-add-btn" onClick={addWake}>
-                <PlusIcon /> Add {peso(wakePreview)}
-              </button>
-            </div>
-            <p className="pos-wake-note">Total auto-computed as rate × number of nights</p>
+          <div className="pos-header-right">
+            <button className="btn-secondary" onClick={resetTransaction}><i className="fas fa-redo"></i> Reset</button>
+            <button className="btn-primary" onClick={() => window.print()}><i className="fas fa-print"></i> Print View</button>
           </div>
+        </div>
 
-          {/* Sales Report */}
-          <div className="pos-card">
-            <div className="pos-card-heading-row">
-              <div className="pos-card-heading">
-                <ChartIcon /> Sales Report
-              </div>
-              <div className="pos-period-toggle">
-                <button
-                  className={`pos-period-btn ${period === "weekly" ? "pos-period-active" : ""}`}
-                  onClick={() => setPeriod("weekly")}
-                >
-                  Weekly
-                </button>
-                <button
-                  className={`pos-period-btn ${period === "monthly" ? "pos-period-active" : ""}`}
-                  onClick={() => setPeriod("monthly")}
-                >
-                  Monthly
-                </button>
-              </div>
-            </div>
-
-            <div className="pos-sales-stats">
-              <div className="pos-sales-stat">
-                <span className="pos-sales-label">Lot Sales</span>
-                <span className="pos-sales-value">{peso(salesData.lotSales)}</span>
-              </div>
-              <div className="pos-sales-stat">
-                <span className="pos-sales-label">Wake Space</span>
-                <span className="pos-sales-value">{peso(salesData.wakeSpace)}</span>
-              </div>
-              <div className="pos-sales-stat pos-sales-stat--total">
-                <span className="pos-sales-label">Total</span>
-                <span className="pos-sales-value">{peso(salesData.total)}</span>
-              </div>
-            </div>
-
-            <BarChart data={salesData.chart} />
-            <div className="pos-bar-legend">
-              <div className="pos-legend-item">
-                <span className="pos-legend-dot" style={{ background: "#111827" }} />
-                Lot Sales
-              </div>
-              <div className="pos-legend-item">
-                <span className="pos-legend-dot" style={{ background: "#d1d5db" }} />
-                Wake Space
-              </div>
-            </div>
-          </div>
-
-          {/* Recent Receipts */}
-          <div className="pos-card">
-            <div className="pos-card-heading">
-              <ReceiptIcon /> Recent Receipts
-            </div>
-            <div className="pos-table-wrap">
-              <table className="pos-table">
+        <div className="pos-two-col">
+          {/* Left Panel */}
+          <div className="left-panel">
+            {/* Lots */}
+            <div className="product-list-section">
+              <div className="section-title"><i className="fas fa-layer-group"></i> Grave Lots & Spaces</div>
+              <table className="product-table">
                 <thead>
                   <tr>
-                    <th>Receipt No.</th>
-                    <th>Client</th>
-                    <th>Items</th>
-                    <th>Amount</th>
-                    <th>Date</th>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {receipts.map((r) => (
-                    <tr key={r.receiptNo}>
-                      <td className="pos-td-receipt">{r.receiptNo}</td>
-                      <td className="pos-td-client">{r.client}</td>
-                      <td className="pos-td-items">{r.items}</td>
-                      <td className="pos-td-amount">{peso(r.amount)}</td>
-                      <td>{r.date}</td>
+                  {GRAVE_PRODUCTS.map(p => (
+                    <tr key={p.id}>
+                      <td className="product-name-cell"><i className={`fas ${p.icon}`}></i> {p.name}</td>
+                      <td className="product-price-cell">{formatCurrency(p.price)}</td>
+                      <td className={`product-avail-cell ${p.available > 0 ? 'available' : 'sold-out'}`}>
+                        {p.available > 0 ? `${p.available} Available` : 'Sold Out'}
+                      </td>
+                      <td>
+                        <button className="btn-add-sm" disabled={p.available === 0} onClick={() => addToCart(p)}>Add</button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-          </div>
-        </div>
 
-        {/* RIGHT COLUMN — Current Transaction */}
-        <div className="pos-side-col">
-          <div className="pos-transaction-card">
-            <div className="pos-card-heading">
-              <CartIcon /> Current Transaction
+            {/* Wake */}
+            <div className="wake-separator">
+              <div className="line"></div>
+              <span>Wake Space Rentals</span>
+              <div className="line"></div>
             </div>
 
-            {hasLotItem && (
-              <div className="pos-form-row">
-                <div className="pos-form-group">
-                  <label>Section</label>
-                  <input type="text" value={section} onChange={(e) => setSection(e.target.value)} />
-                </div>
-                <div className="pos-form-group">
-                  <label>Block</label>
-                  <input type="text" value={block} onChange={(e) => setBlock(e.target.value)} />
-                </div>
-              </div>
-            )}
-
-            <div className="pos-form-group">
-              <label>Client Name</label>
-              <input
-                type="text"
-                placeholder="Enter client name"
-                value={clientName}
-                onChange={(e) => setClientName(e.target.value)}
-              />
-            </div>
-
-            <div className="pos-form-group">
-              <label>Payment Type</label>
-              <select value={paymentType} onChange={(e) => setPaymentType(e.target.value)}>
-                <option value="">Select payment type</option>
-                <option value="Cash">Cash</option>
-                <option value="Installment">Installment</option>
-                <option value="Bank Transfer">Bank Transfer</option>
-                <option value="GCash">GCash</option>
-              </select>
-            </div>
-
-            <div className="pos-items-section">
-              <p className="pos-items-label">Items</p>
-              {cartItems.length === 0 ? (
-                <p className="pos-items-empty">No items added</p>
-              ) : (
-                <div className="pos-items-list">
-                  {cartItems.map((item) => (
-                    <div className="pos-item-row" key={item.id}>
-                      <span className="pos-item-name">{item.label}</span>
-                      <span className="pos-item-price">{peso(item.price)}</span>
-                      <button className="pos-item-remove" onClick={() => removeItem(item.id)}>
-                        <CloseIcon />
-                      </button>
+            <div className="product-list-section">
+              {WAKE_PRODUCTS.map(w => (
+                <div className="wake-product-row" key={w.id}>
+                  <div className="wake-info">
+                    <i className={`fas ${w.icon}`}></i>
+                    <div>
+                      <div className="wake-name">{w.name}</div>
+                      <div className="wake-price">{formatCurrency(w.price)} / night</div>
                     </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <div className="pos-total-row">
-              <span>Total</span>
-              <span className="pos-total-value">{peso(total)}</span>
-            </div>
-
-            {cartItems.length === 0 && (
-              <>
-                <div className="pos-form-group">
-                  <label>Amount Tendered</label>
-                  <input type="text" value="₱0" disabled />
-                </div>
-                <div className="pos-change-row">
-                  <span>Change</span>
-                  <span className="pos-change-value">₱0</span>
-                </div>
-              </>
-            )}
-
-            <button
-              className="pos-process-btn"
-              disabled={cartItems.length === 0 || !clientName.trim()}
-              onClick={handleProcessPayment}
-            >
-              Process Payment
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Receipt Modal */}
-      {receiptModal && (
-        <div className="pos-overlay" onClick={closeReceiptModal}>
-          <div className="pos-receipt-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="pos-receipt-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                stroke="#374151" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="20" height="20">
-                <line x1="12" y1="1" x2="12" y2="23" />
-                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-              </svg>
-            </div>
-            <h2 className="pos-receipt-title">Official Receipt</h2>
-            <p className="pos-receipt-no">{receiptModal.receiptNo}</p>
-            <p className="pos-receipt-org">Cherubim of Heaven Memorial Park</p>
-            <p className="pos-receipt-addr">Hagonoy, Bulacan</p>
-
-            <div className="pos-receipt-info">
-              <div className="pos-receipt-info-row">
-                <span>Client:</span>
-                <span>{receiptModal.client}</span>
-              </div>
-              <div className="pos-receipt-info-row">
-                <span>Date:</span>
-                <span>{receiptModal.date}</span>
-              </div>
-              <div className="pos-receipt-info-row">
-                <span>Payment:</span>
-                <span>{receiptModal.payment}</span>
-              </div>
-              <div className="pos-receipt-info-row">
-                <span>Email:</span>
-                <span>{receiptModal.email}</span>
-              </div>
-              <div className="pos-receipt-info-row">
-                <span>Password:</span>
-                <span>{receiptModal.password}</span>
-              </div>
-            </div>
-
-            <div className="pos-receipt-items">
-              {receiptModal.items.map((item) => (
-                <div className="pos-receipt-item-row" key={item.id}>
-                  <span>{item.label}</span>
-                  <span>{peso(item.price)}</span>
+                  </div>
+                  <div className={`wake-avail ${w.available ? 'available' : 'sold-out'}`}>
+                    {w.available ? 'Available' : 'Occupied'}
+                  </div>
+                  <button className="btn-add-sm" disabled={!w.available} onClick={() => addToCart(w)}>Select</button>
                 </div>
               ))}
             </div>
 
-            <div className="pos-receipt-total-row">
-              <span>Total:</span>
-              <span>{peso(receiptModal.total)}</span>
+            {/* Cart */}
+            <div className="cart-section">
+              <div className="cart-title">
+                <span><i className="fas fa-shopping-cart"></i> Current Items</span>
+                <span style={{color: '#3670AF'}}>{cart.length} item(s)</span>
+              </div>
+              
+              {cart.length === 0 ? (
+                <div className="empty-msg">No items in cart. Select products above to add.</div>
+              ) : (
+                <table className="cart-items-table">
+                  <thead>
+                    <tr>
+                      <th>Item</th>
+                      <th>Qty</th>
+                      <th>Amount</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {cart.map(item => (
+                      <tr key={item.cartId}>
+                        <td>
+                          <div style={{fontWeight: 600, color: '#1a3d5c'}}>{item.name}</div>
+                          {item.location && <div className="cart-location"><i className="fas fa-map-marker-alt"></i> {item.location}</div>}
+                          {item.dates && <div className="cart-location"><i className="fas fa-calendar"></i> {item.dates}</div>}
+                        </td>
+                        <td>{item.quantity}</td>
+                        <td style={{fontWeight: 600}}>{formatCurrency(item.price * item.quantity)}</td>
+                        <td><button className="btn-remove" onClick={() => removeFromCart(item.cartId)}><i className="fas fa-times"></i></button></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          </div>
+
+          {/* Right Panel */}
+          <div className="right-panel">
+            <div className="panel-box">
+              <div className="client-payment-row">
+                <div className="form-group">
+                  <label>Client / Buyer Name</label>
+                  <input type="text" value={clientName} onChange={e => setClientName(e.target.value)} placeholder="Enter full name" />
+                </div>
+                <div className="form-group">
+                  <label>Payment Method</label>
+                  <select value={paymentMethod} onChange={e => setPaymentMethod(e.target.value)}>
+                    <option value="cash">Cash</option>
+                    <option value="card">Credit/Debit Card</option>
+                    <option value="check">Manager's Check</option>
+                    <option value="bank">Bank Transfer</option>
+                    <option value="gcash">GCash / PayMaya</option>
+                  </select>
+                </div>
+              </div>
             </div>
 
-            <div className="pos-receipt-actions">
-              <button className="pos-btn-secondary" onClick={closeReceiptModal}>Close</button>
-              <button className="pos-btn-primary" onClick={() => window.print()}>
-                <PrintIcon /> Print
+            <div className="panel-box">
+              <div className="burial-type-group">
+                <label>
+                  <input type="radio" name="btype" checked={burialType === 'actual'} onChange={() => setBurialType('actual')} /> Actual Burial (Immediate)
+                </label>
+                <label>
+                  <input type="radio" name="btype" checked={burialType === 'preneed'} onChange={() => setBurialType('preneed')} /> Pre-need (Future Use)
+                </label>
+              </div>
+
+              {burialType === 'actual' && (
+                <div className="checklist-section" style={{marginTop: '1rem'}}>
+                  <div className="checklist-title">
+                    <i className="fas fa-clipboard-check"></i> Document Requirements
+                  </div>
+                  <div className="checklist-grid">
+                    {checklist.map(req => (
+                      <label className="checklist-item" key={req.id}>
+                        <input type="checkbox" checked={req.checked} onChange={() => toggleChecklist(req.id)} />
+                        {req.label} {req.required && <span className="required">*</span>}
+                      </label>
+                    ))}
+                  </div>
+                  <div className="checklist-progress">
+                    <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                      <span>Completion</span>
+                      <span>{Math.round(progressPercent)}%</span>
+                    </div>
+                    <div className="progress-track">
+                      <div className="progress-bar" style={{width: `${progressPercent}%`}}></div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="panel-box">
+              <div className="discount-plan-row">
+                <div className="form-group">
+                  <label>Discount</label>
+                  <select value={discountType} onChange={e => setDiscountType(e.target.value)}>
+                    <option value="none">No Discount</option>
+                    <option value="senior">Senior Citizen (20%)</option>
+                    <option value="pwd">PWD (20%)</option>
+                    <option value="promo">Promo Code</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div className="panel-box" style={{background: '#fff', borderColor: '#dce3ec'}}>
+              <div className="summary-line">
+                <span className="label">Subtotal</span>
+                <span className="value">{formatCurrency(subtotal)}</span>
+              </div>
+              <div className="summary-line" style={{color: '#c0392b'}}>
+                <span className="label">Discount</span>
+                <span className="value">- {formatCurrency(discount)}</span>
+              </div>
+              <div className="summary-line total">
+                <span className="label">Amount Due</span>
+                <span className="value" style={{color: '#3670AF'}}>{formatCurrency(total)}</span>
+              </div>
+
+              <div className="form-group" style={{marginTop: '1rem'}}>
+                <label>Amount Tendered</label>
+                <input 
+                  type="number" 
+                  value={amountTendered} 
+                  onChange={e => setAmountTendered(e.target.value)}
+                  style={{fontSize: '1.2rem', fontWeight: 'bold'}}
+                />
+              </div>
+
+              <div style={{marginTop: '0.8rem'}}>
+                <div style={{fontSize: '0.75rem', color: '#6a8aaa', marginBottom: '0.2rem'}}>Change</div>
+                <div className="change-display">{formatCurrency(change)}</div>
+              </div>
+
+              <button className="btn-process" onClick={handleProcessPayment} disabled={cart.length === 0 || Number(amountTendered) < total}>
+                <i className="fas fa-check-circle"></i> Complete Transaction
               </button>
             </div>
           </div>
+        </div>
+
+        <div className="receipts-section">
+          <h3>Recent Transactions</h3>
+          <table className="receipts-table">
+            <thead>
+              <tr>
+                <th>Receipt ID</th>
+                <th>Client Name</th>
+                <th>Total Amount</th>
+                <th>Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {receipts.map(r => (
+                <tr key={r.id}>
+                  <td style={{fontWeight: 600, color: '#3670AF'}}>{r.id}</td>
+                  <td>{r.client}</td>
+                  <td style={{fontWeight: 600}}>{formatCurrency(r.total)}</td>
+                  <td>{r.date}</td>
+                  <td><span style={{color: '#27ae60', background: '#eafaf1', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.7rem'}}>{r.status}</span></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Modals */}
+      {activeModal === 'addLot' && (
+        <div className="pos-modal-overlay">
+          <div className="pos-modal">
+            <div className="modal-icon" style={{color: '#d4af37'}}><i className={`fas ${selectedProduct?.icon}`}></i></div>
+            <h3>Select Location for {selectedProduct?.name}</h3>
+            <p className="modal-subtitle">Choose from available blocks and lots</p>
+            
+            <div className="location-grid">
+              <div className="location-option" onClick={() => confirmAddLot('Block 1, Lot 4')}>
+                <span className="loc-id">B1-L4</span>
+                <span className="loc-status available">Available</span>
+              </div>
+              <div className="location-option" onClick={() => confirmAddLot('Block 1, Lot 5')}>
+                <span className="loc-id">B1-L5</span>
+                <span className="loc-status available">Available</span>
+              </div>
+              <div className="location-option" onClick={() => confirmAddLot('Block 2, Lot 12')}>
+                <span className="loc-id">B2-L12</span>
+                <span className="loc-status available">Available</span>
+              </div>
+            </div>
+
+            <div className="modal-actions">
+              <button className="btn-cancel" onClick={() => setActiveModal(null)}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeModal === 'addWake' && (
+        <div className="pos-modal-overlay">
+          <div className="pos-modal">
+            <div className="modal-icon" style={{color: '#3670AF'}}><i className={`fas ${selectedProduct?.icon}`}></i></div>
+            <h3>Book {selectedProduct?.name}</h3>
+            <p className="modal-subtitle">Specify number of nights and dates</p>
+            
+            <div className="wake-nights-control">
+              <label style={{fontWeight: 600, fontSize: '0.9rem', color: '#1a3d5c'}}>Number of Nights:</label>
+              <input type="number" id="wakeNightsInput" defaultValue={3} min="1" max="14" style={{width: '60px', padding: '0.4rem', borderRadius: '6px', border: '1px solid #dce3ec'}} />
+            </div>
+
+            <div className="modal-actions">
+              <button className="btn-cancel" onClick={() => setActiveModal(null)}>Cancel</button>
+              <button className="btn-confirm" onClick={() => confirmAddWake(parseInt(document.getElementById('wakeNightsInput').value) || 1, 'TBD')}>Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeModal === 'paymentSuccess' && (
+        <div className="pos-modal-overlay">
+          <div className="pos-modal" style={{textAlign: 'center'}}>
+            <div className="modal-icon" style={{color: '#27ae60', fontSize: '4rem'}}><i className="fas fa-check-circle"></i></div>
+            <h3>Transaction Successful!</h3>
+            <p className="modal-subtitle">Receipt has been generated and saved.</p>
+            
+            <div style={{background: '#f8fafc', padding: '1rem', borderRadius: '12px', margin: '1.5rem 0'}}>
+              <div style={{fontSize: '0.85rem', color: '#6a8aaa'}}>Amount Paid</div>
+              <div style={{fontSize: '1.8rem', fontWeight: 'bold', color: '#1a3d5c'}}>{formatCurrency(total)}</div>
+              <div style={{fontSize: '0.85rem', color: '#6a8aaa', marginTop: '0.5rem'}}>Change</div>
+              <div style={{fontSize: '1.2rem', fontWeight: 'bold', color: '#27ae60'}}>{formatCurrency(change)}</div>
+            </div>
+
+            <div className="modal-actions" style={{justifyContent: 'center'}}>
+              <button className="btn-cancel" onClick={resetTransaction}>New Transaction</button>
+              <button className="btn-confirm" onClick={() => window.print()}><i className="fas fa-print"></i> Print Receipt</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Toast */}
+      {toast && (
+        <div className={`pos-toast ${toast.type}`}>
+          <i className={toast.type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle'}></i>
+          {toast.message}
         </div>
       )}
     </div>
   );
 }
-
-export default POSTransactions;

@@ -29,7 +29,6 @@ const mainItems = [
   { key: "dashboard",    label: "Dashboard",           path: "/staff/dashboard" },
   { key: "burial",       label: "Burial Records",      path: "/staff/burial" },
   { key: "inventory",    label: "Grave Inventory",     path: "/staff/inventory" },
-  { key: "mapping",      label: "Grave Mapping",       path: "/staff/mapping" },
   { key: "pos",          label: "POS Transactions",    path: "/staff/pos" },
   { key: "installment",  label: "Installment Payments",path: "/staff/installment" },
 ];
@@ -297,7 +296,6 @@ function StaffNavigation({ onSignOut }) {
           <Route path="dashboard" element={<DashboardS />} />
           <Route path="burial" element={<SBurialRecords />} />
           <Route path="inventory" element={<GraveInventory />} />
-          <Route path="mapping" element={<PagePlaceholder title="Grave Mapping" />} />
           <Route path="pos" element={<POSTransactions />} />
           <Route path="installment" element={<InstallmentPayments />} />
           <Route path="wake" element={<WakeScheduling />} />
