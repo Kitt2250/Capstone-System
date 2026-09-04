@@ -3713,7 +3713,6 @@
 .pos-page-wrapper .product-table,
 .pos-page-wrapper .cart-items-table {
     width: 100% !important;
-    min-width: 480px !important; /* Force minimum width to prevent squishing */
     table-layout: auto !important;
 }
 
