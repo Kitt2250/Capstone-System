@@ -1140,10 +1140,10 @@ export default function POSTransactions() {
                     <table class="cart-items-table" id="cartTable">
                         <thead>
                             <tr>
-                                <th>Item</th>
-                                <th style="text-align:center;">Qty</th>
-                                <th style="text-align:right;">Total</th>
-                                <th style="text-align:center;">Action</th>
+                                <th style="width:40%;">Item</th>
+                                <th style="width:15%;text-align:center;">Qty</th>
+                                <th style="width:25%;text-align:right;">Total</th>
+                                <th style="width:20%;text-align:center;">Action</th>
                             </tr>
                         </thead>
                         <tbody id="cartBody"></tbody>

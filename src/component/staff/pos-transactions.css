@@ -341,7 +341,6 @@
     width: 100%;
     min-width: 0;
     box-sizing: border-box;
-    overflow-x: auto;
 }
 .cart-section .cart-title {
     font-size: 0.85rem;
@@ -361,6 +360,7 @@
     width: 100%;
     border-collapse: collapse;
     font-size: 0.78rem;
+    table-layout: fixed;
 }
 .cart-items-table th {
     text-align: left;
