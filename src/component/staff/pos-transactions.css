@@ -155,6 +155,8 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    min-width: 0;
+    overflow: hidden;
 }
 
 .product-list-section {
@@ -177,11 +179,10 @@
 }
 
 .product-table {
-    width: max-content;
-    max-width: 100%;
+    width: 100%;
     border-collapse: collapse;
     font-size: 0.8rem;
-    
+    table-layout: fixed;
 }
 .product-table th {
     text-align: left;
@@ -1420,14 +1421,26 @@
 
 .product-table th { width: auto !important; }
 
-
-/* BRUTE FORCE COMPACT TABLE */
+/* Compact table — stays inside left panel */
 .product-table {
-    width: max-content !important;
+    width: 100% !important;
     max-width: 100% !important;
-    table-layout: auto !important;
+    table-layout: fixed !important;
 }
 .product-table th, .product-table td {
     width: auto !important;
-    white-space: nowrap !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+/* Allow product name column to show full text but truncate if needed */
+.product-table .product-name-cell {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 0; /* forces ellipsis with table-layout:fixed */
+}
+/* Wrap the table so it is scrollable if absolutely needed */
+.product-list-section {
+    overflow: hidden;
 }
