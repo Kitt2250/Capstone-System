@@ -1,3 +1,6 @@
+
+>     <style>
+          /* ----- TOP BAR ----- */
 .pos-page-wrapper .topbar {
               display: flex;
               justify-content: space-between;
@@ -149,14 +152,13 @@
           /* ----- TWO-COLUMN LAYOUT ----- */
 .pos-page-wrapper .pos-two-col {
               display: grid;
-              grid-template-columns: 1fr 1fr !important;
+              grid-template-columns: 1fr 1.1fr;
               gap: 1.5rem;
           }
   
           /* ----- LEFT: Product List (Vertical / Table Style) ----- */
 .pos-page-wrapper .left-panel {
               display: flex;
-              min-width: 0 !important;
               flex-direction: column;
               gap: 1rem;
           }
@@ -446,7 +448,6 @@
           /* ===== RIGHT: Transaction Panel ===== */
 .pos-page-wrapper .right-panel {
               display: flex;
-              min-width: 0 !important;
               flex-direction: column;
               gap: 0.8rem;
           }
@@ -688,19 +689,16 @@
 
 
 
-/* ==================================================
-   OVERRIDE STAFF-SHARED.CSS
-   staff-shared.css forces white-space: nowrap which 
-   blows out the auto table layout.
-   ================================================== */
-.pos-page-wrapper .product-table th,
-.pos-page-wrapper .product-table td,
-.pos-page-wrapper .cart-items-table th,
-.pos-page-wrapper .cart-items-table td {
-    white-space: normal !important;
+/* Ensure tables stay exactly within the 50% left panel */
+.pos-page-wrapper .pos-two-col {
+    grid-template-columns: 1fr 1fr !important;
 }
 
-/* Ensure tables stay exactly within the 50% left panel */
+.pos-page-wrapper .left-panel,
+.pos-page-wrapper .right-panel {
+    min-width: 0 !important;
+}
+
 .pos-page-wrapper .product-list-section,
 .pos-page-wrapper .cart-section {
     max-width: 100% !important;
@@ -711,12 +709,37 @@
 .pos-page-wrapper .cart-items-table {
     width: 100% !important;
     max-width: 100% !important;
+    table-layout: fixed !important;
 }
 
 .pos-page-wrapper .product-table th,
 .pos-page-wrapper .product-table td,
 .pos-page-wrapper .cart-items-table th,
 .pos-page-wrapper .cart-items-table td {
+    white-space: normal !important;
     word-break: break-word !important;
     overflow-wrap: break-word !important;
+    padding: 0.3rem 0.2rem !important; /* Smaller padding to fit text */
 }
+
+/* Force specific column widths as requested by user */
+.pos-page-wrapper .product-table th:nth-child(1),
+.pos-page-wrapper .cart-items-table th:nth-child(1) { width: 35% !important; }
+
+.pos-page-wrapper .product-table th:nth-child(2),
+.pos-page-wrapper .cart-items-table th:nth-child(2) { width: 25% !important; text-align: right; }
+
+.pos-page-wrapper .product-table th:nth-child(3),
+.pos-page-wrapper .cart-items-table th:nth-child(3) { width: 20% !important; text-align: center; }
+
+.pos-page-wrapper .product-table th:nth-child(4),
+.pos-page-wrapper .cart-items-table th:nth-child(4) { width: 20% !important; text-align: center; }
+
+.pos-page-wrapper .product-table td:nth-child(2),
+.pos-page-wrapper .cart-items-table td:nth-child(2) { text-align: right; }
+
+.pos-page-wrapper .product-table td:nth-child(3),
+.pos-page-wrapper .cart-items-table td:nth-child(3) { text-align: center; }
+
+.pos-page-wrapper .product-table td:nth-child(4),
+.pos-page-wrapper .cart-items-table td:nth-child(4) { text-align: center; }
