@@ -51,7 +51,7 @@
 .pos-page-wrapper .product-list-section .section-title { font-size: 0.8rem; font-weight: 600; color: #1a3d5c; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 6px; }
 .pos-page-wrapper .product-list-section .section-title i { color: #d4af37; }
 
-.pos-page-wrapper .product-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; table-layout: fixed; }
+.pos-page-wrapper .product-table { width: 100% !important; border-collapse: collapse; font-size: 0.8rem; table-layout: fixed !important; }
 .pos-page-wrapper .product-table th { text-align: left; padding: 0.3rem 0.4rem; border-bottom: 2px solid #e8edf4; color: #7a9fbe; font-weight: 600; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.3px; white-space: normal; overflow-wrap: break-word; }
 .pos-page-wrapper .product-table td { padding: 0.3rem 0.4rem; border-bottom: 1px solid #f0f2f5; vertical-align: middle; white-space: normal; overflow-wrap: break-word; }
 .pos-page-wrapper .product-table tr:hover td { background: #f0f2f5; }
@@ -89,7 +89,7 @@
 .pos-page-wrapper .cart-section { background: #f8fafc; border-radius: 12px; padding: 0.8rem 1rem; border: 1px solid rgba(212,175,55,0.06); }
 .pos-page-wrapper .cart-section .cart-title { font-size: 0.85rem; font-weight: 600; color: #1a3d5c; margin-bottom: 0.4rem; display: flex; justify-content: space-between; align-items: center; }
 .pos-page-wrapper .cart-section .cart-title .item-count { font-size: 0.7rem; color: #7a9fbe; font-weight: 400; }
-.pos-page-wrapper .cart-items-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; table-layout: fixed; }
+.pos-page-wrapper .cart-items-table { width: 100% !important; border-collapse: collapse; font-size: 0.78rem; table-layout: fixed !important; }
 .pos-page-wrapper .cart-items-table th { text-align: left; padding: 0.2rem; border-bottom: 1px solid #e8edf4; color: #7a9fbe; font-weight: 600; font-size: 0.6rem; text-transform: uppercase; white-space: normal; overflow-wrap: break-word; }
 .pos-page-wrapper .cart-items-table td { padding: 0.2rem; border-bottom: 1px solid #f0f2f5; vertical-align: middle; white-space: normal; overflow-wrap: break-word; }
 .pos-page-wrapper .cart-items-table .item-total { font-weight: 600; }
@@ -365,4 +365,23 @@
 .pos-page-wrapper .info-grid .form-group:has(#deceasedName),
 .pos-page-wrapper .info-grid .form-group:has(#deceasedCause) {
     grid-column: span 2;
+}
+
+/* ENFORCE BOUNDARIES */
+.pos-page-wrapper .product-list-section, 
+.pos-page-wrapper .cart-section,
+.pos-page-wrapper .left-panel, 
+.pos-page-wrapper .right-panel {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+}
+
+.pos-page-wrapper .product-table th, 
+.pos-page-wrapper .product-table td,
+.pos-page-wrapper .cart-items-table th, 
+.pos-page-wrapper .cart-items-table td {
+    white-space: normal !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
 }
