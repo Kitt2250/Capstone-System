@@ -1092,10 +1092,10 @@ export default function POSTransactions() {
                     <table class="product-table" id="productTable">
                         <thead>
                             <tr>
-                                <th style="width:32%;">Product</th>
-                                <th style="width:22%;text-align:right;">Price</th>
-                                <th style="width:22%;text-align:center;">Availability</th>
-                                <th style="width:24%;text-align:center;">Action</th>
+                                <th style="width:30%;">Product</th>
+                                <th style="width:20%;text-align:right;">Price</th>
+                                <th style="width:25%;text-align:center;">Availability</th>
+                                <th style="width:25%;text-align:center;">Action</th>
                             </tr>
                         </thead>
                         <tbody id="productTableBody"></tbody>

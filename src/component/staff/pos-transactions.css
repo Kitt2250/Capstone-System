@@ -156,7 +156,6 @@
     flex-direction: column;
     gap: 1rem;
     min-width: 0;
-    overflow: hidden;
 }
 
 .product-list-section {
@@ -182,7 +181,7 @@
     width: 100%;
     border-collapse: collapse;
     font-size: 0.8rem;
-    table-layout: fixed;
+    table-layout: auto;
 }
 .product-table th {
     text-align: left;
@@ -1419,28 +1418,31 @@
     overflow-x: auto;
 }
 
-.product-table th { width: auto !important; }
+.product-table th { white-space: nowrap; }
 
-/* Compact table — stays inside left panel */
+/* Product table — fills left panel width, auto-sizes columns to content */
 .product-table {
     width: 100% !important;
     max-width: 100% !important;
-    table-layout: fixed !important;
+    table-layout: auto !important;
 }
-.product-table th, .product-table td {
-    width: auto !important;
+
+/* Price, availability and action cells don't wrap */
+.product-table td:nth-child(2),
+.product-table td:nth-child(3),
+.product-table td:nth-child(4),
+.product-table th:nth-child(2),
+.product-table th:nth-child(3),
+.product-table th:nth-child(4) {
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
-/* Allow product name column to show full text but truncate if needed */
+
+/* Product name can wrap if needed but don't let it push table wider */
 .product-table .product-name-cell {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 0; /* forces ellipsis with table-layout:fixed */
+    word-break: break-word;
 }
-/* Wrap the table so it is scrollable if absolutely needed */
+
+/* Scrollable wrapper — only scrolls if content truly can't fit */
 .product-list-section {
-    overflow: hidden;
+    overflow-x: auto;
 }
