@@ -1603,3 +1603,11 @@
     width: 100% !important;
     max-width: 100% !important;
 }
+
+/* --- GRID FIXES FOR 50/50 SPLIT --- */
+.pos-two-col {
+    grid-template-columns: 1fr 1fr !important;
+}
+.left-panel, .right-panel {
+    min-width: 0 !important;
+}
