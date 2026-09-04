@@ -1,32 +1,17 @@
 import re
+jsx = open('src/component/staff/POSTransactions.jsx', 'r', encoding='utf-8').read()
 
-def css_to_react_style(css_str):
-    if not css_str.strip(): return '{{}}'
-    rules = [r.strip() for r in css_str.split(';') if r.strip()]
-    obj_str = []
-    for r in rules:
-        if ':' not in r: continue
-        k, v = r.split(':', 1)
-        k = k.strip()
-        v = v.strip()
-        # camelCase
-        parts = k.split('-')
-        k_camel = parts[0] + ''.join(p.capitalize() for p in parts[1:])
-        v = v.replace('"', '\\"').replace("'", "\\'")
-        obj_str.append(f"'{k_camel}': '{v}'")
-    return '{{ ' + ', '.join(obj_str) + ' }}'
+jsx = jsx.replace('style="width:30%"', 'style={{width: "30%"}}')
+jsx = jsx.replace('style="width:20%; text-align:right;"', 'style={{width: "20%", textAlign: "right"}}')
+jsx = jsx.replace('style="width:25%; text-align:center;"', 'style={{width: "25%", textAlign: "center"}}')
+jsx = jsx.replace('style="text-align:right;"', 'style={{textAlign: "right"}}')
+jsx = jsx.replace('style="text-align:center;"', 'style={{textAlign: "center"}}')
+jsx = jsx.replace('style="color:#3670AF;"', 'style={{color: "#3670AF"}}')
+jsx = jsx.replace('style="color:#3670AF;margin-right:8px;"', 'style={{color: "#3670AF", marginRight: "8px"}}')
+jsx = jsx.replace('style="display:flex;align-items:center;gap:0.8rem;"', 'style={{display: "flex", alignItems: "center", gap: "0.8rem"}}')
+jsx = jsx.replace('style="font-size:0.6rem;color:#8aaccc;padding:0.2rem 0.4rem;text-align:center;"', 'style={{fontSize: "0.6rem", color: "#8aaccc", padding: "0.2rem 0.4rem", textAlign: "center"}}')
+jsx = jsx.replace('style="color:#d4af37;margin-right:8px;"', 'style={{color: "#d4af37", marginRight: "8px"}}')
+jsx = jsx.replace('class=', 'className=')
 
-with open('src/component/staff/POSTransactions.jsx', 'r', encoding='utf-8') as f:
-    content = f.read()
-
-content = re.sub(r'\bclass=', 'className=', content)
-
-def replacer(match):
-    css_str = match.group(1)
-    react_style = css_to_react_style(css_str)
-    return 'style=' + react_style
-
-content = re.sub(r'style="([^"]*)"', replacer, content)
-
-with open('src/component/staff/POSTransactions.jsx', 'w', encoding='utf-8') as f:
-    f.write(content)
+open('src/component/staff/POSTransactions.jsx', 'w', encoding='utf-8').write(jsx)
+print('Fixed jsx for real')
