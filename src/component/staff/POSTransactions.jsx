@@ -1,4 +1,5 @@
 
+import StaffTopbar from './StaffTopbar';
 import React, { useEffect } from 'react';
 import './pos-transactions.css';
 
