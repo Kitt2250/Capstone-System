@@ -1054,7 +1054,9 @@ export default function POSTransactions() {
   }, []);
 
   return (
-    <div className="pos-page-wrapper" style={{ padding: '0', background: 'transparent' }}
+    <>
+      <StaffTopbar title="POS Transactions ?" greeting="Process grave lot sales, wake space rentals, and payments" />
+      <div className="pos-page-wrapper" style={{ padding: '0', background: 'transparent' }}
       dangerouslySetInnerHTML={{ __html: `
     <div class="topbar">
         <div class="topbar-left">
@@ -1520,5 +1522,6 @@ export default function POSTransactions() {
     </div>
       ` }}
     />
+    </>
   );
 }

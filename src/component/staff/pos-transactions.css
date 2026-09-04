@@ -3700,11 +3700,21 @@
 }
 
 
-/* Force columns to be small and tables to fit */
+
+/* Make tables scrollable and beautifully sized */
+.pos-page-wrapper .product-list-section,
+.pos-page-wrapper .cart-section {
+    width: 100%;
+    overflow-x: auto !important; /* Allow horizontal scroll */
+    min-width: 0 !important;
+    padding-bottom: 0.5rem; /* Space for scrollbar */
+}
+
 .pos-page-wrapper .product-table,
 .pos-page-wrapper .cart-items-table {
     width: 100% !important;
-    table-layout: auto !important; /* Let browser fit them */
+    min-width: 480px !important; /* Force minimum width to prevent squishing */
+    table-layout: auto !important;
 }
 
 .pos-page-wrapper .product-table th,
@@ -3713,22 +3723,23 @@
 .pos-page-wrapper .cart-items-table td {
     white-space: normal !important;
     word-break: break-word !important;
-    padding: 0.3rem 0.2rem !important; 
+    padding: 0.5rem 0.4rem !important; 
 }
 
-/* Force small widths */
-.pos-page-wrapper .product-table th:nth-child(1) { width: 15% !important; }
-.pos-page-wrapper .product-table th:nth-child(2) { width: 10% !important; }
-.pos-page-wrapper .product-table th:nth-child(3) { width: 10% !important; }
-.pos-page-wrapper .product-table th:nth-child(4) { width: 10% !important; }
+/* Proportional column sizing */
+.pos-page-wrapper .product-table th:nth-child(1) { width: 35% !important; }
+.pos-page-wrapper .product-table th:nth-child(2) { width: 20% !important; }
+.pos-page-wrapper .product-table th:nth-child(3) { width: 25% !important; }
+.pos-page-wrapper .product-table th:nth-child(4) { width: 20% !important; }
 
-.pos-page-wrapper .cart-items-table th:nth-child(1) { width: 15% !important; }
-.pos-page-wrapper .cart-items-table th:nth-child(2) { width: 10% !important; }
-.pos-page-wrapper .cart-items-table th:nth-child(3) { width: 10% !important; }
-.pos-page-wrapper .cart-items-table th:nth-child(4) { width: 10% !important; }
+.pos-page-wrapper .cart-items-table th:nth-child(1) { width: 40% !important; }
+.pos-page-wrapper .cart-items-table th:nth-child(2) { width: 15% !important; }
+.pos-page-wrapper .cart-items-table th:nth-child(3) { width: 25% !important; }
+.pos-page-wrapper .cart-items-table th:nth-child(4) { width: 20% !important; }
 
-/* Allow flex contents to shrink */
+/* Allow flex contents to wrap gracefully */
 .pos-page-wrapper .product-name-cell {
     min-width: 0;
     flex-wrap: wrap;
+    white-space: normal !important;
 }
