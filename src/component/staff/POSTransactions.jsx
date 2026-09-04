@@ -1,5 +1,5 @@
 import StaffTopbar from './StaffTopbar';
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import './pos-transactions.css';
 
 // ================================================================
@@ -280,6 +280,7 @@ export default function POSTransactions() {
         if (wakeModalOpen) {
             const checkin = wakeBooking.checkin;
             if (!checkin) {
+                // eslint-disable-next-line
                 setWakeBooking(prev => ({ ...prev, available: false }));
                 return;
             }
@@ -312,7 +313,6 @@ export default function POSTransactions() {
 
     const handleSelectClient = (index) => {
         const client = MOCK_CLIENTS[index];
-        setSelectedClientIndex(index);
         setClientSearchTerm(client.name);
         setClientName(client.name);
         setClientContact(client.contact);
@@ -328,7 +328,6 @@ export default function POSTransactions() {
 
     const enableClientEditingLocal = () => {
         setIsClientEditing(true);
-        setSelectedClientIndex(null);
         setClientSearchTerm('');
     };
 
@@ -591,10 +590,10 @@ export default function POSTransactions() {
                                 <table className="product-table" id="productTable">
                                     <thead>
                                         <tr>
-                                            <th style={{width:'30%'}}>Product</th>
-                                            <th style={{width:'20%', textAlign:'right'}}>Price</th>
-                                            <th style={{width:'25%', textAlign:'center'}}>Availability</th>
-                                            <th style={{width:'25%', textAlign:'center'}}>Action</th>
+                                            <th style={{width:'40%'}}>Product</th>
+                                            <th style={{width:'20%', textAlign:'left'}}>Price</th>
+                                            <th style={{width:'20%', textAlign:'center'}}>Availability</th>
+                                            <th style={{width:'20%', textAlign:'center'}}>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody id="productTableBody">
@@ -605,7 +604,7 @@ export default function POSTransactions() {
                                             return (
                                                 <tr key={key}>
                                                     <td><div className="product-name-cell"><i className={'fas ' + p.icon}></i> {key}</div></td>
-                                                    <td style={{textAlign:'right'}} className="product-price-cell">&#8369;{p.price.toLocaleString()}</td>
+                                                    <td style={{textAlign:'left'}} className="product-price-cell">&#8369;{p.price.toLocaleString()}</td>
                                                     <td style={{textAlign:'center'}} className={'product-avail-cell ' + availClass}>
                                                         {isSoldOut ? <><span dangerouslySetInnerHTML={{__html: '&#10060;'}}/> Sold Out</> : <><span dangerouslySetInnerHTML={{__html: '&#9989;'}}/> {p.availableSlots}</>}
                                                     </td>
@@ -656,10 +655,10 @@ export default function POSTransactions() {
                                 <table className="cart-items-table" id="cartTable">
                                     <thead>
                                         <tr>
-                                            <th>Item</th>
-                                            <th style={{textAlign:'center'}}>Qty</th>
-                                            <th style={{textAlign:'right'}}>Total</th>
-                                            <th style={{textAlign:'center'}}>Action</th>
+                                            <th style={{width:'50%'}}>Item</th>
+                                            <th style={{width:'15%', textAlign:'left'}}>Qty</th>
+                                            <th style={{width:'20%', textAlign:'left'}}>Total</th>
+                                            <th style={{width:'15%', textAlign:'center'}}>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody id="cartBody">
@@ -682,8 +681,8 @@ export default function POSTransactions() {
                                                         </div>
                                                     )}
                                                 </td>
-                                                <td style={{textAlign:'center'}}>{item.qty}</td>
-                                                <td style={{textAlign:'right',fontWeight:'600'}}>&#8369;{item.total.toLocaleString()}</td>
+                                                <td style={{textAlign:'left'}}>{item.qty}</td>
+                                                <td style={{textAlign:'left',fontWeight:'600'}}>&#8369;{item.total.toLocaleString()}</td>
                                                 <td style={{textAlign:'center'}}>
                                                     <button className="btn-remove" onClick={() => removeFromCartLocal(idx)}><i className="fas fa-times"></i></button>
                                                 </td>
