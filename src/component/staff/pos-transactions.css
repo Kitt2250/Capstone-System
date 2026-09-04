@@ -332,19 +332,12 @@
     cursor: not-allowed;
 }
 
-/* ===== CART SECTION ===== */
-.cart-section {
+/* ===== CART SECTION ===== */.cart-section {
     background: #f8fafc;
     border-radius: 12px;
     padding: 0.8rem 1rem;
     border: 1px solid rgba(212, 175, 55, 0.06);
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    box-sizing: border-box;
-    overflow-x: hidden; /* was 'auto' — clip instead of scroll now that columns are fixed */
 }
-
 .cart-section .cart-title {
     font-size: 0.85rem;
     font-weight: 600;
@@ -354,39 +347,16 @@
     justify-content: space-between;
     align-items: center;
 }
-
 .cart-section .cart-title .item-count {
     font-size: 0.7rem;
     color: #7a9fbe;
     font-weight: 400;
 }
-
 .cart-items-table {
     width: 100%;
-    max-width: 100%;
     border-collapse: collapse;
     font-size: 0.78rem;
-    table-layout: fixed;
 }
-
-/* Explicit column widths */
-.cart-items-table th:nth-child(1),
-.cart-items-table td:nth-child(1) { width: 42%; }
-.cart-items-table th:nth-child(2),
-.cart-items-table td:nth-child(2) { width: 16%; }
-.cart-items-table th:nth-child(3),
-.cart-items-table td:nth-child(3) { width: 22%; }
-.cart-items-table th:nth-child(4),
-.cart-items-table td:nth-child(4) { width: 20%; }
-
-.cart-items-table th,
-.cart-items-table td {
-    box-sizing: border-box; /* padding no longer adds to the width */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
 .cart-items-table th {
     text-align: left;
     padding: 0.2rem 0.2rem;
@@ -396,23 +366,14 @@
     font-size: 0.6rem;
     text-transform: uppercase;
 }
-
 .cart-items-table td {
     padding: 0.2rem 0.2rem;
     border-bottom: 1px solid #f0f2f5;
     vertical-align: middle;
 }
-
-/* Make anything inside the ACTION column (buttons/icons) shrink to fit */
-.cart-items-table td:nth-child(4) * {
-    max-width: 100%;
-    box-sizing: border-box;
-}
-
 .cart-items-table .item-total {
     font-weight: 600;
 }
-
 .cart-items-table .btn-remove {
     background: none;
     border: none;
@@ -426,20 +387,12 @@
     background: #fdedec;
     border-radius: 4px;
 }
-
 .cart-items-table .empty-msg {
     text-align: center;
     color: #8aaccc;
     padding: 0.8rem 0;
     font-size: 0.8rem;
 }
-
-.cart-items-table th:nth-child(2) { text-align: center; }
-.cart-items-table th:nth-child(3) { text-align: right; }
-.cart-items-table th:nth-child(4) { text-align: center; }
-.cart-items-table td:nth-child(2) { text-align: center; }
-.cart-items-table td:nth-child(3) { text-align: right; }
-.cart-items-table td:nth-child(4) { text-align: center; }
 
 /* Cart Location Styles */
 .cart-location {
