@@ -374,6 +374,8 @@
     font-size: 0.6rem;
     text-transform: uppercase;
     white-space: normal !important;
+    word-break: break-all !important;
+    overflow-wrap: break-word !important;
     overflow: hidden;
 }
 .cart-items-table td {
@@ -381,6 +383,8 @@
     border-bottom: 1px solid #f0f2f5;
     vertical-align: middle;
     white-space: normal !important;
+    word-break: break-all !important;
+    overflow-wrap: break-word !important;
     overflow: hidden;
 }
 .cart-items-table .item-total {

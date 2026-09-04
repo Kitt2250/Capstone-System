@@ -1137,17 +1137,19 @@ export default function POSTransactions() {
                         <span>&#128722; Cart</span>
                         <span class="item-count" id="cartItemCount">0 items</span>
                     </div>
-                    <table class="cart-items-table" id="cartTable">
-                        <thead>
-                            <tr>
-                                <th style="width:40%;">Item</th>
-                                <th style="width:15%;text-align:center;">Qty</th>
-                                <th style="width:25%;text-align:right;">Total</th>
-                                <th style="width:20%;text-align:center;">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="cartBody"></tbody>
-                    </table>
+                    <div style="width: 100%; overflow: hidden; box-sizing: border-box;">
+                        <table class="cart-items-table" id="cartTable" style="width: 100% !important; max-width: 100% !important; table-layout: fixed !important; word-wrap: break-word;">
+                            <thead>
+                                <tr>
+                                    <th style="width:40%;">Item</th>
+                                    <th style="width:15%;text-align:center;">Qty</th>
+                                    <th style="width:25%;text-align:right;">Total</th>
+                                    <th style="width:20%;text-align:center;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cartBody"></tbody>
+                        </table>
+                    </div>
                 </div>
 
             </div>
