@@ -385,3 +385,11 @@
     word-break: break-word !important;
     overflow-wrap: break-word !important;
 }
+
+/* EXACT COLUMN WIDTHS */
+.pos-page-wrapper .product-table th, 
+.pos-page-wrapper .cart-items-table th {
+    width: 25% !important;
+    max-width: 25% !important;
+    overflow: hidden !important;
+}

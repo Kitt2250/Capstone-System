@@ -1092,10 +1092,10 @@ export default function POSTransactions() {
                     <table class="product-table" id="productTable">
                         <thead>
                             <tr>
-                                <th style="width:25%; max-width:25%; overflow:hidden;">Product</th>
-                                <th style="width:25%; max-width:25%; overflow:hidden; text-align:right;">Price</th>
-                                <th style="width:25%; max-width:25%; overflow:hidden; text-align:center;">Availability</th>
-                                <th style="width:25%; max-width:25%; overflow:hidden; text-align:center;">Action</th>
+                                <th>Product</th>
+                                <th style="text-align:right;">Price</th>
+                                <th style="text-align:center;">Availability</th>
+                                <th style="text-align:center;">Action</th>
                             </tr>
                         </thead>
                         <tbody id="productTableBody"></tbody>
@@ -1140,10 +1140,10 @@ export default function POSTransactions() {
                     <table class="cart-items-table" id="cartTable">
                         <thead>
                             <tr>
-                                <th style="width:25%; max-width:25%; overflow:hidden;">Item</th>
-                                <th style="width:25%; max-width:25%; overflow:hidden; text-align:center;">Qty</th>
-                                <th style="width:25%; max-width:25%; overflow:hidden; text-align:right;">Total</th>
-                                <th style="width:25%; max-width:25%; overflow:hidden; text-align:center;">Action</th>
+                                <th>Item</th>
+                                <th style="text-align:center;">Qty</th>
+                                <th style="text-align:right;">Total</th>
+                                <th style="text-align:center;">Action</th>
                             </tr>
                         </thead>
                         <tbody id="cartBody"></tbody>
