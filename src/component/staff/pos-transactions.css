@@ -1413,37 +1413,3 @@
     grid-column: span 2;
 }
 
-.table-wrapper {
-    border: 1px solid #e8edf4;
-    border-radius: 12px;
-    overflow-x: auto;
-}
-
-.product-table th { white-space: nowrap; }
-
-/* Product table — fills left panel width, auto-sizes columns to content */
-.product-table {
-    width: 100% !important;
-    max-width: 100% !important;
-    table-layout: auto !important;
-}
-
-/* Price, availability and action cells don't wrap */
-.product-table td:nth-child(2),
-.product-table td:nth-child(3),
-.product-table td:nth-child(4),
-.product-table th:nth-child(2),
-.product-table th:nth-child(3),
-.product-table th:nth-child(4) {
-    white-space: nowrap;
-}
-
-/* Product name can wrap if needed but don't let it push table wider */
-.product-table .product-name-cell {
-    word-break: break-word;
-}
-
-/* Scrollable wrapper — only scrolls if content truly can't fit */
-.product-list-section {
-    overflow-x: auto;
-}
