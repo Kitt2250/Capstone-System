@@ -339,9 +339,12 @@
     padding: 0.8rem 1rem;
     border: 1px solid rgba(212, 175, 55, 0.06);
     width: 100%;
+    max-width: 100%;
     min-width: 0;
     box-sizing: border-box;
+    overflow-x: auto; /* safety net: scrolls instead of bleeding into other columns */
 }
+
 .cart-section .cart-title {
     font-size: 0.85rem;
     font-weight: 600;
@@ -351,17 +354,31 @@
     justify-content: space-between;
     align-items: center;
 }
+
 .cart-section .cart-title .item-count {
     font-size: 0.7rem;
     color: #7a9fbe;
     font-weight: 400;
 }
+
 .cart-items-table {
     width: 100%;
+    max-width: 100%;
     border-collapse: collapse;
     font-size: 0.78rem;
-    table-layout: auto;
+    table-layout: fixed; /* KEY FIX: stops columns from growing past the container */
 }
+
+/* Explicit column widths — required for table-layout: fixed to behave */
+.cart-items-table th:nth-child(1),
+.cart-items-table td:nth-child(1) { width: 42%; }
+.cart-items-table th:nth-child(2),
+.cart-items-table td:nth-child(2) { width: 16%; }
+.cart-items-table th:nth-child(3),
+.cart-items-table td:nth-child(3) { width: 22%; }
+.cart-items-table th:nth-child(4),
+.cart-items-table td:nth-child(4) { width: 20%; }
+
 .cart-items-table th {
     text-align: left;
     padding: 0.2rem 0.2rem;
@@ -371,14 +388,20 @@
     font-size: 0.6rem;
     text-transform: uppercase;
 }
+
 .cart-items-table td {
     padding: 0.2rem 0.2rem;
     border-bottom: 1px solid #f0f2f5;
     vertical-align: middle;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
+
 .cart-items-table .item-total {
     font-weight: 600;
 }
+
 .cart-items-table .btn-remove {
     background: none;
     border: none;
@@ -398,6 +421,14 @@
     padding: 0.8rem 0;
     font-size: 0.8rem;
 }
+
+/* Alignment for QTY, TOTAL, ACTION columns */
+.cart-items-table th:nth-child(2) { text-align: center; }
+.cart-items-table th:nth-child(3) { text-align: right; }
+.cart-items-table th:nth-child(4) { text-align: center; }
+.cart-items-table td:nth-child(2) { text-align: center; }
+.cart-items-table td:nth-child(3) { text-align: right; }
+.cart-items-table td:nth-child(4) { text-align: center; }
 
 /* Cart Location Styles */
 .cart-location {
