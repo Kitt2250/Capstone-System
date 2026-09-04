@@ -102,7 +102,7 @@ function StaffTopbar({ title, greeting }) {
   return (
     <div className="ds-topbar">
       <div className="ds-topbar-left">
-        <h1 className="ds-title">{title} <span className="ds-title-star">?</span></h1>
+        <h1 className="ds-title">{title} <span className="ds-title-star">&#10022;</span></h1>
         <p className="ds-greeting">{greeting}</p>
       </div>
       <div className="ds-topbar-right">

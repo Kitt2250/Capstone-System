@@ -270,7 +270,7 @@ export default function Renewals() {
                 ))}
             </div>
 
-            <StaffTopbar title="Renewals Management ✦" greeting="Manage contract renewals — Columbarium, Apartment & Bone Vault only" />
+            <StaffTopbar title="Renewals Management" greeting="Manage contract renewals — Columbarium, Apartment & Bone Vault only" />
 
             <div className="renewals-container">
                 <div className="info-banner">

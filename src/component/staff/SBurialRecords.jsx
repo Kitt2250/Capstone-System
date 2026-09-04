@@ -469,7 +469,7 @@ function SBurialRecords() {
               <div><span style={{ color: "#8aaccc", fontSize: "0.75rem" }}>Date Buried</span><br /><strong>{targetRecord.date}</strong></div>
               <div><span style={{ color: "#8aaccc", fontSize: "0.75rem" }}>Payment Status</span><br /><span>{targetRecord.payment}</span></div>
               <div><span style={{ color: "#8aaccc", fontSize: "0.75rem" }}>Contract Expiry</span><br /><strong>{targetRecord.contract}</strong></div>
-              <div><span style={{ color: "#8aaccc", fontSize: "0.75rem" }}>Interment Fee</span><br /><span>{targetRecord.interment ? '✅ Paid' : '❌ Pending'}</span></div>
+              <div><span style={{ color: "#8aaccc", fontSize: "0.75rem" }}>Interment Fee</span><br /><span>{targetRecord.interment ? '✅ Paid' : '⏳ Pending'}</span></div>
               <div><span style={{ color: "#8aaccc", fontSize: "0.75rem" }}>Documents</span><br /><span>{targetRecord.docs ? 'Complete' : 'Incomplete'}</span></div>
               <div><span style={{ color: "#8aaccc", fontSize: "0.75rem" }}>Contact Person</span><br /><strong>{targetRecord.contact}</strong></div>
               <div><span style={{ color: "#8aaccc", fontSize: "0.75rem" }}>Contact Number</span><br /><strong>{targetRecord.phone}</strong></div>
