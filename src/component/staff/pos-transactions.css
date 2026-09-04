@@ -342,7 +342,7 @@
     max-width: 100%;
     min-width: 0;
     box-sizing: border-box;
-    overflow-x: auto; /* safety net: scrolls instead of bleeding into other columns */
+    overflow-x: hidden; /* was 'auto' — clip instead of scroll now that columns are fixed */
 }
 
 .cart-section .cart-title {
@@ -366,10 +366,10 @@
     max-width: 100%;
     border-collapse: collapse;
     font-size: 0.78rem;
-    table-layout: fixed; /* KEY FIX: stops columns from growing past the container */
+    table-layout: fixed;
 }
 
-/* Explicit column widths — required for table-layout: fixed to behave */
+/* Explicit column widths */
 .cart-items-table th:nth-child(1),
 .cart-items-table td:nth-child(1) { width: 42%; }
 .cart-items-table th:nth-child(2),
@@ -378,6 +378,14 @@
 .cart-items-table td:nth-child(3) { width: 22%; }
 .cart-items-table th:nth-child(4),
 .cart-items-table td:nth-child(4) { width: 20%; }
+
+.cart-items-table th,
+.cart-items-table td {
+    box-sizing: border-box; /* padding no longer adds to the width */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 
 .cart-items-table th {
     text-align: left;
@@ -393,9 +401,12 @@
     padding: 0.2rem 0.2rem;
     border-bottom: 1px solid #f0f2f5;
     vertical-align: middle;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+}
+
+/* Make anything inside the ACTION column (buttons/icons) shrink to fit */
+.cart-items-table td:nth-child(4) * {
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .cart-items-table .item-total {
@@ -415,6 +426,7 @@
     background: #fdedec;
     border-radius: 4px;
 }
+
 .cart-items-table .empty-msg {
     text-align: center;
     color: #8aaccc;
@@ -422,7 +434,6 @@
     font-size: 0.8rem;
 }
 
-/* Alignment for QTY, TOTAL, ACTION columns */
 .cart-items-table th:nth-child(2) { text-align: center; }
 .cart-items-table th:nth-child(3) { text-align: right; }
 .cart-items-table th:nth-child(4) { text-align: center; }
