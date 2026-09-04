@@ -690,7 +690,7 @@
 
 /* Ensure tables stay exactly within the 50% left panel */
 .pos-page-wrapper .pos-two-col {
-    grid-template-columns: 1fr 1fr !important;
+    grid-template-columns: 1fr 1.1fr !important;
 }
 
 .pos-page-wrapper .left-panel,
@@ -708,7 +708,6 @@
 .pos-page-wrapper .cart-items-table {
     width: 100% !important;
     max-width: 100% !important;
-    table-layout: fixed !important;
 }
 
 .pos-page-wrapper .product-table th,
@@ -718,27 +717,4 @@
     white-space: normal !important;
     word-break: break-word !important;
     overflow-wrap: break-word !important;
-    padding: 0.3rem 0.2rem !important; /* Smaller padding to fit text */
 }
-
-/* Force specific column widths as requested by user */
-.pos-page-wrapper .product-table th:nth-child(1),
-.pos-page-wrapper .cart-items-table th:nth-child(1) { width: 35% !important; }
-
-.pos-page-wrapper .product-table th:nth-child(2),
-.pos-page-wrapper .cart-items-table th:nth-child(2) { width: 25% !important; text-align: right; }
-
-.pos-page-wrapper .product-table th:nth-child(3),
-.pos-page-wrapper .cart-items-table th:nth-child(3) { width: 20% !important; text-align: center; }
-
-.pos-page-wrapper .product-table th:nth-child(4),
-.pos-page-wrapper .cart-items-table th:nth-child(4) { width: 20% !important; text-align: center; }
-
-.pos-page-wrapper .product-table td:nth-child(2),
-.pos-page-wrapper .cart-items-table td:nth-child(2) { text-align: right; }
-
-.pos-page-wrapper .product-table td:nth-child(3),
-.pos-page-wrapper .cart-items-table td:nth-child(3) { text-align: center; }
-
-.pos-page-wrapper .product-table td:nth-child(4),
-.pos-page-wrapper .cart-items-table td:nth-child(4) { text-align: center; }
