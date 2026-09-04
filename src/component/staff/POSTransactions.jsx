@@ -590,10 +590,10 @@ export default function POSTransactions() {
                                 <table className="product-table" id="productTable">
                                     <thead>
                                         <tr>
-                                            <th style={{width:'40%'}}>Product</th>
-                                            <th style={{width:'20%', textAlign:'left'}}>Price</th>
-                                            <th style={{width:'20%', textAlign:'center'}}>Availability</th>
-                                            <th style={{width:'20%', textAlign:'center'}}>Action</th>
+                                            <th style={{width:'28%'}}>Product</th>
+                                            <th style={{width:'22%', textAlign:'left'}}>Price</th>
+                                            <th style={{width:'25%', textAlign:'center'}}>Availability</th>
+                                            <th style={{width:'25%', textAlign:'center'}}>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody id="productTableBody">
@@ -655,10 +655,10 @@ export default function POSTransactions() {
                                 <table className="cart-items-table" id="cartTable">
                                     <thead>
                                         <tr>
-                                            <th style={{width:'50%'}}>Item</th>
-                                            <th style={{width:'15%', textAlign:'left'}}>Qty</th>
-                                            <th style={{width:'20%', textAlign:'left'}}>Total</th>
-                                            <th style={{width:'15%', textAlign:'center'}}>Action</th>
+                                            <th style={{width:'30%'}}>Item</th>
+                                            <th style={{width:'20%', textAlign:'left'}}>Qty</th>
+                                            <th style={{width:'25%', textAlign:'left'}}>Total</th>
+                                            <th style={{width:'25%', textAlign:'center'}}>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody id="cartBody">
