@@ -1056,7 +1056,7 @@ export default function POSTransactions() {
 
   return (
     <>
-      <StaffTopbar title="POS Transactions ✨" greeting="Process grave lot sales, wake space rentals, and payments" />
+      <StaffTopbar title="POS Transactions" greeting="Process grave lot sales, wake space rentals, and payments" />
       <div className="pos-page-wrapper" style={{ padding: '0', background: 'transparent' }}
       dangerouslySetInnerHTML={{ __html: `
     <!-- ===== POS ===== -->
