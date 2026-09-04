@@ -1056,20 +1056,9 @@ export default function POSTransactions() {
 
   return (
     <>
-      <StaffTopbar title="POS Transactions ?" greeting="Process grave lot sales, wake space rentals, and payments" />
+      <StaffTopbar title="POS Transactions ✨" greeting="Process grave lot sales, wake space rentals, and payments" />
       <div className="pos-page-wrapper" style={{ padding: '0', background: 'transparent' }}
       dangerouslySetInnerHTML={{ __html: `
-    <div class="topbar">
-        <div class="topbar-left">
-            <h1>POS Transactions <span>&#10022;</span></h1>
-            <div class="greeting">Process grave lot sales, wake space rentals, and payments</div>
-        </div>
-        <div class="topbar-right">
-            <div class="date-badge pos-date-badge"><i class="fas fa-calendar-alt"></i> August 2026</div>
-            <button class="notification-btn"><i class="fas fa-bell"></i><span class="dot"></span></button>
-        </div>
-    </div>
-
     <!-- ===== POS ===== -->
     <div class="pos-container">
         <!-- Header -->
