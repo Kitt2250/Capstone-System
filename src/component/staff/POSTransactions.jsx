@@ -1045,13 +1045,16 @@ export default function POSTransactions() {
         updateWakeAvailabilityDisplay();
     `;
 
-    const script = document.createElement('script');
-    script.innerHTML = '(function() { try {\n' + scriptText + '\n} catch(e) { console.error(e); } })();';
-    document.body.appendChild(script);
-
-    return () => {
-      if (document.body.contains(script)) document.body.removeChild(script);
-    };
+    try {
+      const runScript = new Function(scriptText);
+      runScript();
+    } catch(e) {
+      console.error("POS Script Error:", e);
+      setTimeout(() => {
+        const tbody = document.getElementById('productTableBody');
+        if(tbody) tbody.innerHTML = `<tr><td colspan="4" style="color:red; text-align:center;"><b>Error loading POS Script:</b> ${e.message}<br/>Please check console or try reopening this page.</td></tr>`;
+      }, 500);
+    }
   }, []);
 
   return (
