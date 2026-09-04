@@ -357,13 +357,10 @@
     font-weight: 400;
 }
 .cart-items-table {
-    width: 100% !important;
-    max-width: 100% !important;
+    width: 100%;
     border-collapse: collapse;
     font-size: 0.78rem;
-    table-layout: fixed !important;
-    word-wrap: break-word;
-    overflow-wrap: anywhere;
+    table-layout: auto;
 }
 .cart-items-table th {
     text-align: left;
@@ -373,19 +370,11 @@
     font-weight: 600;
     font-size: 0.6rem;
     text-transform: uppercase;
-    white-space: normal !important;
-    word-break: break-all !important;
-    overflow-wrap: break-word !important;
-    overflow: hidden;
 }
 .cart-items-table td {
     padding: 0.2rem 0.2rem;
     border-bottom: 1px solid #f0f2f5;
     vertical-align: middle;
-    white-space: normal !important;
-    word-break: break-all !important;
-    overflow-wrap: break-word !important;
-    overflow: hidden;
 }
 .cart-items-table .item-total {
     font-weight: 600;
