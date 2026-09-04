@@ -1431,3 +1431,74 @@
     word-break: break-word !important;
     overflow-wrap: break-word !important;
 }
+
+/* =========================================================
+   COMPLETELY REBUILT FLEXBOX TABLES TO PREVENT OVERFLOW
+   ========================================================= */
+.product-table, .cart-items-table {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    border: none !important;
+    table-layout: auto !important; /* override */
+}
+.product-table thead, .cart-items-table thead, 
+.product-table tbody, .cart-items-table tbody {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+}
+.product-table tr, .cart-items-table tr {
+    display: flex !important;
+    flex-direction: row !important;
+    width: 100% !important;
+    align-items: center !important;
+    border-bottom: 1px solid #f0f2f5 !important;
+}
+.product-table thead tr, .cart-items-table thead tr {
+    border-bottom: 2px solid #e8edf4 !important;
+}
+.product-table th, .product-table td, 
+.cart-items-table th, .cart-items-table td {
+    display: flex !important;
+    align-items: center !important;
+    padding: 0.4rem 0.2rem !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    box-sizing: border-box !important;
+    border: none !important;
+}
+
+/* Grave Lots Column Widths */
+.product-table th:nth-child(1), .product-table td:nth-child(1) { width: 35% !important; flex: 0 0 35% !important; justify-content: flex-start !important; }
+.product-table th:nth-child(2), .product-table td:nth-child(2) { width: 25% !important; flex: 0 0 25% !important; justify-content: flex-end !important; text-align: right !important; }
+.product-table th:nth-child(3), .product-table td:nth-child(3) { width: 20% !important; flex: 0 0 20% !important; justify-content: center !important; text-align: center !important; }
+.product-table th:nth-child(4), .product-table td:nth-child(4) { width: 20% !important; flex: 0 0 20% !important; justify-content: center !important; text-align: center !important; }
+
+/* Cart Column Widths */
+.cart-items-table th:nth-child(1), .cart-items-table td:nth-child(1) { width: 42% !important; flex: 0 0 42% !important; justify-content: flex-start !important; }
+.cart-items-table th:nth-child(2), .cart-items-table td:nth-child(2) { width: 16% !important; flex: 0 0 16% !important; justify-content: center !important; text-align: center !important; }
+.cart-items-table th:nth-child(3), .cart-items-table td:nth-child(3) { width: 22% !important; flex: 0 0 22% !important; justify-content: flex-end !important; text-align: right !important; }
+.cart-items-table th:nth-child(4), .cart-items-table td:nth-child(4) { width: 20% !important; flex: 0 0 20% !important; justify-content: center !important; text-align: center !important; }
+
+/* Handle empty cart message spanning */
+.cart-items-table td[colspan='4'], .cart-items-table td.empty-msg {
+    width: 100% !important;
+    flex: 0 0 100% !important;
+    justify-content: center !important;
+}
+
+/* Fix product name cell flex layout */
+.product-name-cell {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+.product-name-cell i {
+    width: 18px !important;
+    text-align: center !important;
+}
+
+.product-list-section, .cart-section, .left-panel, .right-panel, .pos-two-col {
+    box-sizing: border-box !important;
+}
