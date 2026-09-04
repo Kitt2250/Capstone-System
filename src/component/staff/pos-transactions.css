@@ -163,6 +163,9 @@
     border-radius: 12px;
     padding: 0.8rem 1rem;
     border: 1px solid rgba(212, 175, 55, 0.06);
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
 }
 .product-list-section .section-title {
     font-size: 0.8rem;
@@ -335,6 +338,10 @@
     border-radius: 12px;
     padding: 0.8rem 1rem;
     border: 1px solid rgba(212, 175, 55, 0.06);
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    overflow-x: auto;
 }
 .cart-section .cart-title {
     font-size: 0.85rem;
