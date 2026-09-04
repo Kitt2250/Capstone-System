@@ -3699,18 +3699,12 @@
     min-width: 0 !important;
 }
 
-/* Force tables to be strictly contained within their 50% card without overflowing */
-.pos-page-wrapper .product-list-section,
-.pos-page-wrapper .cart-section {
-    max-width: 100% !important;
-    overflow-x: hidden !important; 
-}
 
+/* Force columns to be small and tables to fit */
 .pos-page-wrapper .product-table,
 .pos-page-wrapper .cart-items-table {
     width: 100% !important;
-    max-width: 100% !important;
-    table-layout: fixed !important;
+    table-layout: auto !important; /* Let browser fit them */
 }
 
 .pos-page-wrapper .product-table th,
@@ -3719,17 +3713,22 @@
 .pos-page-wrapper .cart-items-table td {
     white-space: normal !important;
     word-break: break-word !important;
-    overflow-wrap: break-word !important;
-    padding: 0.3rem 0.2rem !important; /* Smaller padding to fit text */
+    padding: 0.3rem 0.2rem !important; 
 }
 
-/* Ensure specific small column widths */
-.pos-page-wrapper .product-table th:nth-child(1) { width: 25% !important; }
-.pos-page-wrapper .product-table th:nth-child(2) { width: 25% !important; text-align: right; }
-.pos-page-wrapper .product-table th:nth-child(3) { width: 25% !important; text-align: center; }
-.pos-page-wrapper .product-table th:nth-child(4) { width: 25% !important; text-align: center; }
+/* Force small widths */
+.pos-page-wrapper .product-table th:nth-child(1) { width: 15% !important; }
+.pos-page-wrapper .product-table th:nth-child(2) { width: 10% !important; }
+.pos-page-wrapper .product-table th:nth-child(3) { width: 10% !important; }
+.pos-page-wrapper .product-table th:nth-child(4) { width: 10% !important; }
 
-.pos-page-wrapper .cart-items-table th:nth-child(1) { width: 25% !important; }
-.pos-page-wrapper .cart-items-table th:nth-child(2) { width: 25% !important; text-align: center; }
-.pos-page-wrapper .cart-items-table th:nth-child(3) { width: 25% !important; text-align: right; }
-.pos-page-wrapper .cart-items-table th:nth-child(4) { width: 25% !important; text-align: center; }
+.pos-page-wrapper .cart-items-table th:nth-child(1) { width: 15% !important; }
+.pos-page-wrapper .cart-items-table th:nth-child(2) { width: 10% !important; }
+.pos-page-wrapper .cart-items-table th:nth-child(3) { width: 10% !important; }
+.pos-page-wrapper .cart-items-table th:nth-child(4) { width: 10% !important; }
+
+/* Allow flex contents to shrink */
+.pos-page-wrapper .product-name-cell {
+    min-width: 0;
+    flex-wrap: wrap;
+}

@@ -168,14 +168,14 @@ export default function POSTransactions() {
                 c.name.toLowerCase().includes(term) || c.deceased.toLowerCase().includes(term)
             );
             if (matches.length === 0) {
-                resultsContainer.innerHTML = '<div class="result-item" style="color:#8aaccc;cursor:default;">No clients found. Enter new client info below.</div>';
+                resultsContainer.innerHTML = '<div className="result-item" style={{ 'color': '#8aaccc', 'cursor': 'default' }}>No clients found. Enter new client info below.</div>';
                 resultsContainer.style.display = 'block';
                 return;
             }
             resultsContainer.innerHTML = matches.map(c => \`
-                <div class="result-item" onclick="selectClient(\${mockClients.indexOf(c)})">
+                <div className="result-item" onclick="selectClient(\${mockClients.indexOf(c)})">
                     <strong>\${c.name}</strong>
-                    <div class="sub">\${c.deceased} &middot; \${c.relationship}</div>
+                    <div className="sub">\${c.deceased} &middot; \${c.relationship}</div>
                 </div>
             \`).join('');
             resultsContainer.style.display = 'block';
@@ -249,7 +249,7 @@ export default function POSTransactions() {
                 document.getElementById('wakeSummaryNights').textContent = '0';
                 document.getElementById('wakeSummaryTotal').textContent = '\\u20b10.00';
                 document.getElementById('wakeAvailabilityStatus').className = 'wake-availability-status';
-                document.getElementById('wakeAvailabilityStatus').innerHTML = '<i class="fas fa-info-circle"></i> Please select check-in date';
+                document.getElementById('wakeAvailabilityStatus').innerHTML = '<i className="fas fa-info-circle"></i> Please select check-in date';
                 document.getElementById('wakeBookBtn').disabled = true;
                 return;
             }
@@ -268,12 +268,12 @@ export default function POSTransactions() {
             const bookBtn = document.getElementById('wakeBookBtn');
             if (available) {
                 statusEl.className = 'wake-availability-status available';
-                statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Wake space is AVAILABLE for these dates';
+                statusEl.innerHTML = '<i className="fas fa-check-circle"></i> Wake space is AVAILABLE for these dates';
                 bookBtn.disabled = false;
                 wakeBooking.available = true;
             } else {
                 statusEl.className = 'wake-availability-status unavailable';
-                statusEl.innerHTML = '<i class="fas fa-times-circle"></i> Wake space is OCCUPIED for these dates. Please choose different dates.';
+                statusEl.innerHTML = '<i className="fas fa-times-circle"></i> Wake space is OCCUPIED for these dates. Please choose different dates.';
                 bookBtn.disabled = true;
                 wakeBooking.available = false;
             }
@@ -362,8 +362,8 @@ export default function POSTransactions() {
                 const label = item.querySelector('label');
                 if (!doc) return;
                 let rHtml = burialType === 'actual'
-                    ? (doc.requiredFor === 'actual' || doc.requiredFor === 'both' ? '<span class="required">*</span>' : '<span class="optional">(optional)</span>')
-                    : (doc.requiredFor === 'both' ? '<span class="required">*</span>' : '<span class="optional">(optional)</span>');
+                    ? (doc.requiredFor === 'actual' || doc.requiredFor === 'both' ? '<span className="required">*</span>' : '<span className="optional">(optional)</span>')
+                    : (doc.requiredFor === 'both' ? '<span className="required">*</span>' : '<span className="optional">(optional)</span>');
                 label.innerHTML = doc.label + ' ' + rHtml;
             });
             updateChecklist();
@@ -374,11 +374,11 @@ export default function POSTransactions() {
             const lotKeys = Object.keys(PRODUCTS).filter(k => PRODUCTS[k].category === 'lot');
             const hasLot = cart.some(item => lotKeys.includes(item.name));
             if (cart.length === 0) {
-                note.innerHTML = '<i class="fas fa-info-circle"></i> Add items to cart to see payment eligibility';
+                note.innerHTML = '<i className="fas fa-info-circle"></i> Add items to cart to see payment eligibility';
                 note.className = 'eligibility-note'; return;
             }
             if (!hasLot) {
-                note.innerHTML = '<i class="fas fa-info-circle"></i> No grave lot selected. Only Wake Space rental. Payment plan options limited.';
+                note.innerHTML = '<i className="fas fa-info-circle"></i> No grave lot selected. Only Wake Space rental. Payment plan options limited.';
                 note.className = 'eligibility-note warning'; return;
             }
             let staggeredAllowed = true, warnings = [];
@@ -391,12 +391,12 @@ export default function POSTransactions() {
                 }
             });
             if (!staggeredAllowed) {
-                note.innerHTML = '<i class="fas fa-exclamation-triangle"></i> ' + warnings.join('. ') + '. Switch to "Full Payment" or "Pre-Need" plan.';
+                note.innerHTML = '<i className="fas fa-exclamation-triangle"></i> ' + warnings.join('. ') + '. Switch to "Full Payment" or "Pre-Need" plan.';
                 note.className = 'eligibility-note error';
                 if (document.getElementById('paymentPlan').value === 'staggered') { document.getElementById('paymentPlan').value = 'full'; updateTotals(); }
                 document.getElementById('paymentPlan').disabled = true;
             } else {
-                note.innerHTML = '<i class="fas fa-check-circle"></i> Staggered payment is available for this selection.';
+                note.innerHTML = '<i className="fas fa-check-circle"></i> Staggered payment is available for this selection.';
                 note.className = 'eligibility-note';
                 document.getElementById('paymentPlan').disabled = false;
             }
@@ -455,7 +455,7 @@ export default function POSTransactions() {
             updateDeceasedInfo();
 
             if (isWakeOnly) {
-                document.getElementById('eligibilityNote').innerHTML = '<i class="fas fa-info-circle"></i> Wake Space rental only. No burial documents required.';
+                document.getElementById('eligibilityNote').innerHTML = '<i className="fas fa-info-circle"></i> Wake Space rental only. No burial documents required.';
                 document.getElementById('eligibilityNote').className = 'eligibility-note';
                 document.getElementById('datePickerPanel').style.display = 'block';
                 document.getElementById('dateLabel').textContent = '\\ud83d\\udcc5 Wake Check-in Date';
@@ -483,13 +483,13 @@ export default function POSTransactions() {
                 const availClass = isSoldOut ? 'sold-out' : 'available';
                 return \`
                     <tr>
-                        <td><div class="product-name-cell"><i class="fas \${p.icon}"></i> \${key}</div></td>
-                        <td style="text-align:right;" class="product-price-cell">&#8369;\${p.price.toLocaleString()}</td>
-                        <td style="text-align:center;" class="product-avail-cell \${availClass}">
+                        <td><div className="product-name-cell"><i className="fas \${p.icon}"></i> \${key}</div></td>
+                        <td style={{ 'textAlign': 'right' }} className="product-price-cell">&#8369;\${p.price.toLocaleString()}</td>
+                        <td style={{ 'textAlign': 'center' }} className="product-avail-cell \${availClass}">
                             \${isSoldOut ? '&#10060; Sold Out' : '&#9989; ' + p.availableSlots}
                         </td>
-                        <td style="text-align:center;">
-                            <button class="btn-add-sm" onclick="openAddItemModal('\${key}')" \${isSoldOut ? 'disabled' : ''}>+ Add</button>
+                        <td style={{ 'textAlign': 'center' }}>
+                            <button className="btn-add-sm" onclick="openAddItemModal('\${key}')" \${isSoldOut ? 'disabled' : ''}>+ Add</button>
                         </td>
                     </tr>
                 \`;
@@ -521,10 +521,10 @@ export default function POSTransactions() {
             grid.innerHTML = DOCUMENTS.map(doc => {
                 const checked = checklistState[doc.id] ? 'checked' : '';
                 let rHtml = burialType === 'actual'
-                    ? (doc.requiredFor === 'actual' || doc.requiredFor === 'both' ? '<span class="required">*</span>' : '<span class="optional">(optional)</span>')
-                    : (doc.requiredFor === 'both' ? '<span class="required">*</span>' : '<span class="optional">(optional)</span>');
+                    ? (doc.requiredFor === 'actual' || doc.requiredFor === 'both' ? '<span className="required">*</span>' : '<span className="optional">(optional)</span>')
+                    : (doc.requiredFor === 'both' ? '<span className="required">*</span>' : '<span className="optional">(optional)</span>');
                 return \`
-                    <div class="checklist-item">
+                    <div className="checklist-item">
                         <input type="checkbox" id="check_\${doc.id}" \${checked} onchange="updateChecklist()" />
                         <label for="check_\${doc.id}">\${doc.label} \${rHtml}</label>
                     </div>
@@ -548,16 +548,16 @@ export default function POSTransactions() {
         window.renderModalChecklist = function() {
             const container = document.getElementById('modalChecklist');
             if (isWakeOnly) {
-                container.innerHTML = '<div style="grid-column:span 2;text-align:center;color:#8aaccc;padding:0.5rem 0;"><i class="fas fa-info-circle"></i> No documents required for Wake Space rental only.</div>';
+                container.innerHTML = '<div style={{ 'gridColumn': 'span 2', 'textAlign': 'center', 'color': '#8aaccc', 'padding': '0.5rem 0' }}><i className="fas fa-info-circle"></i> No documents required for Wake Space rental only.</div>';
                 return;
             }
             container.innerHTML = DOCUMENTS.map(doc => {
                 const checked = checklistState[doc.id] ? 'checked' : '';
                 let rHtml = burialType === 'actual'
-                    ? (doc.requiredFor === 'actual' || doc.requiredFor === 'both' ? '<span class="required">*</span>' : '<span class="optional">(optional)</span>')
-                    : (doc.requiredFor === 'both' ? '<span class="required">*</span>' : '<span class="optional">(optional)</span>');
+                    ? (doc.requiredFor === 'actual' || doc.requiredFor === 'both' ? '<span className="required">*</span>' : '<span className="optional">(optional)</span>')
+                    : (doc.requiredFor === 'both' ? '<span className="required">*</span>' : '<span className="optional">(optional)</span>');
                 return \`
-                    <div class="check-item">
+                    <div className="check-item">
                         <input type="checkbox" id="modal_check_\${doc.id}" \${checked} onchange="updateModalChecklist()" />
                         <label for="modal_check_\${doc.id}">\${doc.label} \${rHtml}</label>
                     </div>
@@ -597,22 +597,22 @@ export default function POSTransactions() {
             const grid = document.getElementById('locationGrid');
 
             if (!p.locations || p.locations.length === 0) {
-                grid.innerHTML = '<div style="padding:0.5rem;text-align:center;color:#8aaccc;font-size:0.8rem;grid-column:span 2;"><i class="fas fa-info-circle"></i> No locations available for this type</div>';
+                grid.innerHTML = '<div style={{ 'padding': '0.5rem', 'textAlign': 'center', 'color': '#8aaccc', 'fontSize': '0.8rem', 'gridColumn': 'span 2' }}><i className="fas fa-info-circle"></i> No locations available for this type</div>';
                 selectedLocationId = null;
             } else {
                 const available = p.locations.filter(l => l.status === 'Available');
                 if (available.length === 0) {
-                    grid.innerHTML = '<div style="padding:0.5rem;text-align:center;color:#c0392b;font-size:0.8rem;grid-column:span 2;"><i class="fas fa-exclamation-triangle"></i> No available locations for this type</div>';
+                    grid.innerHTML = '<div style={{ 'padding': '0.5rem', 'textAlign': 'center', 'color': '#c0392b', 'fontSize': '0.8rem', 'gridColumn': 'span 2' }}><i className="fas fa-exclamation-triangle"></i> No available locations for this type</div>';
                     selectedLocationId = null;
                 } else {
                     grid.innerHTML = available.map(loc => \`
-                        <div class="location-option" onclick="selectLocation('\${loc.id}')">
+                        <div className="location-option" onclick="selectLocation('\${loc.id}')">
                             <input type="radio" name="selectedLocation" value="\${loc.id}" id="loc_\${loc.id}" />
-                            <label for="loc_\${loc.id}" style="cursor:pointer;display:flex;align-items:center;gap:4px;flex-wrap:wrap;width:100%;">
-                                <span class="loc-id">\${loc.id}</span>
-                                <span class="loc-detail">\${loc.block} &middot; \${loc.zone}</span>
-                                <span class="loc-detail">\${loc.level}</span>
-                                <span class="loc-status available">&#9679; Available</span>
+                            <label for="loc_\${loc.id}" style={{ 'cursor': 'pointer', 'display': 'flex', 'alignItems': 'center', 'gap': '4px', 'flexWrap': 'wrap', 'width': '100%' }}>
+                                <span className="loc-id">\${loc.id}</span>
+                                <span className="loc-detail">\${loc.block} &middot; \${loc.zone}</span>
+                                <span className="loc-detail">\${loc.level}</span>
+                                <span className="loc-status available">&#9679; Available</span>
                             </label>
                         </div>
                     \`).join('');
@@ -697,7 +697,7 @@ export default function POSTransactions() {
         window.renderCart = function() {
             const tbody = document.getElementById('cartBody');
             if (cart.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" class="empty-msg">No items added yet</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4" className="empty-msg">No items added yet</td></tr>';
                 document.getElementById('cartItemCount').textContent = '0 items';
             } else {
                 tbody.innerHTML = cart.map((item, idx) => {
@@ -708,13 +708,13 @@ export default function POSTransactions() {
                     }
                     if (item.location) {
                         locationHtml = \`
-                            <div class="cart-location">
-                                <i class="fas fa-map-pin"></i>
-                                <span class="location-id">\${item.location.id}</span>
-                                <span class="location-detail">\${item.location.block} &middot; \${item.location.zone}</span>
-                                <span class="location-detail">\${item.location.level}</span>
-                                <button class="btn-map-sm" onclick="viewOnMap('\${item.location.id}')">
-                                    <i class="fas fa-map-marked-alt"></i> View Map
+                            <div className="cart-location">
+                                <i className="fas fa-map-pin"></i>
+                                <span className="location-id">\${item.location.id}</span>
+                                <span className="location-detail">\${item.location.block} &middot; \${item.location.zone}</span>
+                                <span className="location-detail">\${item.location.level}</span>
+                                <button className="btn-map-sm" onclick="viewOnMap('\${item.location.id}')">
+                                    <i className="fas fa-map-marked-alt"></i> View Map
                                 </button>
                             </div>
                         \`;
@@ -722,10 +722,10 @@ export default function POSTransactions() {
                     return \`
                         <tr>
                             <td>\${item.displayName}\${extraInfo}\${locationHtml}</td>
-                            <td style="text-align:center;">\${item.qty}</td>
-                            <td style="text-align:right;font-weight:600;">&#8369;\${item.total.toLocaleString()}</td>
-                            <td style="text-align:center;">
-                                <button class="btn-remove" onclick="removeFromCart(\${idx})"><i class="fas fa-times"></i></button>
+                            <td style={{ 'textAlign': 'center' }}>\${item.qty}</td>
+                            <td style={{ 'textAlign': 'right', 'fontWeight': '600' }}>&#8369;\${item.total.toLocaleString()}</td>
+                            <td style={{ 'textAlign': 'center' }}>
+                                <button className="btn-remove" onclick="removeFromCart(\${idx})"><i className="fas fa-times"></i></button>
                             </td>
                         </tr>
                     \`;
@@ -940,7 +940,7 @@ export default function POSTransactions() {
                     <td><strong>\${r.receipt}</strong></td>
                     <td>\${r.client}</td>
                     <td>\${r.items}</td>
-                    <td style="text-align:right;" class="receipt-amount">&#8369;\${r.amount.toLocaleString()}</td>
+                    <td style={{ 'textAlign': 'right' }} className="receipt-amount">&#8369;\${r.amount.toLocaleString()}</td>
                     <td>\${r.date}</td>
                 </tr>
             \`).join('');
@@ -1009,7 +1009,7 @@ export default function POSTransactions() {
         if (db) {
             const n = new Date();
             const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-            db.innerHTML = '<i class="fas fa-calendar-alt"></i> ' + months[n.getMonth()] + ' ' + n.getFullYear();
+            db.innerHTML = '<i className="fas fa-calendar-alt"></i> ' + months[n.getMonth()] + ' ' + n.getFullYear();
         }
 
         // ================================================================
@@ -1056,46 +1056,46 @@ export default function POSTransactions() {
   return (
     <div className="pos-page-wrapper" style={{ padding: '0', background: 'transparent' }}
       dangerouslySetInnerHTML={{ __html: `
-    <div class="topbar">
-        <div class="topbar-left">
+    <div className="topbar">
+        <div className="topbar-left">
             <h1>POS Transactions <span>&#10022;</span></h1>
-            <div class="greeting">Process grave lot sales, wake space rentals, and payments</div>
+            <div className="greeting">Process grave lot sales, wake space rentals, and payments</div>
         </div>
-        <div class="topbar-right">
-            <div class="date-badge pos-date-badge"><i class="fas fa-calendar-alt"></i> August 2026</div>
-            <button class="notification-btn"><i class="fas fa-bell"></i><span class="dot"></span></button>
+        <div className="topbar-right">
+            <div className="date-badge pos-date-badge"><i className="fas fa-calendar-alt"></i> August 2026</div>
+            <button className="notification-btn"><i className="fas fa-bell"></i><span className="dot"></span></button>
         </div>
     </div>
 
     <!-- ===== POS ===== -->
-    <div class="pos-container">
+    <div className="pos-container">
         <!-- Header -->
-        <div class="pos-header">
-            <div class="pos-header-left">
-                <h2><i class="fas fa-cash-register" style="color:#d4af37;margin-right:8px;"></i>New Transaction</h2>
+        <div className="pos-header">
+            <div className="pos-header-left">
+                <h2><i className="fas fa-cash-register" style={{ 'color': '#d4af37', 'marginRight': '8px' }}></i>New Transaction</h2>
                 <p>Select products below, then complete payment details on the right</p>
             </div>
-            <div class="pos-header-right">
-                <button class="btn-secondary" onclick="clearTransaction()"><i class="fas fa-undo"></i> Reset</button>
+            <div className="pos-header-right">
+                <button className="btn-secondary" onclick="clearTransaction()"><i className="fas fa-undo"></i> Reset</button>
             </div>
         </div>
 
         <!-- ===== TWO-COLUMN LAYOUT ===== -->
-        <div class="pos-two-col">
+        <div className="pos-two-col">
 
             <!-- ===== LEFT ===== -->
-            <div class="left-panel">
+            <div className="left-panel">
 
                 <!-- Grave Lots Section -->
-                <div class="product-list-section">
-                    <div class="section-title"><i class="fas fa-tshirt"></i> Grave Lots</div>
-                    <table class="product-table" id="productTable">
+                <div className="product-list-section">
+                    <div className="section-title"><i className="fas fa-tshirt"></i> Grave Lots</div>
+                    <table className="product-table" id="productTable">
                         <thead>
                             <tr>
-                                <th style="width:30%">Product</th>
-                                <th style="width:20%; text-align:right;">Price</th>
-                                <th style="width:25%; text-align:center;">Availability</th>
-                                <th style="width:25%; text-align:center;">Action</th>
+                                <th style={{ 'width': '30%' }}>Product</th>
+                                <th style={{ 'width': '20%', 'textAlign': 'right' }}>Price</th>
+                                <th style={{ 'width': '25%', 'textAlign': 'center' }}>Availability</th>
+                                <th style={{ 'width': '25%', 'textAlign': 'center' }}>Action</th>
                             </tr>
                         </thead>
                         <tbody id="productTableBody"></tbody>
@@ -1103,47 +1103,47 @@ export default function POSTransactions() {
                 </div>
 
                 <!-- Wake Space Separator -->
-                <div class="wake-separator">
-                    <span><i class="fas fa-bed" style="color:#3670AF;"></i> Wake Space (Optional)</span>
-                    <div class="line"></div>
+                <div className="wake-separator">
+                    <span><i className="fas fa-bed" style={{ 'color': '#3670AF' }}></i> Wake Space (Optional)</span>
+                    <div className="line"></div>
                 </div>
 
                 <!-- Wake Space Section -->
-                <div class="product-list-section">
-                    <div class="section-title" style="color:#3670AF;"><i class="fas fa-bed"></i> Wake Space Rental</div>
-                    <div class="wake-product-row">
-                        <div class="wake-info">
-                            <i class="fas fa-bed"></i>
+                <div className="product-list-section">
+                    <div className="section-title" style={{ 'color': '#3670AF' }}><i className="fas fa-bed"></i> Wake Space Rental</div>
+                    <div className="wake-product-row">
+                        <div className="wake-info">
+                            <i className="fas fa-bed"></i>
                             <div>
-                                <div class="wake-name">Wake Space</div>
-                                <div class="wake-price">&#8369;1,500 / night</div>
+                                <div className="wake-name">Wake Space</div>
+                                <div className="wake-price">&#8369;1,500 / night</div>
                             </div>
                         </div>
-                        <div style="display:flex;align-items:center;gap:0.8rem;">
-                            <span class="wake-avail" id="wakeAvailStatus">&#9989; 2 available</span>
-                            <button class="btn-add-sm" onclick="openWakeBookingModal()">
-                                <i class="fas fa-calendar-plus"></i> Book
+                        <div style={{ 'display': 'flex', 'alignItems': 'center', 'gap': '0.8rem' }}>
+                            <span className="wake-avail" id="wakeAvailStatus">&#9989; 2 available</span>
+                            <button className="btn-add-sm" onclick="openWakeBookingModal()">
+                                <i className="fas fa-calendar-plus"></i> Book
                             </button>
                         </div>
                     </div>
-                    <div style="font-size:0.6rem;color:#8aaccc;padding:0.2rem 0.4rem;text-align:center;">
-                        <i class="fas fa-info-circle"></i> Click "Book" to select check-in/out dates
+                    <div style={{ 'fontSize': '0.6rem', 'color': '#8aaccc', 'padding': '0.2rem 0.4rem', 'textAlign': 'center' }}>
+                        <i className="fas fa-info-circle"></i> Click "Book" to select check-in/out dates
                     </div>
                 </div>
 
                 <!-- Cart Section -->
-                <div class="cart-section">
-                    <div class="cart-title">
+                <div className="cart-section">
+                    <div className="cart-title">
                         <span>&#128722; Cart</span>
-                        <span class="item-count" id="cartItemCount">0 items</span>
+                        <span className="item-count" id="cartItemCount">0 items</span>
                     </div>
-                    <table class="cart-items-table" id="cartTable">
+                    <table className="cart-items-table" id="cartTable">
                         <thead>
                             <tr>
                                 <th>Item</th>
-                                <th style="text-align:center;">Qty</th>
-                                <th style="text-align:right;">Total</th>
-                                <th style="text-align:center;">Action</th>
+                                <th style={{ 'textAlign': 'center' }}>Qty</th>
+                                <th style={{ 'textAlign': 'right' }}>Total</th>
+                                <th style={{ 'textAlign': 'center' }}>Action</th>
                             </tr>
                         </thead>
                         <tbody id="cartBody"></tbody>
@@ -1153,18 +1153,18 @@ export default function POSTransactions() {
             </div>
 
             <!-- ===== RIGHT ===== -->
-            <div class="right-panel">
+            <div className="right-panel">
 
                 <!-- Client & Payment Type -->
-                <div class="panel-box" id="clientPaymentPanel">
-                    <div class="client-payment-row">
-                        <div class="form-group client-search-wrapper" id="clientSearchWrapper">
+                <div className="panel-box" id="clientPaymentPanel">
+                    <div className="client-payment-row">
+                        <div className="form-group client-search-wrapper" id="clientSearchWrapper">
                             <label>Client Name</label>
                             <input type="text" id="clientSearchInput" placeholder="Search client..." oninput="searchClients()" />
-                            <i class="fas fa-search search-icon"></i>
-                            <div class="client-search-results" id="clientSearchResults"></div>
+                            <i className="fas fa-search search-icon"></i>
+                            <div className="client-search-results" id="clientSearchResults"></div>
                         </div>
-                        <div class="form-group">
+                        <div className="form-group">
                             <label>Payment Type</label>
                             <select id="paymentType">
                                 <option value="Cash">Cash</option>
@@ -1174,28 +1174,28 @@ export default function POSTransactions() {
                 </div>
 
                 <!-- Client & Deceased Info -->
-                <div class="panel-box" id="infoPanel">
-                    <div class="info-side-by-side">
+                <div className="panel-box" id="infoPanel">
+                    <div className="info-side-by-side">
                         <!-- Client Info -->
-                        <div class="info-column">
-                            <div class="info-title">
-                                <i class="fas fa-user" style="color:#d4af37;"></i> Client Information
-                                <span class="badge" id="clientInfoBadge">New</span>
+                        <div className="info-column">
+                            <div className="info-title">
+                                <i className="fas fa-user" style={{ 'color': '#d4af37' }}></i> Client Information
+                                <span className="badge" id="clientInfoBadge">New</span>
                             </div>
-                            <div class="info-grid">
-                                <div class="form-group">
+                            <div className="info-grid">
+                                <div className="form-group">
                                     <label>Full Name</label>
                                     <input type="text" id="clientName" placeholder="Enter name" />
                                 </div>
-                                <div class="form-group">
+                                <div className="form-group">
                                     <label>Contact Number</label>
                                     <input type="text" id="clientContact" placeholder="0917-123-4567" />
                                 </div>
-                                <div class="form-group" style="grid-column: span 2;">
+                                <div className="form-group" style={{ 'gridColumn': 'span 2' }}>
                                     <label>Email Address</label>
                                     <input type="email" id="clientEmail" placeholder="client@email.com" />
                                 </div>
-                                <div class="form-group" style="grid-column: span 2;">
+                                <div className="form-group" style={{ 'gridColumn': 'span 2' }}>
                                     <label>Relationship to Deceased</label>
                                     <select id="clientRelationship">
                                         <option value="">Select relationship...</option>
@@ -1215,25 +1215,25 @@ export default function POSTransactions() {
                         </div>
 
                         <!-- Deceased Info -->
-                        <div class="info-column" id="deceasedInfoColumn">
-                            <div class="info-title">
-                                <i class="fas fa-cross" style="color:#8e44ad;"></i> Deceased Information
-                                <span class="badge" id="deceasedInfoBadge">Required</span>
+                        <div className="info-column" id="deceasedInfoColumn">
+                            <div className="info-title">
+                                <i className="fas fa-cross" style={{ 'color': '#8e44ad' }}></i> Deceased Information
+                                <span className="badge" id="deceasedInfoBadge">Required</span>
                             </div>
-                            <div class="info-grid">
-                                <div class="form-group" style="grid-column: span 2;">
+                            <div className="info-grid">
+                                <div className="form-group" style={{ 'gridColumn': 'span 2' }}>
                                     <label>Full Name</label>
                                     <input type="text" id="deceasedName" placeholder="Enter full name" />
                                 </div>
-                                <div class="form-group">
+                                <div className="form-group">
                                     <label>Date of Birth</label>
                                     <input type="date" id="deceasedDOB" />
                                 </div>
-                                <div class="form-group">
+                                <div className="form-group">
                                     <label>Date of Death</label>
                                     <input type="date" id="deceasedDOD" />
                                 </div>
-                                <div class="form-group" style="grid-column: span 2;">
+                                <div className="form-group" style={{ 'gridColumn': 'span 2' }}>
                                     <label>Cause of Death (Optional)</label>
                                     <input type="text" id="deceasedCause" placeholder="e.g., Natural causes" />
                                 </div>
@@ -1243,18 +1243,18 @@ export default function POSTransactions() {
                 </div>
 
                 <!-- Burial Type -->
-                <div class="panel-box hide-when-wake-only" id="burialTypePanel">
-                    <div class="burial-type-group">
+                <div className="panel-box hide-when-wake-only" id="burialTypePanel">
+                    <div className="burial-type-group">
                         <label id="actualLabel"><input type="radio" name="burialType" value="actual" checked onchange="updateBurialType()" /> Actual Burial (Ililibing na)</label>
                         <label id="preneedLabel"><input type="radio" name="burialType" value="preneed" onchange="updateBurialType()" /> Pre-Need (Advance Purchase)</label>
-                        <span class="info-note" id="burialTypeNote"><i class="fas fa-info-circle"></i> Heroes Buried only available for Pre-Need</span>
+                        <span className="info-note" id="burialTypeNote"><i className="fas fa-info-circle"></i> Heroes Buried only available for Pre-Need</span>
                     </div>
                 </div>
 
                 <!-- Date Picker -->
-                <div class="panel-box hide-when-wake-only" id="datePickerPanel">
-                    <div class="date-picker-row">
-                        <div class="form-group" id="burialDateGroup">
+                <div className="panel-box hide-when-wake-only" id="datePickerPanel">
+                    <div className="date-picker-row">
+                        <div className="form-group" id="burialDateGroup">
                             <label id="dateLabel">&#128197; Burial Date</label>
                             <input type="date" id="burialDate" />
                         </div>
@@ -1262,29 +1262,29 @@ export default function POSTransactions() {
                 </div>
 
                 <!-- Eligibility Note -->
-                <div class="eligibility-note" id="eligibilityNote">
-                    <i class="fas fa-info-circle"></i> Add items to cart to see payment eligibility
+                <div className="eligibility-note" id="eligibilityNote">
+                    <i className="fas fa-info-circle"></i> Add items to cart to see payment eligibility
                 </div>
 
                 <!-- Document Checklist -->
-                <div class="panel-box checklist-section hide-when-wake-only" id="checklistSection">
-                    <div class="checklist-title">
-                        <i class="fas fa-clipboard-list"></i> Document Requirements
-                        <span style="font-size:0.6rem;color:#8aaccc;font-weight:400;">(Check when complete)</span>
+                <div className="panel-box checklist-section hide-when-wake-only" id="checklistSection">
+                    <div className="checklist-title">
+                        <i className="fas fa-clipboard-list"></i> Document Requirements
+                        <span style={{ 'fontSize': '0.6rem', 'color': '#8aaccc', 'fontWeight': '400' }}>(Check when complete)</span>
                     </div>
-                    <div class="checklist-grid" id="checklistGrid"></div>
-                    <div class="checklist-progress">
+                    <div className="checklist-grid" id="checklistGrid"></div>
+                    <div className="checklist-progress">
                         <span id="checklistStatus">0 of 6 completed</span>
-                        <div class="progress-track">
-                            <div class="progress-bar" id="checklistProgress" style="width:0%;"></div>
+                        <div className="progress-track">
+                            <div className="progress-bar" id="checklistProgress" style={{ 'width': '0%' }}></div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Discount & Payment Plan -->
-                <div class="panel-box">
-                    <div class="discount-plan-row">
-                        <div class="form-group">
+                <div className="panel-box">
+                    <div className="discount-plan-row">
+                        <div className="form-group">
                             <label>Discount Type</label>
                             <select id="discountType" onchange="updateTotals()">
                                 <option value="none">None</option>
@@ -1292,7 +1292,7 @@ export default function POSTransactions() {
                                 <option value="senior">Senior Citizen - 20%</option>
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div className="form-group">
                             <label>Payment Plan</label>
                             <select id="paymentPlan" onchange="updateTotals()">
                                 <option value="full">Full Payment (On the Spot)</option>
@@ -1304,53 +1304,53 @@ export default function POSTransactions() {
                 </div>
 
                 <!-- Payment Summary -->
-                <div class="panel-box payment-panel">
-                    <h4 style="font-size:0.85rem;font-weight:600;color:#1a3d5c;margin-bottom:0.3rem;">
-                        <i class="fas fa-receipt" style="color:#d4af37;"></i> Payment Summary
+                <div className="panel-box payment-panel">
+                    <h4 style={{ 'fontSize': '0.85rem', 'fontWeight': '600', 'color': '#1a3d5c', 'marginBottom': '0.3rem' }}>
+                        <i className="fas fa-receipt" style={{ 'color': '#d4af37' }}></i> Payment Summary
                     </h4>
-                    <div class="summary-line">
-                        <span class="label">Subtotal</span>
-                        <span class="value" id="subtotalDisplay">&#8369;0.00</span>
+                    <div className="summary-line">
+                        <span className="label">Subtotal</span>
+                        <span className="value" id="subtotalDisplay">&#8369;0.00</span>
                     </div>
-                    <div class="summary-line">
-                        <span class="label">Interment Fee</span>
-                        <span class="value" id="intermentDisplay" style="color:#8e44ad;">&#8369;0.00</span>
+                    <div className="summary-line">
+                        <span className="label">Interment Fee</span>
+                        <span className="value" id="intermentDisplay" style={{ 'color': '#8e44ad' }}>&#8369;0.00</span>
                     </div>
-                    <div class="summary-line">
-                        <span class="label">Wake Space</span>
-                        <span class="value" id="wakeSubtotalDisplay" style="color:#3670AF;">&#8369;0.00</span>
+                    <div className="summary-line">
+                        <span className="label">Wake Space</span>
+                        <span className="value" id="wakeSubtotalDisplay" style={{ 'color': '#3670AF' }}>&#8369;0.00</span>
                     </div>
-                    <div class="summary-line">
-                        <span class="label">Discount (20%)</span>
-                        <span class="value" id="discountDisplay" style="color:#27ae60;">- &#8369;0.00</span>
+                    <div className="summary-line">
+                        <span className="label">Discount (20%)</span>
+                        <span className="value" id="discountDisplay" style={{ 'color': '#27ae60' }}>- &#8369;0.00</span>
                     </div>
-                    <div class="summary-line">
-                        <span class="label">DP Required</span>
-                        <span class="value" id="dpDisplay" style="color:#f39c12;">&#8369;0.00</span>
+                    <div className="summary-line">
+                        <span className="label">DP Required</span>
+                        <span className="value" id="dpDisplay" style={{ 'color': '#f39c12' }}>&#8369;0.00</span>
                     </div>
-                    <div class="summary-line" style="border-bottom:none;">
-                        <span class="label">Monthly (if staggered)</span>
-                        <span class="value" id="monthlyDisplay" style="font-size:0.75rem;color:#3670AF;">&#8369;0.00</span>
+                    <div className="summary-line" style={{ 'borderBottom': 'none' }}>
+                        <span className="label">Monthly (if staggered)</span>
+                        <span className="value" id="monthlyDisplay" style={{ 'fontSize': '0.75rem', 'color': '#3670AF' }}>&#8369;0.00</span>
                     </div>
-                    <div class="summary-line total">
-                        <span class="label">Total Due</span>
-                        <span class="value" id="grandTotalDisplay">&#8369;0.00</span>
+                    <div className="summary-line total">
+                        <span className="label">Total Due</span>
+                        <span className="value" id="grandTotalDisplay">&#8369;0.00</span>
                     </div>
-                    <div style="margin-top:0.5rem;">
-                        <div class="form-group">
+                    <div style={{ 'marginTop': '0.5rem' }}>
+                        <div className="form-group">
                             <label>Amount Tendered (Cash)</label>
                             <input type="number" id="amountTendered" placeholder="0.00" oninput="computeChange()" />
                         </div>
-                        <div class="form-group">
+                        <div className="form-group">
                             <label>Change</label>
-                            <div class="change-display" id="changeDisplay">&#8369;0.00</div>
+                            <div className="change-display" id="changeDisplay">&#8369;0.00</div>
                         </div>
                     </div>
-                    <button class="btn-process" onclick="openChecklistModal()">
-                        <i class="fas fa-check-circle"></i> Process Payment
+                    <button className="btn-process" onclick="openChecklistModal()">
+                        <i className="fas fa-check-circle"></i> Process Payment
                     </button>
-                    <div style="font-size:0.6rem;color:#8aaccc;text-align:center;margin-top:0.2rem;">
-                        <i class="fas fa-info-circle"></i> Cash only. Receipt will be generated.
+                    <div style={{ 'fontSize': '0.6rem', 'color': '#8aaccc', 'textAlign': 'center', 'marginTop': '0.2rem' }}>
+                        <i className="fas fa-info-circle"></i> Cash only. Receipt will be generated.
                     </div>
                 </div>
 
@@ -1358,16 +1358,16 @@ export default function POSTransactions() {
         </div>
 
         <!-- Recent Receipts -->
-        <div class="receipts-section">
-            <h3><i class="fas fa-receipt"></i> Recent Receipts</h3>
-            <div class="table-wrapper" style="border:1px solid #e8edf4;border-radius:12px;overflow-x:auto;">
-                <table class="receipts-table">
+        <div className="receipts-section">
+            <h3><i className="fas fa-receipt"></i> Recent Receipts</h3>
+            <div className="table-wrapper" style={{ 'border': '1px solid #e8edf4', 'borderRadius': '12px', 'overflowX': 'auto' }}>
+                <table className="receipts-table">
                     <thead>
                         <tr>
                             <th>Receipt No.</th>
                             <th>Client</th>
                             <th>Items</th>
-                            <th style="text-align:right;">Amount</th>
+                            <th style={{ 'textAlign': 'right' }}>Amount</th>
                             <th>Date</th>
                         </tr>
                     </thead>
@@ -1378,145 +1378,145 @@ export default function POSTransactions() {
     </div>
 
     <!-- FOOTER -->
-    <div class="main-footer" style="margin-top:2rem;text-align:center;font-size:0.7rem;color:#8aaccc;border-top:1px solid rgba(212,175,55,0.08);padding-top:1.5rem;">
-        <i class="fas fa-dove" style="color:#d4af37;margin:0 4px;"></i>
+    <div className="main-footer" style={{ 'marginTop': '2rem', 'textAlign': 'center', 'fontSize': '0.7rem', 'color': '#8aaccc', 'borderTop': '1px solid rgba(212,175,55,0.08)', 'paddingTop': '1.5rem' }}>
+        <i className="fas fa-dove" style={{ 'color': '#d4af37', 'margin': '0 4px' }}></i>
         Cherubim of Heaven Memorial Park &middot; Staff Dashboard v2.0
-        <i class="fas fa-dove" style="color:#d4af37;margin:0 4px;"></i>
+        <i className="fas fa-dove" style={{ 'color': '#d4af37', 'margin': '0 4px' }}></i>
     </div>
 
     <!-- ===== WAKE BOOKING MODAL ===== -->
-    <div class="modal-overlay" id="wakeModal">
-        <div class="modal" style="max-width:520px;">
-            <div class="modal-icon" style="color:#3670AF;"><i class="fas fa-bed"></i></div>
+    <div className="modal-overlay" id="wakeModal">
+        <div className="modal" style={{ 'maxWidth': '520px' }}>
+            <div className="modal-icon" style={{ 'color': '#3670AF' }}><i className="fas fa-bed"></i></div>
             <h3>Book Wake Space</h3>
-            <p class="modal-subtitle">Select dates for the wake service</p>
-            <div class="wake-nights-control">
+            <p className="modal-subtitle">Select dates for the wake service</p>
+            <div className="wake-nights-control">
                 <label>Number of Nights</label>
-                <div class="nights-input">
-                    <button onclick="adjustNights(-1)"><i class="fas fa-minus"></i></button>
+                <div className="nights-input">
+                    <button onclick="adjustNights(-1)"><i className="fas fa-minus"></i></button>
                     <input type="number" id="wakeNightsInput" value="3" min="1" max="30" onchange="updateWakeBooking()" />
-                    <button onclick="adjustNights(1)"><i class="fas fa-plus"></i></button>
+                    <button onclick="adjustNights(1)"><i className="fas fa-plus"></i></button>
                 </div>
             </div>
-            <div class="wake-date-range">
-                <div class="date-group">
-                    <label><i class="fas fa-calendar-check" style="color:#3670AF;"></i> Check-in Date</label>
+            <div className="wake-date-range">
+                <div className="date-group">
+                    <label><i className="fas fa-calendar-check" style={{ 'color': '#3670AF' }}></i> Check-in Date</label>
                     <input type="date" id="wakeCheckinInput" onchange="updateWakeBooking()" />
                 </div>
-                <div class="date-group">
-                    <label><i class="fas fa-calendar-times" style="color:#c0392b;"></i> Check-out Date</label>
+                <div className="date-group">
+                    <label><i className="fas fa-calendar-times" style={{ 'color': '#c0392b' }}></i> Check-out Date</label>
                     <input type="date" id="wakeCheckoutInput" disabled />
                 </div>
             </div>
-            <div class="wake-booking-summary">
-                <div class="wake-row"><span class="label">Check-in</span><span class="value" id="wakeSummaryCheckin">&mdash;</span></div>
-                <div class="wake-row"><span class="label">Check-out</span><span class="value" id="wakeSummaryCheckout">&mdash;</span></div>
-                <div class="wake-row"><span class="label">Nights</span><span class="value" id="wakeSummaryNights">0</span></div>
-                <div class="wake-row"><span class="label">Rate</span><span class="value">&#8369;1,500 / night</span></div>
-                <div class="wake-row wake-total"><span class="label">Total</span><span class="value" id="wakeSummaryTotal">&#8369;0.00</span></div>
+            <div className="wake-booking-summary">
+                <div className="wake-row"><span className="label">Check-in</span><span className="value" id="wakeSummaryCheckin">&mdash;</span></div>
+                <div className="wake-row"><span className="label">Check-out</span><span className="value" id="wakeSummaryCheckout">&mdash;</span></div>
+                <div className="wake-row"><span className="label">Nights</span><span className="value" id="wakeSummaryNights">0</span></div>
+                <div className="wake-row"><span className="label">Rate</span><span className="value">&#8369;1,500 / night</span></div>
+                <div className="wake-row wake-total"><span className="label">Total</span><span className="value" id="wakeSummaryTotal">&#8369;0.00</span></div>
             </div>
-            <div class="wake-availability-status" id="wakeAvailabilityStatus">
-                <i class="fas fa-spinner fa-spin"></i> Checking availability...
+            <div className="wake-availability-status" id="wakeAvailabilityStatus">
+                <i className="fas fa-spinner fa-spin"></i> Checking availability...
             </div>
-            <div class="modal-actions">
-                <button class="btn-cancel" onclick="closeModal('wakeModal')">Cancel</button>
-                <button class="btn-confirm" onclick="confirmWakeBooking()" id="wakeBookBtn" disabled>
-                    <i class="fas fa-check"></i> Add to Cart
+            <div className="modal-actions">
+                <button className="btn-cancel" onclick="closeModal('wakeModal')">Cancel</button>
+                <button className="btn-confirm" onclick="confirmWakeBooking()" id="wakeBookBtn" disabled>
+                    <i className="fas fa-check"></i> Add to Cart
                 </button>
             </div>
         </div>
     </div>
 
     <!-- ===== ADD ITEM MODAL ===== -->
-    <div class="modal-overlay" id="addItemModal">
-        <div class="modal" style="max-width:560px;">
-            <div class="modal-icon" style="color:#d4af37;"><i class="fas fa-cart-plus"></i></div>
+    <div className="modal-overlay" id="addItemModal">
+        <div className="modal" style={{ 'maxWidth': '560px' }}>
+            <div className="modal-icon" style={{ 'color': '#d4af37' }}><i className="fas fa-cart-plus"></i></div>
             <h3>Add Item</h3>
-            <p class="modal-subtitle">Select grave type, location, and interment option</p>
-            <div class="form-group">
+            <p className="modal-subtitle">Select grave type, location, and interment option</p>
+            <div className="form-group">
                 <label>Product</label>
                 <select id="modalProduct" onchange="updateLocationOptions()"></select>
             </div>
-            <div class="form-group">
+            <div className="form-group">
                 <label>Select Location</label>
-                <div class="location-grid" id="locationGrid"></div>
+                <div className="location-grid" id="locationGrid"></div>
             </div>
-            <div class="form-group" id="intermentGroup">
+            <div className="form-group" id="intermentGroup">
                 <label>Interment Type</label>
                 <select id="modalInterment"></select>
             </div>
-            <div class="form-group" id="qtyGroup">
+            <div className="form-group" id="qtyGroup">
                 <label>Quantity</label>
                 <input type="number" id="modalQty" value="1" min="1" />
             </div>
-            <div class="form-group" id="borrowingGroup" style="display:none;">
+            <div className="form-group" id="borrowingGroup" style={{ 'display': 'none' }}>
                 <label>Columbarium Borrowing Fee</label>
                 <select id="modalBorrowing">
                     <option value="0">None</option>
                     <option value="1500">Borrowing Fee - &#8369;1,500/urn</option>
                 </select>
             </div>
-            <div class="modal-actions">
-                <button class="btn-cancel" onclick="closeModal('addItemModal')">Cancel</button>
-                <button class="btn-confirm" onclick="confirmAddItem()"><i class="fas fa-check"></i> Add to Cart</button>
+            <div className="modal-actions">
+                <button className="btn-cancel" onclick="closeModal('addItemModal')">Cancel</button>
+                <button className="btn-confirm" onclick="confirmAddItem()"><i className="fas fa-check"></i> Add to Cart</button>
             </div>
         </div>
     </div>
 
     <!-- ===== DOCUMENT CHECKLIST MODAL ===== -->
-    <div class="modal-overlay" id="checklistModal">
-        <div class="modal" style="max-width:560px;">
-            <div class="modal-icon" style="color:#d4af37;"><i class="fas fa-clipboard-check"></i></div>
+    <div className="modal-overlay" id="checklistModal">
+        <div className="modal" style={{ 'maxWidth': '560px' }}>
+            <div className="modal-icon" style={{ 'color': '#d4af37' }}><i className="fas fa-clipboard-check"></i></div>
             <h3>Document Checklist</h3>
-            <p class="modal-subtitle">Verify all required documents are complete before processing payment</p>
-            <div class="modal-checklist" id="modalChecklist"></div>
-            <div style="background:#fef9e7;border-left:3px solid #f39c12;padding:0.5rem 0.8rem;border-radius:6px;font-size:0.75rem;color:#7a9fbe;margin-bottom:1rem;">
-                <i class="fas fa-info-circle" style="color:#f39c12;"></i>
-                <strong>For Actual Burial:</strong> All documents marked with <strong style="color:#c0392b;">*</strong> are required.<br>
-                <strong>For Pre-Need:</strong> Only <strong style="color:#3670AF;">Purchase Agreement</strong> and <strong style="color:#3670AF;">Valid ID</strong> are required.
+            <p className="modal-subtitle">Verify all required documents are complete before processing payment</p>
+            <div className="modal-checklist" id="modalChecklist"></div>
+            <div style={{ 'background': '#fef9e7', 'borderLeft': '3px solid #f39c12', 'padding': '0.5rem 0.8rem', 'borderRadius': '6px', 'fontSize': '0.75rem', 'color': '#7a9fbe', 'marginBottom': '1rem' }}>
+                <i className="fas fa-info-circle" style={{ 'color': '#f39c12' }}></i>
+                <strong>For Actual Burial:</strong> All documents marked with <strong style={{ 'color': '#c0392b' }}>*</strong> are required.<br>
+                <strong>For Pre-Need:</strong> Only <strong style={{ 'color': '#3670AF' }}>Purchase Agreement</strong> and <strong style={{ 'color': '#3670AF' }}>Valid ID</strong> are required.
             </div>
-            <div class="modal-actions">
-                <button class="btn-cancel" onclick="closeModal('checklistModal')">Cancel</button>
-                <button class="btn-confirm" onclick="confirmChecklist()">
-                    <i class="fas fa-check"></i> All Documents Complete - Process Payment
+            <div className="modal-actions">
+                <button className="btn-cancel" onclick="closeModal('checklistModal')">Cancel</button>
+                <button className="btn-confirm" onclick="confirmChecklist()">
+                    <i className="fas fa-check"></i> All Documents Complete - Process Payment
                 </button>
             </div>
         </div>
     </div>
 
     <!-- ===== PAYMENT CONFIRMATION MODAL ===== -->
-    <div class="modal-overlay" id="paymentModal">
-        <div class="modal">
-            <div class="modal-icon" style="color:#27ae60;"><i class="fas fa-check-circle"></i></div>
+    <div className="modal-overlay" id="paymentModal">
+        <div className="modal">
+            <div className="modal-icon" style={{ 'color': '#27ae60' }}><i className="fas fa-check-circle"></i></div>
             <h3>Payment Processed!</h3>
-            <p class="modal-subtitle">Receipt generated successfully</p>
-            <div style="background:#f8fafc;border-radius:12px;padding:1rem;margin-bottom:1rem;">
-                <div style="display:flex;justify-content:space-between;padding:0.2rem 0;"><span>Receipt No.</span><strong id="receiptNumber">OR-2026-0000</strong></div>
-                <div style="display:flex;justify-content:space-between;padding:0.2rem 0;"><span>Client</span><strong id="receiptClient">-</strong></div>
-                <div style="display:flex;justify-content:space-between;padding:0.2rem 0;"><span>Total Amount</span><strong id="receiptAmount">&#8369;0.00</strong></div>
-                <div style="display:flex;justify-content:space-between;padding:0.2rem 0;"><span>Interment Fee</span><strong id="receiptIntermentAmt">-</strong></div>
-                <div style="display:flex;justify-content:space-between;padding:0.2rem 0;"><span>Wake Space</span><strong id="receiptWakeTotal">-</strong></div>
-                <div style="display:flex;justify-content:space-between;padding:0.2rem 0;"><span>Payment Plan</span><strong id="receiptPlan">-</strong></div>
-                <div style="display:flex;justify-content:space-between;padding:0.2rem 0;"><span>Burial Type</span><strong id="receiptBurialType">-</strong></div>
-                <div style="display:flex;justify-content:space-between;padding:0.2rem 0;"><span>Discount</span><strong id="receiptDiscount">None</strong></div>
-                <div style="display:flex;justify-content:space-between;padding:0.2rem 0;"><span>Burial Date</span><strong id="receiptBurialDate">-</strong></div>
-                <div style="display:flex;justify-content:space-between;padding:0.2rem 0;"><span>Deceased</span><strong id="receiptDeceased">-</strong></div>
-                <div style="display:flex;justify-content:space-between;padding:0.2rem 0;"><span>Location</span><strong id="receiptLocation">-</strong></div>
-                <div style="display:flex;justify-content:space-between;padding:0.2rem 0;"><span>Wake Check-in</span><strong id="receiptWakeCheckin">-</strong></div>
-                <div style="display:flex;justify-content:space-between;padding:0.2rem 0;"><span>Wake Check-out</span><strong id="receiptWakeCheckout">-</strong></div>
-                <div style="display:flex;justify-content:space-between;padding:0.2rem 0;"><span>Nights</span><strong id="receiptNights">0</strong></div>
+            <p className="modal-subtitle">Receipt generated successfully</p>
+            <div style={{ 'background': '#f8fafc', 'borderRadius': '12px', 'padding': '1rem', 'marginBottom': '1rem' }}>
+                <div style={{ 'display': 'flex', 'justifyContent': 'space-between', 'padding': '0.2rem 0' }}><span>Receipt No.</span><strong id="receiptNumber">OR-2026-0000</strong></div>
+                <div style={{ 'display': 'flex', 'justifyContent': 'space-between', 'padding': '0.2rem 0' }}><span>Client</span><strong id="receiptClient">-</strong></div>
+                <div style={{ 'display': 'flex', 'justifyContent': 'space-between', 'padding': '0.2rem 0' }}><span>Total Amount</span><strong id="receiptAmount">&#8369;0.00</strong></div>
+                <div style={{ 'display': 'flex', 'justifyContent': 'space-between', 'padding': '0.2rem 0' }}><span>Interment Fee</span><strong id="receiptIntermentAmt">-</strong></div>
+                <div style={{ 'display': 'flex', 'justifyContent': 'space-between', 'padding': '0.2rem 0' }}><span>Wake Space</span><strong id="receiptWakeTotal">-</strong></div>
+                <div style={{ 'display': 'flex', 'justifyContent': 'space-between', 'padding': '0.2rem 0' }}><span>Payment Plan</span><strong id="receiptPlan">-</strong></div>
+                <div style={{ 'display': 'flex', 'justifyContent': 'space-between', 'padding': '0.2rem 0' }}><span>Burial Type</span><strong id="receiptBurialType">-</strong></div>
+                <div style={{ 'display': 'flex', 'justifyContent': 'space-between', 'padding': '0.2rem 0' }}><span>Discount</span><strong id="receiptDiscount">None</strong></div>
+                <div style={{ 'display': 'flex', 'justifyContent': 'space-between', 'padding': '0.2rem 0' }}><span>Burial Date</span><strong id="receiptBurialDate">-</strong></div>
+                <div style={{ 'display': 'flex', 'justifyContent': 'space-between', 'padding': '0.2rem 0' }}><span>Deceased</span><strong id="receiptDeceased">-</strong></div>
+                <div style={{ 'display': 'flex', 'justifyContent': 'space-between', 'padding': '0.2rem 0' }}><span>Location</span><strong id="receiptLocation">-</strong></div>
+                <div style={{ 'display': 'flex', 'justifyContent': 'space-between', 'padding': '0.2rem 0' }}><span>Wake Check-in</span><strong id="receiptWakeCheckin">-</strong></div>
+                <div style={{ 'display': 'flex', 'justifyContent': 'space-between', 'padding': '0.2rem 0' }}><span>Wake Check-out</span><strong id="receiptWakeCheckout">-</strong></div>
+                <div style={{ 'display': 'flex', 'justifyContent': 'space-between', 'padding': '0.2rem 0' }}><span>Nights</span><strong id="receiptNights">0</strong></div>
             </div>
-            <div class="modal-actions">
-                <button class="btn-cancel" onclick="closeModal('paymentModal')">Close</button>
-                <button class="btn-confirm" onclick="window.print()"><i class="fas fa-print"></i> Print Receipt</button>
+            <div className="modal-actions">
+                <button className="btn-cancel" onclick="closeModal('paymentModal')">Close</button>
+                <button className="btn-confirm" onclick="window.print()"><i className="fas fa-print"></i> Print Receipt</button>
             </div>
         </div>
     </div>
 
     <!-- ===== TOAST ===== -->
-    <div class="toast" id="toast">
+    <div className="toast" id="toast">
         <span id="toastMessage">Success!</span>
-        <button class="toast-close" onclick="hideToast()">&times;</button>
+        <button className="toast-close" onclick="hideToast()">&times;</button>
     </div>
       ` }}
     />
