@@ -231,7 +231,6 @@ function GraveInventory() {
             </div>
             <div className="inventory-header-right">
                 <button className="btn-secondary" onClick={exportInventory}><i className="fas fa-file-export"></i> Export</button>
-                <button className="btn-primary" onClick={openAdd}><i className="fas fa-plus-circle"></i> Add Lot</button>
             </div>
         </div>
 
@@ -304,9 +303,7 @@ function GraveInventory() {
                                     <td>
                                         <div className="action-buttons">
                                             <button className="btn-action-view" onClick={() => openView(item)}><i className="fas fa-eye"></i></button>
-                                            <button className="btn-action-edit" onClick={() => openEdit(item)}><i className="fas fa-pen"></i></button>
                                             <button className="btn-action-map" onClick={() => showOnMap(item)}><i className="fas fa-map-pin"></i></button>
-                                            <button className="btn-action-delete" onClick={() => openDelete(item)}><i className="fas fa-trash"></i></button>
                                         </div>
                                     </td>
                                 </tr>

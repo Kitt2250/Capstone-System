@@ -163,7 +163,6 @@ function SBurialRecords() {
           </div>
           <div className="records-header-right">
             <button className="btn-secondary" onClick={exportRecords}><i className="fas fa-file-export"></i> Export</button>
-            <button className="btn-primary" onClick={openAdd}><i className="fas fa-plus-circle"></i> Register Burial</button>
           </div>
         </div>
 
@@ -241,8 +240,6 @@ function SBurialRecords() {
                       <td>
                         <div className="action-buttons">
                           <button className="btn-action-view" onClick={() => openView(r)}><i className="fas fa-eye"></i></button>
-                          <button className="btn-action-edit" onClick={() => openEdit(r)}><i className="fas fa-pen"></i></button>
-                          <button className="btn-action-delete" onClick={() => openDelete(r)}><i className="fas fa-trash"></i></button>
                         </div>
                       </td>
                     </tr>
